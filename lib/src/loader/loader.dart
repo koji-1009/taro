@@ -1,7 +1,9 @@
-import 'package:taro/src/loader/loader_result.dart';
+import 'dart:typed_data';
+
 import 'package:taro/src/loader/memory_loader.dart';
 import 'package:taro/src/loader/network_loader.dart';
 import 'package:taro/src/loader/storage_loader.dart';
+import 'package:taro/src/taro_load_result.dart';
 
 const maximumMemoryCacheSize = 40;
 
@@ -32,7 +34,7 @@ class Loader {
     _storageLoader = loader;
   }
 
-  Future<LoaderResult> load({
+  Future<({Uint8List bytes, TaroLoadResultType type})> load({
     required String url,
     required Map<String, String> requestHeaders,
     required checkMaxAgeIfExist,
@@ -43,7 +45,7 @@ class Loader {
     if (memoryCache != null) {
       return (
         bytes: memoryCache,
-        type: LoaderResultType.memory,
+        type: TaroLoadResultType.memory,
       );
     }
 
@@ -60,7 +62,7 @@ class Loader {
 
       return (
         bytes: storageCache.bytes,
-        type: LoaderResultType.storage,
+        type: TaroLoadResultType.storage,
       );
     }
 
@@ -88,7 +90,7 @@ class Loader {
 
       return (
         bytes: networkResponse.bytes,
-        type: LoaderResultType.network,
+        type: TaroLoadResultType.network,
       );
     }
 

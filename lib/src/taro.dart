@@ -1,10 +1,21 @@
 import 'dart:typed_data';
 
 import 'package:flutter/painting.dart';
+import 'package:taro/src/loader/loader.dart';
 import 'package:taro/src/loader/memory_loader.dart';
 import 'package:taro/src/loader/network_loader.dart';
 import 'package:taro/src/loader/storage_loader.dart';
-import 'package:taro/src/loader/loader.dart';
+import 'package:taro/src/taro_load_result.dart';
+
+typedef ImageProviderWithType = ({
+  MemoryImage imageProvider,
+  TaroLoadResultType type,
+});
+
+typedef BytesWithType = ({
+  Uint8List bytes,
+  TaroLoadResultType type,
+});
 
 class Taro {
   Taro._();
@@ -36,13 +47,30 @@ class Taro {
     Map<String, String> headers = const {},
     bool checkMaxAgeIfExist = false,
   }) async {
-    final bytes = await loadBytes(
+    final result = await loadBytesWithType(
       url,
       headers: headers,
       checkMaxAgeIfExist: checkMaxAgeIfExist,
     );
 
-    return MemoryImage(bytes);
+    return MemoryImage(result.bytes);
+  }
+
+  Future<ImageProviderWithType> loadImageProviderWithType(
+    String url, {
+    Map<String, String> headers = const {},
+    bool checkMaxAgeIfExist = false,
+  }) async {
+    final result = await loadBytesWithType(
+      url,
+      headers: headers,
+      checkMaxAgeIfExist: checkMaxAgeIfExist,
+    );
+
+    return (
+      imageProvider: MemoryImage(result.bytes),
+      type: result.type,
+    );
   }
 
   Future<Uint8List> loadBytes(
@@ -50,12 +78,24 @@ class Taro {
     Map<String, String> headers = const {},
     bool checkMaxAgeIfExist = false,
   }) async {
-    final result = await _loader.load(
-      url: url,
-      requestHeaders: headers,
+    final result = await loadBytesWithType(
+      url,
+      headers: headers,
       checkMaxAgeIfExist: checkMaxAgeIfExist,
     );
 
     return result.bytes;
+  }
+
+  Future<BytesWithType> loadBytesWithType(
+    String url, {
+    Map<String, String> headers = const {},
+    bool checkMaxAgeIfExist = false,
+  }) async {
+    return _loader.load(
+      url: url,
+      requestHeaders: headers,
+      checkMaxAgeIfExist: checkMaxAgeIfExist,
+    );
   }
 }

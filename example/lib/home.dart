@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:taro/taro.dart';
 
@@ -16,12 +18,26 @@ class HomePage extends StatelessWidget {
         itemBuilder: (context, index) => Card(
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: SizedBox(
-              width: 200,
-              height: 200,
-              child: TaroWidget(
-                url: 'https://picsum.photos/id/$index/100/100',
-              ),
+            child: Column(
+              children: [
+                Text('Image $index'),
+                SizedBox(
+                  width: 200,
+                  height: 200,
+                  child: TaroWidget(
+                    url: 'https://picsum.photos/id/$index/100/100',
+                    builder: (context, url, imageProvider, type) {
+                      log('Image $index loaded from $type');
+                      return Image(
+                        image: imageProvider,
+                      );
+                    },
+                    placeholder: (context, url) => const Center(
+                      child: CircularProgressIndicator.adaptive(),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
