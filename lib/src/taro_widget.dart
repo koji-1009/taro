@@ -1,21 +1,23 @@
 import 'package:flutter/widgets.dart';
 import 'package:taro/src/taro.dart';
+import 'package:taro/src/taro_load_result.dart';
 
 typedef TaroWidgetBuilder = Widget Function(
   BuildContext context,
   String url,
   ImageProvider imageProvider,
-);
-
-typedef TaroPlaceholderBuilder = Widget Function(
-  BuildContext context,
-  String url,
+  TaroLoadResultType type,
 );
 
 typedef TaroErrorBuilder = Widget Function(
   BuildContext context,
   String url,
   Object error,
+);
+
+typedef TaroPlaceholderBuilder = Widget Function(
+  BuildContext context,
+  String url,
 );
 
 class TaroWidget extends StatefulWidget {
@@ -25,9 +27,9 @@ class TaroWidget extends StatefulWidget {
     this.contentDisposition,
     this.width,
     this.height,
+    this.builder,
+    this.errorBuilder,
     this.placeholder,
-    this.onError,
-    this.onSuccess,
     this.headers = const {},
     this.checkMaxAgeIfExist = false,
   });
@@ -37,9 +39,9 @@ class TaroWidget extends StatefulWidget {
   final double? width;
   final double? height;
 
-  final TaroWidgetBuilder? onSuccess;
+  final TaroWidgetBuilder? builder;
+  final TaroErrorBuilder? errorBuilder;
   final TaroPlaceholderBuilder? placeholder;
-  final TaroErrorBuilder? onError;
 
   final Map<String, String> headers;
   final bool checkMaxAgeIfExist;
@@ -49,7 +51,7 @@ class TaroWidget extends StatefulWidget {
 }
 
 class _TaroWidgetState extends State<TaroWidget> {
-  late final futureLoading = Taro.instance.loadImageProvider(
+  late final futureLoading = Taro.instance.loadImageProviderWithType(
     widget.url,
     headers: widget.headers,
     checkMaxAgeIfExist: widget.checkMaxAgeIfExist,
@@ -57,12 +59,12 @@ class _TaroWidgetState extends State<TaroWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<MemoryImage>(
+    return FutureBuilder<ImageProviderWithType>(
       future: futureLoading,
       builder: (context, snapshot) {
         final error = snapshot.error;
         if (error != null) {
-          return widget.onError?.call(
+          return widget.errorBuilder?.call(
                 context,
                 widget.url,
                 error,
@@ -77,13 +79,14 @@ class _TaroWidgetState extends State<TaroWidget> {
         if (data != null) {
           return Semantics(
             label: widget.contentDisposition,
-            child: widget.onSuccess?.call(
+            child: widget.builder?.call(
                   context,
                   widget.url,
-                  data,
+                  data.imageProvider,
+                  data.type,
                 ) ??
                 Image(
-                  image: data,
+                  image: data.imageProvider,
                   width: widget.width,
                   height: widget.height,
                 ),
