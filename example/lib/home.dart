@@ -35,6 +35,12 @@ class HomePage extends StatelessWidget {
                     placeholder: (context, url) => const Center(
                       child: CircularProgressIndicator.adaptive(),
                     ),
+                    errorBuilder: (context, url, error) {
+                      log('Image $index failed to load. error: $error');
+                      return const Center(
+                        child: Icon(Icons.error),
+                      );
+                    },
                   ),
                 ),
               ],
