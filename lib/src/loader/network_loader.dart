@@ -14,7 +14,7 @@ typedef NetworkResult = ({
 class NetworkLoader {
   const NetworkLoader({
     this.timeout = const Duration(
-      seconds: 120,
+      seconds: 600,
     ),
   });
 
