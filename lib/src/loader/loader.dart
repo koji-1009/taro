@@ -20,6 +20,12 @@ class Loader {
     _networkLoader = loader;
   }
 
+  void changeNetworkLoaderTimeout(Duration timeout) {
+    _networkLoader = NetworkLoader(
+      timeout: timeout,
+    );
+  }
+
   void changeMemoryLoader(MemoryLoader loader) {
     _memoryLoader = loader;
   }

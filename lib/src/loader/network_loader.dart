@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
+import 'package:taro/src/taro_exception.dart';
 
 typedef NetworkResult = ({
   Uint8List bytes,
@@ -10,26 +12,60 @@ typedef NetworkResult = ({
 });
 
 class NetworkLoader {
-  const NetworkLoader();
+  const NetworkLoader({
+    this.timeout = const Duration(
+      seconds: 180,
+    ),
+  });
+
+  final Duration timeout;
 
   Future<NetworkResult?> load({
     required String url,
     required Map<String, String> requestHeaders,
     required bool checkMaxAgeIfExist,
   }) async {
-    final uri = Uri.parse(url);
-    final response = await http.get(
-      uri,
-      headers: requestHeaders,
-    );
+    final Uri uri;
+    try {
+      uri = Uri.parse(url);
+    } on FormatException catch (error) {
+      throw TaroUriParseException(
+        url: url,
+        error: error,
+      );
+    }
+
+    final http.Response response;
+    try {
+      response = await http
+          .get(
+            uri,
+            headers: requestHeaders,
+          )
+          .timeout(timeout);
+    } on Exception catch (error) {
+      throw TaroNetworkException(
+        url: url,
+        error: error,
+      );
+    }
+
+    if (response.statusCode < 200 || response.statusCode >= 400) {
+      throw TaroHttpResponseException(
+        statusCode: response.statusCode,
+        reasonPhrase: response.reasonPhrase,
+        contentLength: response.contentLength,
+        headers: response.headers,
+        isRedirect: response.isRedirect,
+      );
+    }
 
     final contentType = response.headers['content-type'] ?? '';
-    final cacheControl = response.headers['cache-control']?.toLowerCase();
-
+    final cacheControl = response.headers['cache-control']?.toLowerCase() ?? '';
     DateTime? expireAt;
     if (checkMaxAgeIfExist) {
       try {
-        if (cacheControl != null) {
+        if (cacheControl.isNotEmpty) {
           final maxAgePattern = RegExp(r'max-age=(\d+)');
           final match = maxAgePattern.firstMatch(cacheControl);
           if (match != null) {

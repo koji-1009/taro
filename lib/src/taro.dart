@@ -30,6 +30,10 @@ class Taro {
     _loader.changeNetworkLoader(newLoader);
   }
 
+  set networkLoaderTimeout(Duration timeout) {
+    _loader.changeNetworkLoaderTimeout(timeout);
+  }
+
   set memoryLoader(MemoryLoader newLoader) {
     _loader.changeMemoryLoader(newLoader);
   }
