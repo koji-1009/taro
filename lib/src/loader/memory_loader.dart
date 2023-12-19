@@ -4,21 +4,31 @@ import 'package:quiver/cache.dart';
 import 'package:quiver/core.dart';
 import 'package:taro/src/taro_exception.dart';
 
-typedef MemoryCache = ({
+typedef _MemoryCache = ({
   Uint8List bytes,
   DateTime? expireAt,
 });
 
+/// `MemoryLoader` is a class that manages the loading of data into memory.
+/// It uses a cache to store data, with an optional maximum size.
 class MemoryLoader {
+  /// Creates a new instance of `MemoryLoader`.
+  /// The [maximumSize] parameter sets the maximum size of the cache.
   MemoryLoader({
     this.maximumSize,
   });
 
+  /// The maximum size of the cache.
   final int? maximumSize;
-  late final _cache = MapCache<int, MemoryCache>.lru(
+
+  /// The cache used to store data.
+  late final _cache = MapCache<int, _MemoryCache>.lru(
     maximumSize: maximumSize,
   );
 
+  /// Loads the data from the provided URL into memory.
+  /// If the data is already in the cache and has not expired, it is returned from the cache.
+  /// If the data is not in the cache or has expired, `null` is returned.
   Future<Uint8List?> load({
     required String url,
   }) async {
@@ -46,6 +56,9 @@ class MemoryLoader {
     }
   }
 
+  /// Saves the provided data to memory with the given URL and an optional expiration date.
+  /// Returns a Future that completes when the data is saved.
+  /// If the data is already in the cache, it is overwritten. Otherwise, it is added to the cache.
   Future<void> save({
     required String url,
     required Uint8List bytes,

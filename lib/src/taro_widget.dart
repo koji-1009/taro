@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:taro/src/taro.dart';
 import 'package:taro/src/taro_load_result.dart';
 
+/// A builder that creates a widget from the loaded data.
 typedef TaroWidgetBuilder = Widget Function(
   BuildContext context,
   String url,
@@ -9,17 +10,20 @@ typedef TaroWidgetBuilder = Widget Function(
   TaroLoadResultType type,
 );
 
+/// A builder that creates a widget when an error occurs while loading the data.
 typedef TaroErrorBuilder = Widget Function(
   BuildContext context,
   String url,
   Object error,
 );
 
+/// A builder that creates a placeholder widget while the data is loading.
 typedef TaroPlaceholderBuilder = Widget Function(
   BuildContext context,
   String url,
 );
 
+/// TaroWidget is a widget for loading images. It uses three loaders: Storage, Memory, and Network.
 class TaroWidget extends StatefulWidget {
   const TaroWidget({
     super.key,
@@ -34,16 +38,31 @@ class TaroWidget extends StatefulWidget {
     this.checkMaxAgeIfExist = false,
   });
 
+  /// The URL from which the widget loads data.
   final String url;
+
+  /// The content disposition of the data.
   final String? contentDisposition;
+
+  /// The width of the widget.
   final double? width;
+
+  /// The height of the widget.
   final double? height;
 
+  /// A builder that creates a widget from the loaded data.
   final TaroWidgetBuilder? builder;
+
+  /// A builder that creates a widget when an error occurs while loading the data.
   final TaroErrorBuilder? errorBuilder;
+
+  /// A builder that creates a placeholder widget while the data is loading.
   final TaroPlaceholderBuilder? placeholder;
 
+  /// A map of request headers to send with the GET request.
   final Map<String, String> headers;
+
+  /// Whether to check the max age of the data.
   final bool checkMaxAgeIfExist;
 
   @override

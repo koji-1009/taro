@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:taro/src/loader/storage_file.dart';
 
+/// Loads a `StorageFile` with the provided filename.
 Future<StorageFile?> load({
   required String filename,
 }) async {
@@ -41,6 +42,9 @@ Future<StorageFile?> load({
   );
 }
 
+/// Saves the provided bytes as a `StorageFile` with the provided filename and content type.
+///
+/// The [expireAt] parameter determines when the file should expire.
 Future<void> save({
   required String filename,
   required Uint8List bytes,
