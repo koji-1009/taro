@@ -3,10 +3,12 @@ import 'dart:typed_data';
 import 'package:taro/src/loader/memory_loader.dart';
 import 'package:taro/src/loader/network_loader.dart';
 import 'package:taro/src/loader/storage_loader.dart';
+import 'package:taro/src/taro_exception.dart';
 import 'package:taro/src/taro_load_result.dart';
 
 const maximumMemoryCacheSize = 40;
 
+/// `Loader` is a class that manages different types of loaders.
 class Loader {
   Loader();
 
@@ -16,30 +18,37 @@ class Loader {
   );
   StorageLoader _storageLoader = const StorageLoader();
 
+  /// Changes the current network loader to the provided loader.
   void changeNetworkLoader(NetworkLoader loader) {
     _networkLoader = loader;
   }
 
+  /// Changes the timeout of the current network loader.
   void changeNetworkLoaderTimeout(Duration timeout) {
     _networkLoader = NetworkLoader(
       timeout: timeout,
     );
   }
 
+  /// Changes the current memory loader to the provided loader.
   void changeMemoryLoader(MemoryLoader loader) {
     _memoryLoader = loader;
   }
 
+  /// Changes the maximum size of the current memory loader.
   void changeMemoryLoaderMaximumSize(int maximumSize) {
     _memoryLoader = MemoryLoader(
       maximumSize: maximumSize,
     );
   }
 
+  /// Changes the current storage loader to the provided loader.
   void changeStorageLoader(StorageLoader loader) {
     _storageLoader = loader;
   }
 
+  /// Loads the data from the provided URL with the given request headers.
+  /// Returns a Future that completes with a map containing the loaded bytes and the type of the load result.
   Future<({Uint8List bytes, TaroLoadResultType type})> load({
     required String url,
     required Map<String, String> requestHeaders,
@@ -100,6 +109,8 @@ class Loader {
       );
     }
 
-    throw Exception('[taro][loader] load failed');
+    throw TaroLoadException(
+      message: 'Failed to load $url',
+    );
   }
 }

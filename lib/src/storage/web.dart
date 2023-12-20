@@ -5,6 +5,7 @@ import 'package:js/js_util.dart' as js_util;
 import 'package:taro/src/loader/storage_file.dart';
 import 'package:taro/src/storage/web_cache.dart';
 
+/// Loads a `StorageFile` with the provided filename.
 Future<StorageFile?> load({
   required String filename,
 }) async {
@@ -65,6 +66,9 @@ Future<StorageFile?> load({
   );
 }
 
+/// Saves the provided bytes as a `StorageFile` with the provided filename and content type.
+///
+/// The [expireAt] parameter determines when the file should expire.
 Future<void> save({
   required String filename,
   required Uint8List bytes,

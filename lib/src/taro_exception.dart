@@ -1,7 +1,24 @@
+/// `TaroException` is a base class for all exceptions in the Taro.
 sealed class TaroException implements Exception {
   const TaroException();
 }
 
+/// `TaroLoadException` is thrown when there is an issue with loading data in the Taro library.
+final class TaroLoadException extends TaroException {
+  const TaroLoadException({
+    required this.message,
+  });
+
+  final String message;
+
+  @override
+  String toString() {
+    return 'TaroLoadException: message=$message';
+  }
+}
+
+/// `TaroMemoryException` is thrown when there is an issue with memory operations in the Taro library.
+/// It includes the maximum size of the memory and the original exception that caused the error.
 final class TaroMemoryException extends TaroException {
   const TaroMemoryException({
     required this.maximumSize,
@@ -17,6 +34,8 @@ final class TaroMemoryException extends TaroException {
   }
 }
 
+/// `TaroStorageException` is thrown when there is an issue with storage operations in the Taro library.
+/// It includes the original exception that caused the error.
 final class TaroStorageException extends TaroException {
   const TaroStorageException({
     required this.exception,
@@ -30,6 +49,8 @@ final class TaroStorageException extends TaroException {
   }
 }
 
+/// `TaroUriParseException` is thrown when there is an issue with parsing a URI in the Taro library.
+/// It includes the URL that was being parsed and the original FormatException that caused the error.
 final class TaroUriParseException extends TaroException {
   const TaroUriParseException({
     required this.url,
@@ -45,6 +66,8 @@ final class TaroUriParseException extends TaroException {
   }
 }
 
+/// `TaroNetworkException` is thrown when there is an issue with network operations in the Taro library.
+/// It includes the URL that was being accessed and the original error that caused the issue.
 final class TaroNetworkException extends TaroException {
   const TaroNetworkException({
     required this.url,
@@ -60,6 +83,9 @@ final class TaroNetworkException extends TaroException {
   }
 }
 
+/// `TaroHttpResponseException` is thrown when there is an issue with the HTTP response in the Taro library.
+/// It includes the status code, reason phrase, content length, headers, and whether the response is a redirect.
+/// This exception is thrown when the status code is not in the range 200-399.
 final class TaroHttpResponseException extends TaroException {
   const TaroHttpResponseException({
     required this.statusCode,

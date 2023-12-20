@@ -5,22 +5,31 @@ import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:taro/src/taro_exception.dart';
 
-typedef NetworkResult = ({
+typedef _NetworkResult = ({
   Uint8List bytes,
   String contentType,
   DateTime? expireAt,
 });
 
+/// `NetworkLoader` is a class that manages the loading of data from a network source.
+/// It uses the http package to send GET requests to the provided URL.
 class NetworkLoader {
+  /// Creates a new instance of `NetworkLoader`.
+  /// The [timeout] parameter sets the timeout for the GET request.
   const NetworkLoader({
     this.timeout = const Duration(
+      /// The default timeout is 3 minutes.
       seconds: 180,
     ),
   });
 
+  /// The timeout Duration for the GET request.
   final Duration timeout;
 
-  Future<NetworkResult?> load({
+  /// Loads the data from the provided URL with the given request headers.
+  /// If [checkMaxAgeIfExist] is true, the method checks the max age of the data.
+  /// Returns a Future that completes with a `NetworkResult` object.
+  Future<_NetworkResult?> load({
     required String url,
     required Map<String, String> requestHeaders,
     required bool checkMaxAgeIfExist,
