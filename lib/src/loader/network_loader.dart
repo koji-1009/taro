@@ -85,7 +85,7 @@ class NetworkLoader {
             expireAt = now.add(Duration(seconds: maxAge - age));
           }
         }
-      } catch (error) {
+      } on Exception catch (error) {
         log('[taro][network] Error parsing cache-control header: $cacheControl');
         log('[taro][network] Url: $url');
         log('[taro][network] Error: $error');
