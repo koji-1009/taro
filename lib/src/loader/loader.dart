@@ -5,6 +5,7 @@ import 'package:taro/src/loader/network_loader.dart';
 import 'package:taro/src/loader/storage_loader.dart';
 import 'package:taro/src/taro_exception.dart';
 import 'package:taro/src/taro_load_result.dart';
+import 'package:taro/src/taro_resizer.dart';
 
 const maximumMemoryCacheSize = 40;
 
@@ -53,9 +54,11 @@ class Loader {
     required String url,
     required Map<String, String> requestHeaders,
     required checkMaxAgeIfExist,
+    required TaroResizeOption resizeOption,
   }) async {
     final memoryCache = await _memoryLoader.load(
       url: url,
+      resizeOption: resizeOption,
     );
     if (memoryCache != null) {
       return (
@@ -66,6 +69,7 @@ class Loader {
 
     final storageCache = await _storageLoader.load(
       url: url,
+      resizeOption: resizeOption,
     );
     if (storageCache != null) {
       // save to memory
@@ -73,6 +77,7 @@ class Loader {
         url: url,
         bytes: storageCache.bytes,
         expireAt: storageCache.info.expireAt,
+        resizeOption: resizeOption,
       );
 
       return (
@@ -85,6 +90,7 @@ class Loader {
       url: url,
       requestHeaders: requestHeaders,
       checkMaxAgeIfExist: checkMaxAgeIfExist,
+      resizeOption: resizeOption,
     );
 
     if (networkResponse != null) {
@@ -93,6 +99,7 @@ class Loader {
         url: url,
         bytes: networkResponse.bytes,
         expireAt: networkResponse.expireAt,
+        resizeOption: resizeOption,
       );
 
       // save to storage
@@ -101,6 +108,7 @@ class Loader {
         bytes: networkResponse.bytes,
         contentType: networkResponse.contentType,
         expireAt: networkResponse.expireAt,
+        resizeOption: resizeOption,
       );
 
       return (

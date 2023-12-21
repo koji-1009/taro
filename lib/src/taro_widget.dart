@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:taro/src/taro.dart';
 import 'package:taro/src/taro_load_result.dart';
+import 'package:taro/src/taro_resizer.dart';
 
 /// A builder that creates a widget from the loaded data.
 typedef TaroWidgetBuilder = Widget Function(
@@ -28,6 +29,7 @@ class TaroWidget extends StatefulWidget {
   const TaroWidget({
     super.key,
     required this.url,
+    this.fit,
     this.contentDisposition,
     this.width,
     this.height,
@@ -36,10 +38,14 @@ class TaroWidget extends StatefulWidget {
     this.placeholder,
     this.headers = const {},
     this.checkMaxAgeIfExist = false,
+    this.resizeOption,
   });
 
   /// The URL from which the widget loads data.
   final String url;
+
+  /// How to inscribe the image into the space allocated during layout.
+  final BoxFit? fit;
 
   /// The content disposition of the data.
   final String? contentDisposition;
@@ -65,6 +71,9 @@ class TaroWidget extends StatefulWidget {
   /// Whether to check the max age of the data.
   final bool checkMaxAgeIfExist;
 
+  /// The resize option used to resize the image.
+  final TaroResizeOption? resizeOption;
+
   @override
   State<TaroWidget> createState() => _TaroWidgetState();
 }
@@ -74,6 +83,7 @@ class _TaroWidgetState extends State<TaroWidget> {
     widget.url,
     headers: widget.headers,
     checkMaxAgeIfExist: widget.checkMaxAgeIfExist,
+    resizeOption: widget.resizeOption,
   );
 
   @override
@@ -106,6 +116,7 @@ class _TaroWidgetState extends State<TaroWidget> {
                 ) ??
                 Image(
                   image: data.imageProvider,
+                  fit: widget.fit,
                   width: widget.width,
                   height: widget.height,
                 ),

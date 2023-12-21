@@ -106,3 +106,20 @@ final class TaroHttpResponseException extends TaroException {
     return 'TaroHttpException: statusCode=$statusCode, reasonPhrase=$reasonPhrase, contentLength=$contentLength, headers=$headers, isRedirect=$isRedirect';
   }
 }
+
+/// `TaroResizeException` is thrown when there is an issue with resizing an image in the Taro library.
+/// It includes the original exception that caused the error.
+/// This exception is thrown when the status code is not in the range 200-399.
+/// Compare this snippet from lib/src/taro_exception.dart:
+final class TaroResizeException extends TaroException {
+  const TaroResizeException({
+    required this.exception,
+  });
+
+  final Exception exception;
+
+  @override
+  String toString() {
+    return 'TaroResizeException: exception=$exception';
+  }
+}

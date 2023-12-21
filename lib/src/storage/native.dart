@@ -4,10 +4,12 @@ import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:taro/src/loader/storage_file.dart';
+import 'package:taro/src/taro_resizer.dart';
 
 /// Loads a `StorageFile` with the provided filename.
 Future<StorageFile?> load({
   required String filename,
+  required TaroResizeOption resizeOption,
 }) async {
   final Directory appCacheDir = await getApplicationCacheDirectory();
   final cacheDir = Directory('${appCacheDir.path}/taro');
@@ -35,6 +37,15 @@ Future<StorageFile?> load({
     return null;
   }
 
+  if (cacheFileInfo.resizeMode != resizeOption.mode ||
+      cacheFileInfo.maxWidth != resizeOption.maxWidth ||
+      cacheFileInfo.maxHeight != resizeOption.maxHeight) {
+    // cache is not same resize option
+    await cacheFile.delete();
+    await cacheInfoFile.delete();
+    return null;
+  }
+
   final bytes = await cacheFile.readAsBytes();
   return (
     bytes: bytes,
@@ -49,10 +60,15 @@ Future<void> save({
   required String filename,
   required Uint8List bytes,
   required String contentType,
-  DateTime? expireAt,
+  required DateTime? expireAt,
+  required TaroResizeOption resizeOption,
 }) async {
   final cacheFileInfo = CacheInfo(
+    contentType: contentType,
     expireAt: expireAt,
+    resizeMode: resizeOption.mode,
+    maxWidth: resizeOption.maxWidth,
+    maxHeight: resizeOption.maxHeight,
   );
 
   final appCacheDir = await getApplicationCacheDirectory();

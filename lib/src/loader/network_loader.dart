@@ -4,8 +4,9 @@ import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 import 'package:taro/src/taro_exception.dart';
+import 'package:taro/src/taro_resizer.dart';
 
-typedef _NetworkResult = ({
+typedef NetworkResult = ({
   Uint8List bytes,
   String contentType,
   DateTime? expireAt,
@@ -29,10 +30,11 @@ class NetworkLoader {
   /// Loads the data from the provided URL with the given request headers.
   /// If [checkMaxAgeIfExist] is true, the method checks the max age of the data.
   /// Returns a Future that completes with a `NetworkResult` object.
-  Future<_NetworkResult?> load({
+  Future<NetworkResult?> load({
     required String url,
     required Map<String, String> requestHeaders,
     required bool checkMaxAgeIfExist,
+    required TaroResizeOption resizeOption,
   }) async {
     final Uri uri;
     try {
@@ -93,9 +95,15 @@ class NetworkLoader {
       }
     }
 
-    return (
+    final result = await TaroResizer.resizeIfNeeded(
       bytes: response.bodyBytes,
       contentType: contentType,
+      option: resizeOption,
+    );
+
+    return (
+      bytes: result.bytes,
+      contentType: result.cotentType,
       expireAt: expireAt,
     );
   }
