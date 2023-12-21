@@ -60,7 +60,7 @@ Future<void> save({
   required String filename,
   required Uint8List bytes,
   required String contentType,
-  DateTime? expireAt,
+  required DateTime? expireAt,
   required TaroResizeOption resizeOption,
 }) async {
   final cacheFileInfo = CacheInfo(

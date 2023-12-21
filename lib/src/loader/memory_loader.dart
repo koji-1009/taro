@@ -64,7 +64,7 @@ class MemoryLoader {
   Future<void> save({
     required String url,
     required Uint8List bytes,
-    DateTime? expireAt,
+    required DateTime? expireAt,
     required TaroResizeOption resizeOption,
   }) async {
     try {

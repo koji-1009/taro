@@ -35,7 +35,7 @@ class StorageLoader {
     required String url,
     required Uint8List bytes,
     required String contentType,
-    DateTime? expireAt,
+    required DateTime? expireAt,
     required TaroResizeOption resizeOption,
   }) async {
     try {
