@@ -72,23 +72,21 @@ class NetworkLoader {
     }
 
     final contentType = response.headers['content-type'] ?? '';
-    final cacheControl = response.headers['cache-control']?.toLowerCase() ?? '';
     DateTime? expireAt;
     if (checkMaxAgeIfExist) {
+      final cacheControl =
+          response.headers['cache-control']?.toLowerCase() ?? '';
+      final headerAge = response.headers['age']?.toLowerCase() ?? '';
       try {
         if (cacheControl.isNotEmpty) {
-          final maxAgePattern = RegExp(r'max-age=(\d+)');
-          final match = maxAgePattern.firstMatch(cacheControl);
-          if (match != null) {
-            final maxAgeStr = match.group(1);
-            if (maxAgeStr != null) {
-              final maxAge = int.parse(maxAgeStr);
-              final now = DateTime.now();
-              expireAt = now.add(Duration(seconds: maxAge));
-            }
+          final maxAge = _getMaxAge(cacheControl);
+          final age = int.tryParse(headerAge) ?? 0;
+          if (maxAge != null) {
+            final now = DateTime.now();
+            expireAt = now.add(Duration(seconds: maxAge - age));
           }
         }
-      } catch (error) {
+      } on Exception catch (error) {
         log('[taro][network] Error parsing cache-control header: $cacheControl');
         log('[taro][network] Url: $url');
         log('[taro][network] Error: $error');
@@ -106,5 +104,18 @@ class NetworkLoader {
       contentType: result.cotentType,
       expireAt: expireAt,
     );
+  }
+
+  /// Returns the max age from the cache-control header.
+  int? _getMaxAge(String cacheControl) {
+    final maxAgePattern = RegExp(r'max-age=(\d+)');
+    final match = maxAgePattern.firstMatch(cacheControl);
+    if (match != null) {
+      final maxAgeStr = match.group(1);
+      if (maxAgeStr != null) {
+        return int.parse(maxAgeStr);
+      }
+    }
+    return null;
   }
 }
