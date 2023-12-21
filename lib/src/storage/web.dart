@@ -4,10 +4,12 @@ import 'dart:typed_data';
 import 'package:js/js_util.dart' as js_util;
 import 'package:taro/src/loader/storage_file.dart';
 import 'package:taro/src/storage/web_cache.dart';
+import 'package:taro/src/taro_resizer.dart';
 
 /// Loads a `StorageFile` with the provided filename.
 Future<StorageFile?> load({
   required String filename,
+  required TaroResizeOption resizeOption,
 }) async {
   final cacheFileName = filename.toJS;
   final cacheFileInfoFile = 'info_$filename'.toJS;
@@ -74,9 +76,14 @@ Future<void> save({
   required Uint8List bytes,
   required String contentType,
   DateTime? expireAt,
+  required TaroResizeOption resizeOption,
 }) async {
   final cacheFileInfo = CacheInfo(
+    contentType: contentType,
     expireAt: expireAt,
+    resizeMode: resizeOption.mode,
+    maxWidth: resizeOption.maxWidth,
+    maxHeight: resizeOption.maxHeight,
   );
 
   final cacheFileName = filename.toJS;

@@ -7,6 +7,7 @@ Taro is a Flutter library for loading data from various sources. It provides a s
 - Load image as byte arrays or as `MemoryImage` objects.
 - Set custom headers for GET requests.
 - Check the max age of the data.
+- Reduce the size of the data by resizing the image.
 
 ## Usage
 
@@ -31,3 +32,11 @@ final imageProvider = await taro.loadImageProvider(
   checkMaxAgeIfExist: true,
 );
 ```
+
+## Depend libraries
+
+- [image](https://pub.dev/packages/image)
+- [http](https://pub.dev/packages/http)
+- [js](https://pub.dev/packages/js)
+- [path_provider](https://pub.dev/packages/path_provider)
+- [quiver](https://pub.dev/packages/quiver)

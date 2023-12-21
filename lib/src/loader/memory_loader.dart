@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:quiver/cache.dart';
 import 'package:quiver/core.dart';
 import 'package:taro/src/taro_exception.dart';
+import 'package:taro/src/taro_resizer.dart';
 
 typedef _MemoryCache = ({
   Uint8List bytes,
@@ -31,9 +32,10 @@ class MemoryLoader {
   /// If the data is not in the cache or has expired, `null` is returned.
   Future<Uint8List?> load({
     required String url,
+    required TaroResizeOption resizeOption,
   }) async {
     try {
-      final key = hashObjects([url]);
+      final key = hashObjects([url, resizeOption]);
       final cache = await _cache.get(key);
       if (cache == null) {
         // cache is not found
@@ -63,9 +65,10 @@ class MemoryLoader {
     required String url,
     required Uint8List bytes,
     DateTime? expireAt,
+    required TaroResizeOption resizeOption,
   }) async {
     try {
-      final key = hashObjects([url]);
+      final key = hashObjects([url, resizeOption]);
       await _cache.set(
         key,
         (
