@@ -74,12 +74,13 @@ class NetworkLoader {
     final contentType = response.headers['content-type'] ?? '';
     DateTime? expireAt;
     if (checkMaxAgeIfExist) {
-      final cacheControl = response.headers['cache-control']?.toLowerCase() ?? '';
+      final cacheControl =
+          response.headers['cache-control']?.toLowerCase() ?? '';
       final headerAge = response.headers['age']?.toLowerCase() ?? '';
       try {
         if (cacheControl.isNotEmpty) {
           final maxAge = _getMaxAge(cacheControl);
-          final age = int.tryParse(headerAge) ?? 0 ;
+          final age = int.tryParse(headerAge) ?? 0;
           if (maxAge != null) {
             final now = DateTime.now();
             expireAt = now.add(Duration(seconds: maxAge - age));
