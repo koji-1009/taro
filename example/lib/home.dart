@@ -25,7 +25,7 @@ class HomePage extends StatelessWidget {
                   width: 200,
                   height: 200,
                   child: TaroWidget(
-                    url: 'https://cat-pics-api.web.app/cat/image_${'$index'.padLeft(3, '0')}.webp',
+                    url: 'https://picsum.photos/id/$index/100/100',
                     builder: (context, url, imageProvider, type) {
                       log('Image $index loaded from $type');
                       return Image(
