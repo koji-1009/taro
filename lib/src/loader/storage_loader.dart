@@ -19,7 +19,7 @@ class StorageLoader {
   }) async {
     try {
       return storage.load(
-        filename: '${hashObjects([url])}',
+        filename: '${hashObjects([url, resizeOption])}',
         resizeOption: resizeOption,
       );
     } on Exception catch (exception) {
@@ -40,7 +40,7 @@ class StorageLoader {
   }) async {
     try {
       return storage.save(
-        filename: '${hashObjects([url])}',
+        filename: '${hashObjects([url, resizeOption])}',
         bytes: bytes,
         contentType: contentType,
         expireAt: expireAt,
