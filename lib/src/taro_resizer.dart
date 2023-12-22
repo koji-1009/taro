@@ -5,6 +5,7 @@ import 'package:image/image.dart' as img;
 import 'package:taro/src/taro_exception.dart';
 
 /// The [TaroResizeMode] enum is used to determine how images are resized.
+/// Please refer to [https://pub.dev/packages/image] for supported formats.
 enum TaroResizeMode {
   /// The image is not resized.
   skip,
@@ -12,11 +13,23 @@ enum TaroResizeMode {
   /// The image is resized to the original contentType.
   original,
 
+  /// The image is resized to a gif.
+  gif,
+
+  /// The image is resized to a jpg.
+  jpeg,
+
   /// The image is resized to a png.
   png,
 
-  /// The image is resized to a jpg.
-  jpg,
+  /// The image is resized to a bmp.
+  bmp,
+
+  /// The image is resized to a ico.
+  ico,
+
+  /// The image is resized to a tiff.
+  tiff,
 }
 
 /// The [TaroResizeException] class is used to throw exceptions when resizing images.
@@ -36,10 +49,6 @@ class TaroResizer {
   TaroResizer._();
 
   /// Resize the image if needed.
-  /// If [resizeOption.mode] is [TaroResizeMode.skip], the image is not resized.
-  /// If [resizeOption.mode] is [TaroResizeMode.original], the image is resized to the original contentType.
-  /// If [resizeOption.mode] is [TaroResizeMode.png], the image is resized to a png.
-  /// If [resizeOption.mode] is [TaroResizeMode.jpg], the image is resized to a jpg.
   static Future<({Uint8List bytes, String cotentType})> resizeIfNeeded({
     required Uint8List bytes,
     required String contentType,
@@ -60,11 +69,9 @@ class TaroResizer {
       );
     }
 
-    final decodeMaxWidth = min(resizeOption.maxWidth ?? 0, originalImage.width);
-    final decodeMaxHeight =
-        min(resizeOption.maxHeight ?? 0, originalImage.height);
-    if (decodeMaxWidth == originalImage.width &&
-        decodeMaxHeight == originalImage.height) {
+    final maxWidth = min(resizeOption.maxWidth ?? 0, originalImage.width);
+    final maxHeight = min(resizeOption.maxHeight ?? 0, originalImage.height);
+    if (maxWidth == originalImage.width && maxHeight == originalImage.height) {
       // do nothing
       return (
         bytes: bytes,
@@ -75,15 +82,59 @@ class TaroResizer {
     final cmd = img.Command()
       ..image(originalImage)
       ..copyResize(
-        width: decodeMaxWidth,
-        height: decodeMaxHeight,
+        width: maxWidth,
+        height: maxHeight,
       );
-    if (resizeOption.mode == TaroResizeMode.original) {
-      // do nothing
-    } else if (resizeOption.mode == TaroResizeMode.png) {
-      cmd.encodePng();
-    } else if (resizeOption.mode == TaroResizeMode.jpg) {
-      cmd.encodeJpg();
+
+    final String encodeImageType;
+    switch (resizeOption.mode) {
+      case TaroResizeMode.skip:
+        // this case is not possible
+        throw Exception('This case is not possible.');
+      case TaroResizeMode.original:
+        switch (contentType) {
+          case 'image/gif':
+          case 'image/jpeg':
+          case 'image/png':
+          case 'image/bmp':
+          case 'image/x-icon':
+          case 'image/tiff':
+            encodeImageType = contentType;
+          default:
+            encodeImageType = 'image/png';
+        }
+      case TaroResizeMode.gif:
+        encodeImageType = 'image/gif';
+      case TaroResizeMode.jpeg:
+        encodeImageType = 'image/jpeg';
+      case TaroResizeMode.png:
+        encodeImageType = 'image/png';
+      case TaroResizeMode.bmp:
+        encodeImageType = 'image/bmp';
+      case TaroResizeMode.ico:
+        encodeImageType = 'image/x-icon';
+      case TaroResizeMode.tiff:
+        encodeImageType = 'image/tiff';
+      default:
+        encodeImageType = 'image/png';
+    }
+
+    switch (encodeImageType) {
+      case 'image/gif':
+        cmd.encodeGif();
+      case 'image/jpeg':
+        cmd.encodeJpg();
+      case 'image/png':
+        cmd.encodePng();
+      case 'image/bmp':
+        cmd.encodeBmp();
+      case 'image/x-icon':
+        cmd.encodeIco();
+      case 'image/tiff':
+        cmd.encodeTiff();
+      default:
+        // if the contentType is not supported, encode the image to png
+        cmd.encodePng();
     }
 
     final Uint8List? result;
@@ -103,11 +154,7 @@ class TaroResizer {
 
     return (
       bytes: result,
-      cotentType: switch (resizeOption.mode) {
-        TaroResizeMode.skip || TaroResizeMode.original => contentType,
-        TaroResizeMode.png => 'image/png',
-        TaroResizeMode.jpg => 'image/jpeg',
-      },
+      cotentType: encodeImageType,
     );
   }
 }
