@@ -16,12 +16,10 @@ class TaroStorageLoader {
     required TaroResizeOption resizeOption,
   }) async {
     try {
-      final bytes = await storage.load(
+      return await storage.load(
         filename: '${hashObjects([url, resizeOption])}',
         resizeOption: resizeOption,
       );
-
-      return bytes;
     } on Exception catch (exception) {
       throw TaroStorageException(
         exception: exception,
@@ -38,7 +36,7 @@ class TaroStorageLoader {
     required TaroResizeOption resizeOption,
   }) async {
     try {
-      return storage.save(
+      return await storage.save(
         filename: '${hashObjects([url, resizeOption])}',
         bytes: bytes,
         contentType: contentType,

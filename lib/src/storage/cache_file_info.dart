@@ -31,23 +31,24 @@ class CacheFileInfo {
     final json = jsonDecode(jsonStr) as Map<String, dynamic>;
 
     return CacheFileInfo(
-      contentType: json['contentType'] as String,
-      expireAt: json['expireAt'] == null
+      contentType: json['content_type'] as String,
+      expireAt: json['expire_at'] == null
           ? null
-          : DateTime.parse(json['expireAt'] as String),
+          : DateTime.parse(json['expire_at'] as String),
       resizeMode: TaroResizeMode.values.firstWhere(
-          (element) => element.name == json['resizeMode'],
-          orElse: () => TaroResizeMode.skip),
-      maxWidth: json['maxWidth'] as int?,
-      maxHeight: json['maxHeight'] as int?,
+        (element) => element.name == json['resize_mode'],
+        orElse: () => TaroResizeMode.skip,
+      ),
+      maxWidth: json['max_width'] as int?,
+      maxHeight: json['max_height'] as int?,
     );
   }
 
   String toJson() => jsonEncode({
-        'contentType': contentType,
-        'expireAt': expireAt?.toUtc().toIso8601String(),
-        'resizeMode': resizeMode.name,
-        'maxWidth': maxWidth,
-        'maxHeight': maxHeight,
+        'content_type': contentType,
+        'expire_at': expireAt?.toUtc().toIso8601String(),
+        'resize_mode': resizeMode.name,
+        'max_width': maxWidth,
+        'max_height': maxHeight,
       });
 }
