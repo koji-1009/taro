@@ -1,27 +1,27 @@
 import 'dart:typed_data';
 
 import 'package:quiver/core.dart';
-import 'package:taro/src/loader/storage_file.dart';
 import 'package:taro/src/storage/shared.dart' as storage;
 import 'package:taro/src/taro_exception.dart';
 import 'package:taro/src/taro_resizer.dart';
 
-/// `StorageLoader` is a class that manages the loading and saving of data from and to storage.
-class StorageLoader {
-  /// Creates a new instance of `StorageLoader`.
-  const StorageLoader();
+/// The [TaroStorageLoader] class is used to load and save data from storage.
+class TaroStorageLoader {
+  const TaroStorageLoader();
 
   /// Loads the data from the provided URL from storage.
-  /// Returns a Future that completes with a `StorageFile` object.
-  Future<StorageFile?> load({
+  /// Returns a Future that completes with the data.
+  Future<Uint8List?> load({
     required String url,
     required TaroResizeOption resizeOption,
   }) async {
     try {
-      return storage.load(
+      final bytes = await storage.load(
         filename: '${hashObjects([url, resizeOption])}',
         resizeOption: resizeOption,
       );
+
+      return bytes;
     } on Exception catch (exception) {
       throw TaroStorageException(
         exception: exception,
@@ -29,8 +29,7 @@ class StorageLoader {
     }
   }
 
-  /// Saves the provided data to storage with the given URL, content type, and an optional expiration date.
-  /// Returns a Future that completes when the data is saved.
+  /// Saves the data to the provided URL to storage.
   Future<void> save({
     required String url,
     required Uint8List bytes,

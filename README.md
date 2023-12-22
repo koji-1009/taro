@@ -1,7 +1,9 @@
 # Taro
 
-Taro is a Flutter library for loading data from various sources.
-It provides a set of classes and methods for loading data from network and storage.
+`Taro` is a library for loading data from network and saving it to storage to speed up data loading.
+By using `TaroImage`, you can also use the memory cache by CacheImage of Flutter.
+
+This library aims to be easy to use and maintain by reducing the amount of dependent libraries and code.
 
 ## Features
 

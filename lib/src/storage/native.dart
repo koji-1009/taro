@@ -3,11 +3,11 @@ import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:taro/src/loader/storage_file.dart';
+import 'package:taro/src/storage/cache_file_info.dart';
 import 'package:taro/src/taro_resizer.dart';
 
-/// Loads a `StorageFile` with the provided filename.
-Future<StorageFile?> load({
+/// Load [Uint8List] from storage.
+Future<Uint8List?> load({
   required String filename,
   required TaroResizeOption resizeOption,
 }) async {
@@ -27,7 +27,7 @@ Future<StorageFile?> load({
   }
 
   final cacheInfoFileData = await cacheInfoFile.readAsString();
-  final cacheFileInfo = CacheInfo.fromJson(cacheInfoFileData);
+  final cacheFileInfo = CacheFileInfo.fromJson(cacheInfoFileData);
 
   final now = DateTime.now();
   if (cacheFileInfo.expireAt != null && cacheFileInfo.expireAt!.isBefore(now)) {
@@ -47,15 +47,10 @@ Future<StorageFile?> load({
   }
 
   final bytes = await cacheFile.readAsBytes();
-  return (
-    bytes: bytes,
-    info: cacheFileInfo,
-  );
+  return bytes;
 }
 
-/// Saves the provided bytes as a `StorageFile` with the provided filename and content type.
-///
-/// The [expireAt] parameter determines when the file should expire.
+/// Save [Uint8List] to storage.
 Future<void> save({
   required String filename,
   required Uint8List bytes,
@@ -63,7 +58,7 @@ Future<void> save({
   required DateTime? expireAt,
   required TaroResizeOption resizeOption,
 }) async {
-  final cacheFileInfo = CacheInfo(
+  final cacheFileInfo = CacheFileInfo(
     contentType: contentType,
     expireAt: expireAt,
     resizeMode: resizeOption.mode,

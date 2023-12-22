@@ -1,18 +1,10 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:taro/src/taro_resizer.dart';
 
-typedef StorageFile = ({
-  Uint8List bytes,
-  CacheInfo info,
-});
-
-/// `CacheInfo` is a class that manages the cache information for a `StorageFile`.
-class CacheInfo {
-  /// Creates a new instance of `CacheInfo`.
-  /// The [expireAt] parameter sets the expiration date of the cache.
-  const CacheInfo({
+/// The cache file information which saved in storage.
+class CacheFileInfo {
+  const CacheFileInfo({
     required this.contentType,
     required this.expireAt,
     required this.resizeMode,
@@ -35,11 +27,10 @@ class CacheInfo {
   /// The maximum height of the cache.
   final int? maxHeight;
 
-  /// Creates a new instance of `CacheInfo` from a JSON string.
-  factory CacheInfo.fromJson(String jsonStr) {
+  factory CacheFileInfo.fromJson(String jsonStr) {
     final json = jsonDecode(jsonStr) as Map<String, dynamic>;
 
-    return CacheInfo(
+    return CacheFileInfo(
       contentType: json['contentType'] as String,
       expireAt: json['expireAt'] == null
           ? null
@@ -52,7 +43,6 @@ class CacheInfo {
     );
   }
 
-  /// Converts the `CacheInfo` object to a JSON string.
   String toJson() => jsonEncode({
         'contentType': contentType,
         'expireAt': expireAt?.toUtc().toIso8601String(),

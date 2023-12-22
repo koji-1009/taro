@@ -1,9 +1,9 @@
-/// `TaroException` is a base class for all exceptions in the Taro.
+/// [TaroException] is a base class for all exceptions in the Taro.
 sealed class TaroException implements Exception {
   const TaroException();
 }
 
-/// `TaroLoadException` is thrown when there is an issue with loading data in the Taro library.
+/// [TaroLoadException] is thrown when there is an issue with loading data in the Taro library.
 final class TaroLoadException extends TaroException {
   const TaroLoadException({
     required this.message,
@@ -17,7 +17,7 @@ final class TaroLoadException extends TaroException {
   }
 }
 
-/// `TaroMemoryException` is thrown when there is an issue with memory operations in the Taro library.
+/// [TaroMemoryException] is thrown when there is an issue with memory operations in the Taro library.
 /// It includes the maximum size of the memory and the original exception that caused the error.
 final class TaroMemoryException extends TaroException {
   const TaroMemoryException({
@@ -34,7 +34,7 @@ final class TaroMemoryException extends TaroException {
   }
 }
 
-/// `TaroStorageException` is thrown when there is an issue with storage operations in the Taro library.
+/// [TaroStorageException] is thrown when there is an issue with storage operations in the Taro library.
 /// It includes the original exception that caused the error.
 final class TaroStorageException extends TaroException {
   const TaroStorageException({
@@ -49,7 +49,7 @@ final class TaroStorageException extends TaroException {
   }
 }
 
-/// `TaroUriParseException` is thrown when there is an issue with parsing a URI in the Taro library.
+/// [TaroUriParseException] is thrown when there is an issue with parsing a URI in the Taro library.
 /// It includes the URL that was being parsed and the original FormatException that caused the error.
 final class TaroUriParseException extends TaroException {
   const TaroUriParseException({
@@ -66,7 +66,7 @@ final class TaroUriParseException extends TaroException {
   }
 }
 
-/// `TaroNetworkException` is thrown when there is an issue with network operations in the Taro library.
+/// [TaroNetworkException] is thrown when there is an issue with network operations in the Taro library.
 /// It includes the URL that was being accessed and the original error that caused the issue.
 final class TaroNetworkException extends TaroException {
   const TaroNetworkException({
@@ -83,7 +83,7 @@ final class TaroNetworkException extends TaroException {
   }
 }
 
-/// `TaroHttpResponseException` is thrown when there is an issue with the HTTP response in the Taro library.
+/// [TaroHttpResponseException] is thrown when there is an issue with the HTTP response in the Taro library.
 /// It includes the status code, reason phrase, content length, headers, and whether the response is a redirect.
 /// This exception is thrown when the status code is not in the range 200-399.
 final class TaroHttpResponseException extends TaroException {
@@ -107,7 +107,7 @@ final class TaroHttpResponseException extends TaroException {
   }
 }
 
-/// `TaroEmptyResponseException` is thrown when there is an issue with the HTTP response in the Taro library.
+/// [TaroEmptyResponseException] is thrown when there is an issue with the HTTP response in the Taro library.
 /// It includes the URL that was being accessed.
 /// This exception is thrown when the response body is empty.
 final class TaroEmptyResponseException extends TaroException {
@@ -123,7 +123,7 @@ final class TaroEmptyResponseException extends TaroException {
   }
 }
 
-/// `TaroResizeException` is thrown when there is an issue with resizing an image in the Taro library.
+/// [TaroResizeException] is thrown when there is an issue with resizing an image in the Taro library.
 /// It includes the original exception that caused the error.
 /// This exception is thrown when the status code is not in the range 200-399.
 /// Compare this snippet from lib/src/taro_exception.dart:

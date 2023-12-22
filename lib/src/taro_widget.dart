@@ -19,7 +19,8 @@ typedef TaroPlaceholderBuilder = Widget Function(
   String url,
 );
 
-/// TaroWidget is a widget for loading images. It uses three loaders: Storage, Memory, and Network.
+/// [TaroWidget] is a widget for loading images. It uses two loaders: Storage and Network.
+/// Images that have been loaded once are cached in [ImageCache].
 class TaroWidget extends StatelessWidget {
   const TaroWidget({
     super.key,
