@@ -107,6 +107,22 @@ final class TaroHttpResponseException extends TaroException {
   }
 }
 
+/// `TaroEmptyResponseException` is thrown when there is an issue with the HTTP response in the Taro library.
+/// It includes the URL that was being accessed.
+/// This exception is thrown when the response body is empty.
+final class TaroEmptyResponseException extends TaroException {
+  const TaroEmptyResponseException({
+    required this.url,
+  });
+
+  final String url;
+
+  @override
+  String toString() {
+    return 'TaroEmptyResponseException: url=$url';
+  }
+}
+
 /// `TaroResizeException` is thrown when there is an issue with resizing an image in the Taro library.
 /// It includes the original exception that caused the error.
 /// This exception is thrown when the status code is not in the range 200-399.

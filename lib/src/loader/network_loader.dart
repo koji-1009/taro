@@ -48,12 +48,7 @@ class NetworkLoader {
 
     final http.Response response;
     try {
-      response = await http
-          .get(
-            uri,
-            headers: requestHeaders,
-          )
-          .timeout(timeout);
+      response = await http.get(uri, headers: requestHeaders).timeout(timeout);
     } on Exception catch (error) {
       throw TaroNetworkException(
         url: url,
@@ -62,12 +57,20 @@ class NetworkLoader {
     }
 
     if (response.statusCode < 200 || response.statusCode >= 400) {
+      // statusCode is not in the range of 200 to 399
       throw TaroHttpResponseException(
         statusCode: response.statusCode,
         reasonPhrase: response.reasonPhrase,
         contentLength: response.contentLength,
         headers: response.headers,
         isRedirect: response.isRedirect,
+      );
+    }
+
+    if (response.bodyBytes.isEmpty) {
+      // bodyBytes is empty
+      throw TaroEmptyResponseException(
+        url: url,
       );
     }
 

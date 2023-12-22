@@ -1,10 +1,11 @@
 # Taro
 
-Taro is a Flutter library for loading data from various sources. It provides a set of classes and methods for loading data from network, memory, and storage.
+Taro is a Flutter library for loading data from various sources.
+It provides a set of classes and methods for loading data from network and storage.
 
 ## Features
 
-- Load image as byte arrays or as `MemoryImage` objects.
+- Load image as byte arrays or as `TaroImage` object.
 - Set custom headers for GET requests.
 - Check the max age of the data.
 - Reduce the size of the data by resizing the image.
@@ -16,7 +17,7 @@ Here's a basic example of how to use Taro:
 ```dart
 final taro = Taro.instance;
 
-final bytes = await taro.loadBytes(
+final Uint8List bytes = await taro.loadBytes(
   'https://example.com/image',
   headers: {
     'custom-header': 'value',
@@ -24,7 +25,7 @@ final bytes = await taro.loadBytes(
   checkMaxAgeIfExist: true,
 );
 
-final imageProvider = await taro.loadImageProvider(
+final TaroImage imageProvider = taro.loadImageProvider(
   'https://example.com/image',
   headers: {
     'custom-header': 'value',
