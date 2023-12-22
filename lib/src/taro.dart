@@ -95,7 +95,7 @@ class Taro {
     return result.bytes;
   }
 
-  /// Loads the data from the provided URL and returns it as a [BytesWithType] object and the type of the load result.
+  /// Loads the data from the provided URL and returns it as a byte array with the [TaroLoaderType].
   /// The [headers] parameter is a map of request headers to send with the GET request.
   /// If [checkMaxAgeIfExist] is true, the method checks the max age of the data.
   /// The [resizeOption] parameter is used to resize the image. If it is not provided, the default resize option is used.
