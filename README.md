@@ -14,26 +14,68 @@ This library aims to be easy to use and maintain by reducing the amount of depen
 
 ## Usage
 
-Here's a basic example of how to use Taro:
+Here's a basic example of how to use `Taro`:
 
 ```dart
-final taro = Taro.instance;
+Future<void> main() async {
+  // load image as byte arrays
+  final Uint8List bytes = await Taro.instance.loadBytes(
+    'https://example.com/image',
+    headers: {
+      'custom-header': 'value',
+    },
+  );
 
-final Uint8List bytes = await taro.loadBytes(
-  'https://example.com/image',
-  headers: {
-    'custom-header': 'value',
-  },
-  checkMaxAgeIfExist: true,
-);
+  // load image as TaroImage
+  final TaroImage imageProvider = taro.loadImageProvider(
+    'https://example.com/image',
+    headers: {
+      'custom-header': 'value',
+    },
+  );
+}
+```
 
-final TaroImage imageProvider = taro.loadImageProvider(
-  'https://example.com/image',
-  headers: {
-    'custom-header': 'value',
-  },
-  checkMaxAgeIfExist: true,
-);
+When using it as a widget, use `TaroWidget`.
+
+```dart
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Taro demo'),
+      ),
+      body: Center(
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: SizedBox(
+              width: 200,
+              height: 200,
+              child: TaroWidget(
+                url: 'https://example.com/image.jpg',
+                placeholder: (context, url) => const Center(
+                  child: CircularProgressIndicator.adaptive(),
+                ),
+                errorBuilder: (context, url, error, stackTrace) {
+                  log('Image $url failed to load.');
+                  log('error: $error');
+                  log('stackTrace: $stackTrace');
+                  return const Center(
+                    child: Icon(Icons.error),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
 ```
 
 ## Depend libraries
