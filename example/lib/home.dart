@@ -26,17 +26,13 @@ class HomePage extends StatelessWidget {
                   height: 200,
                   child: TaroWidget(
                     url: 'https://picsum.photos/id/$index/100/100',
-                    builder: (context, url, imageProvider, type) {
-                      log('Image $index loaded from $type');
-                      return Image(
-                        image: imageProvider,
-                      );
-                    },
                     placeholder: (context, url) => const Center(
                       child: CircularProgressIndicator.adaptive(),
                     ),
-                    errorBuilder: (context, url, error) {
-                      log('Image $index failed to load. error: $error');
+                    errorBuilder: (context, url, error, stackTrace) {
+                      log('Image $index failed to load.');
+                      log('error: $error');
+                      log('stackTrace: $stackTrace');
                       return const Center(
                         child: Icon(Icons.error),
                       );
