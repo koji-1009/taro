@@ -7,7 +7,7 @@ import 'package:taro/src/taro.dart';
 import 'package:taro/src/taro_resizer.dart';
 
 /// TaroImage is an [ImageProvider] that loads images from the [Taro].
-/// It uses three loaders: Storage, Memory, and Network.
+/// It uses two loaders: Storage and Network.
 /// The [url] parameter is the URL from which the image is loaded.
 /// The [scale] parameter is the scale to place in the [ImageInfo] object of the image.
 /// The [headers] parameter is the HTTP headers that will be used in the GET request.

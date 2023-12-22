@@ -1,44 +1,45 @@
 import 'dart:typed_data';
 
-import 'package:taro/src/loader/network_loader.dart';
-import 'package:taro/src/loader/storage_loader.dart';
 import 'package:taro/src/taro_exception.dart';
-import 'package:taro/src/taro_load_result.dart';
+import 'package:taro/src/taro_loader_network.dart';
+import 'package:taro/src/taro_loader_storage.dart';
+import 'package:taro/src/taro_loader_type.dart';
 import 'package:taro/src/taro_resizer.dart';
 
-/// `Loader` is a class that manages different types of loaders.
-class Loader {
-  Loader();
+/// [TaroLoader] is a class that manages different types of loaders.
+class TaroLoader {
+  TaroLoader();
 
-  NetworkLoader _networkLoader = const NetworkLoader();
-  StorageLoader _storageLoader = const StorageLoader();
+  TaroNetworkLoader _networkLoader = const TaroNetworkLoader();
+  TaroStorageLoader _storageLoader = const TaroStorageLoader();
 
   /// Changes the current network loader to the provided loader.
-  void changeNetworkLoader(NetworkLoader loader) {
+  void changeNetworkLoader(TaroNetworkLoader loader) {
     _networkLoader = loader;
   }
 
   /// Changes the current storage loader to the provided loader.
-  void changeStorageLoader(StorageLoader loader) {
+  void changeStorageLoader(TaroStorageLoader loader) {
     _storageLoader = loader;
   }
 
   /// Loads the data from the provided URL with the given request headers.
-  /// Returns a Future that completes with a map containing the loaded bytes and the type of the load result.
-  Future<({Uint8List bytes, TaroLoadResultType type})> load({
+  /// If [checkMaxAgeIfExist] is true, the method checks the max age of the data.
+  /// The [resizeOption] parameter is used to resize the image. If it is not provided, the default resize option is used.
+  Future<({Uint8List bytes, TaroLoaderType type})> load({
     required String url,
     required Map<String, String> requestHeaders,
     required checkMaxAgeIfExist,
     required TaroResizeOption resizeOption,
   }) async {
-    final storageCache = await _storageLoader.load(
+    final storageBytes = await _storageLoader.load(
       url: url,
       resizeOption: resizeOption,
     );
-    if (storageCache != null) {
+    if (storageBytes != null) {
       return (
-        bytes: storageCache.bytes,
-        type: TaroLoadResultType.storage,
+        bytes: storageBytes,
+        type: TaroLoaderType.storage,
       );
     }
 
@@ -61,7 +62,7 @@ class Loader {
 
       return (
         bytes: networkResponse.bytes,
-        type: TaroLoadResultType.network,
+        type: TaroLoaderType.network,
       );
     }
 

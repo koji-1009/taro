@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:image/image.dart' as img;
 import 'package:taro/src/taro_exception.dart';
 
-/// The `TaroResizeMode` enum is used to determine how images are resized.
+/// The [TaroResizeMode] enum is used to determine how images are resized.
 enum TaroResizeMode {
   /// The image is not resized.
   skip,
@@ -19,7 +19,7 @@ enum TaroResizeMode {
   jpg,
 }
 
-/// The `TaroResizeException` class is used to throw exceptions when resizing images.
+/// The [TaroResizeException] class is used to throw exceptions when resizing images.
 typedef TaroResizeOption = ({
   /// The resize mode of the image.
   TaroResizeMode mode,
@@ -31,18 +31,21 @@ typedef TaroResizeOption = ({
   int? maxHeight,
 });
 
-/// The `TaroResizer` class is used to resize images.
+/// The [TaroResizer] class is used to resize images.
 class TaroResizer {
   TaroResizer._();
 
-  /// Creates a new instance of the `TaroResizer` class.
-  /// The [resizeOption] parameter sets the resize option of the resizer.
+  /// Resize the image if needed.
+  /// If [resizeOption.mode] is [TaroResizeMode.skip], the image is not resized.
+  /// If [resizeOption.mode] is [TaroResizeMode.original], the image is resized to the original contentType.
+  /// If [resizeOption.mode] is [TaroResizeMode.png], the image is resized to a png.
+  /// If [resizeOption.mode] is [TaroResizeMode.jpg], the image is resized to a jpg.
   static Future<({Uint8List bytes, String cotentType})> resizeIfNeeded({
     required Uint8List bytes,
     required String contentType,
-    required TaroResizeOption option,
+    required TaroResizeOption resizeOption,
   }) async {
-    if (option.mode == TaroResizeMode.skip) {
+    if (resizeOption.mode == TaroResizeMode.skip) {
       // do nothing
       return (
         bytes: bytes,
@@ -57,8 +60,9 @@ class TaroResizer {
       );
     }
 
-    final decodeMaxWidth = min(option.maxWidth ?? 0, originalImage.width);
-    final decodeMaxHeight = min(option.maxHeight ?? 0, originalImage.height);
+    final decodeMaxWidth = min(resizeOption.maxWidth ?? 0, originalImage.width);
+    final decodeMaxHeight =
+        min(resizeOption.maxHeight ?? 0, originalImage.height);
     if (decodeMaxWidth == originalImage.width &&
         decodeMaxHeight == originalImage.height) {
       // do nothing
@@ -74,11 +78,11 @@ class TaroResizer {
         width: decodeMaxWidth,
         height: decodeMaxHeight,
       );
-    if (option.mode == TaroResizeMode.original) {
+    if (resizeOption.mode == TaroResizeMode.original) {
       // do nothing
-    } else if (option.mode == TaroResizeMode.png) {
+    } else if (resizeOption.mode == TaroResizeMode.png) {
       cmd.encodePng();
-    } else if (option.mode == TaroResizeMode.jpg) {
+    } else if (resizeOption.mode == TaroResizeMode.jpg) {
       cmd.encodeJpg();
     }
 
@@ -99,7 +103,7 @@ class TaroResizer {
 
     return (
       bytes: result,
-      cotentType: switch (option.mode) {
+      cotentType: switch (resizeOption.mode) {
         TaroResizeMode.skip || TaroResizeMode.original => contentType,
         TaroResizeMode.png => 'image/png',
         TaroResizeMode.jpg => 'image/jpeg',

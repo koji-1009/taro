@@ -6,20 +6,12 @@ import 'package:http/http.dart' as http;
 import 'package:taro/src/taro_exception.dart';
 import 'package:taro/src/taro_resizer.dart';
 
-typedef NetworkResult = ({
-  Uint8List bytes,
-  String contentType,
-  DateTime? expireAt,
-});
-
-/// `NetworkLoader` is a class that manages the loading of data from a network source.
+/// [TaroNetworkLoader] is a class that manages the loading of data from a network source.
 /// It uses the http package to send GET requests to the provided URL.
-class NetworkLoader {
-  /// Creates a new instance of `NetworkLoader`.
-  /// The [timeout] parameter sets the timeout for the GET request.
-  const NetworkLoader({
+class TaroNetworkLoader {
+  const TaroNetworkLoader({
+    /// The default timeout is 3 minutes.
     this.timeout = const Duration(
-      /// The default timeout is 3 minutes.
       seconds: 180,
     ),
   });
@@ -29,8 +21,8 @@ class NetworkLoader {
 
   /// Loads the data from the provided URL with the given request headers.
   /// If [checkMaxAgeIfExist] is true, the method checks the max age of the data.
-  /// Returns a Future that completes with a `NetworkResult` object.
-  Future<NetworkResult?> load({
+  /// The [resizeOption] parameter is used to resize the image. If it is not provided, the default resize option is used.
+  Future<({Uint8List bytes, String contentType, DateTime? expireAt})?> load({
     required String url,
     required Map<String, String> requestHeaders,
     required bool checkMaxAgeIfExist,
@@ -99,7 +91,7 @@ class NetworkLoader {
     final result = await TaroResizer.resizeIfNeeded(
       bytes: response.bodyBytes,
       contentType: contentType,
-      option: resizeOption,
+      resizeOption: resizeOption,
     );
 
     return (
