@@ -32,7 +32,7 @@ enum TaroResizeMode {
   tiff,
 }
 
-/// The [TaroResizeException] class is used to throw exceptions when resizing images.
+/// The [TaroResizeOption] class is used to throw exceptions when resizing images.
 typedef TaroResizeOption = ({
   /// The resize mode of the image.
   TaroResizeMode mode,
@@ -69,10 +69,21 @@ class TaroResizer {
       );
     }
 
-    final maxWidth = min(resizeOption.maxWidth ?? 0, originalImage.width);
-    final maxHeight = min(resizeOption.maxHeight ?? 0, originalImage.height);
+    final int maxWidth;
+    if (resizeOption.maxWidth != null) {
+      maxWidth = min(resizeOption.maxWidth!, originalImage.width);
+    } else {
+      maxWidth = originalImage.width;
+    }
+
+    final int maxHeight;
+    if (resizeOption.maxHeight != null) {
+      maxHeight = min(resizeOption.maxHeight!, originalImage.height);
+    } else {
+      maxHeight = originalImage.height;
+    }
+
     if (maxWidth == originalImage.width && maxHeight == originalImage.height) {
-      // do nothing
       return (
         bytes: bytes,
         cotentType: contentType,

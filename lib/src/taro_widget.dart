@@ -128,6 +128,7 @@ class TaroWidget extends StatelessWidget {
         resizeOption: resizeOption,
         scale: scale,
       ),
+      frameBuilder: frameBuilder,
       loadingBuilder: placeholder != null
           ? (context, child, loadingProgress) =>
               loadingProgress == null ? child : placeholder!(context, url)
