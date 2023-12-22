@@ -51,6 +51,15 @@ class Taro {
     );
   }
 
+  /// Changes the [TaroResizer] of the current [TaroNetworkLoader] to the provided resizer.
+  set networkLoaderResizer(TaroResizer resizer) {
+    _loader.changeNetworkLoader(
+      TaroNetworkLoader(
+        resizer: resizer,
+      ),
+    );
+  }
+
   /// Changes the current [TaroStorageLoader] to the provided new loader.
   set storageLoader(TaroStorageLoader newLoader) {
     _loader.changeStorageLoader(newLoader);

@@ -18,7 +18,6 @@ class TaroStorageLoader {
     try {
       return await storage.load(
         filename: '${hashObjects([url, resizeOption])}',
-        resizeOption: resizeOption,
       );
     } on Exception catch (exception) {
       throw TaroStorageException(
@@ -41,7 +40,6 @@ class TaroStorageLoader {
         bytes: bytes,
         contentType: contentType,
         expireAt: expireAt,
-        resizeOption: resizeOption,
       );
     } on Exception catch (exception) {
       throw TaroStorageException(

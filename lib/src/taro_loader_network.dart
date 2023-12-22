@@ -14,10 +14,14 @@ class TaroNetworkLoader {
     this.timeout = const Duration(
       seconds: 180,
     ),
+    this.resizer = const TaroResizer(),
   });
 
   /// The timeout Duration for the GET request.
   final Duration timeout;
+
+  /// The [TaroResizer] instance used to resize the image.
+  final TaroResizer resizer;
 
   /// Loads the data from the provided URL with the given request headers.
   /// If [checkMaxAgeIfExist] is true, the method checks the max age of the data.
@@ -88,7 +92,7 @@ class TaroNetworkLoader {
       }
     }
 
-    final result = await TaroResizer.resizeIfNeeded(
+    final result = await resizer.resizeIfNeeded(
       bytes: response.bodyBytes,
       contentType: contentType,
       resizeOption: resizeOption,

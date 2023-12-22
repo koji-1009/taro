@@ -46,10 +46,10 @@ typedef TaroResizeOption = ({
 
 /// The [TaroResizer] class is used to resize images.
 class TaroResizer {
-  TaroResizer._();
+  const TaroResizer();
 
   /// Resize the image if needed.
-  static Future<({Uint8List bytes, String cotentType})> resizeIfNeeded({
+  Future<({Uint8List bytes, String cotentType})> resizeIfNeeded({
     required Uint8List bytes,
     required String contentType,
     required TaroResizeOption resizeOption,
