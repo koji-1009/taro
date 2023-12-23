@@ -39,6 +39,7 @@ class Taro {
     ifThrowMaxAgeHeaderError: false,
   );
 
+  /// The [TaroHeaderOption] used to check cache-control header.
   set headerOption(TaroHeaderOption option) {
     _headerOption = option;
   }
