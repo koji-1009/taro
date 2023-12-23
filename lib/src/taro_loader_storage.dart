@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:quiver/core.dart';
 import 'package:taro/src/storage/shared.dart' as storage;
 import 'package:taro/src/taro_exception.dart';
-import 'package:taro/src/taro_resizer.dart';
+import 'package:taro/src/taro_type.dart';
 
 /// The [TaroLoaderStorage] class is used to load and save data from storage.
 class TaroLoaderStorage {

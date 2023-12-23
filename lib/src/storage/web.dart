@@ -1,6 +1,7 @@
 import 'dart:js_interop';
 import 'dart:typed_data';
 
+import 'package:clock/clock.dart';
 import 'package:js/js_util.dart' as js_util;
 import 'package:taro/src/storage/cache_file_info.dart';
 import 'package:taro/src/storage/web_cache.dart';
@@ -44,7 +45,7 @@ Future<Uint8List?> load({
   );
   final cacheInfo = CacheFileInfo.fromJson(cacheFileInfo);
 
-  final now = DateTime.now();
+  final now = clock.now();
   if (cacheInfo.expireAt != null && cacheInfo.expireAt!.isBefore(now)) {
     // cache is expired
     await js_util.promiseToFuture(

@@ -84,6 +84,8 @@ If a native cache directory exists, such as Android or iOS, use [path_provider](
 
 ## Depend libraries
 
+- [clock](https://pub.dev/packages/clock)
+  - Get current time and mock time
 - [image](https://pub.dev/packages/image)
   - Resize image
 - [http](https://pub.dev/packages/http)

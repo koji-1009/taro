@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:taro/src/taro.dart';
-import 'package:taro/src/taro_resizer.dart';
+import 'package:taro/src/taro_type.dart';
 
 /// A builder that creates a widget when the data is loaded.
 typedef TaroImageFrameBuilder = ImageFrameBuilder;
@@ -26,8 +26,8 @@ class TaroWidget extends StatelessWidget {
     super.key,
     required this.url,
     this.headers = const {},
-    this.checkMaxAgeIfExist = false,
     this.resizeOption,
+    this.headerOption,
     this.scale = 1.0,
     this.frameBuilder,
     this.errorBuilder,
@@ -55,11 +55,11 @@ class TaroWidget extends StatelessWidget {
   /// A map of request headers to send with the GET request.
   final Map<String, String> headers;
 
-  /// Whether to check the max age of the data.
-  final bool checkMaxAgeIfExist;
-
   /// The resize option used to resize the image.
   final TaroResizeOption? resizeOption;
+
+  /// The header option used to handle response header.
+  final TaroHeaderOption? headerOption;
 
   /// The scale to place in the [ImageInfo] object of the image.
   final double scale;
@@ -124,10 +124,10 @@ class TaroWidget extends StatelessWidget {
       key: key,
       image: Taro.instance.loadImageProvider(
         url,
-        headers: headers,
-        checkMaxAgeIfExist: checkMaxAgeIfExist,
-        resizeOption: resizeOption,
         scale: scale,
+        headers: headers,
+        resizeOption: resizeOption,
+        headerOption: headerOption,
       ),
       frameBuilder: frameBuilder,
       loadingBuilder: placeholder != null

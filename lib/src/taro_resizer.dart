@@ -3,53 +3,14 @@ import 'dart:typed_data';
 
 import 'package:image/image.dart' as img;
 import 'package:taro/src/taro_exception.dart';
-
-/// The [TaroResizeMode] enum is used to determine how images are resized.
-/// Please refer to [https://pub.dev/packages/image] for supported formats.
-enum TaroResizeMode {
-  /// The image is not resized.
-  skip,
-
-  /// The image is resized to the original contentType.
-  original,
-
-  /// The image is resized to a gif.
-  gif,
-
-  /// The image is resized to a jpg.
-  jpeg,
-
-  /// The image is resized to a png.
-  png,
-
-  /// The image is resized to a bmp.
-  bmp,
-
-  /// The image is resized to a ico.
-  ico,
-
-  /// The image is resized to a tiff.
-  tiff,
-}
-
-/// The [TaroResizeOption] class is used to throw exceptions when resizing images.
-typedef TaroResizeOption = ({
-  /// The resize mode of the image.
-  TaroResizeMode mode,
-
-  /// The maximum width of the image. If null, the width is not limited.
-  int? maxWidth,
-
-  /// The maximum height of the image. If null, the height is not limited.
-  int? maxHeight,
-});
+import 'package:taro/src/taro_type.dart';
 
 /// The [TaroResizer] class is used to resize images.
 class TaroResizer {
   const TaroResizer();
 
   /// Resize the image if needed.
-  Future<({Uint8List bytes, String cotentType})> resizeIfNeeded({
+  Future<({Uint8List bytes, String contentType})> resizeIfNeeded({
     required Uint8List bytes,
     required String contentType,
     required TaroResizeOption resizeOption,
@@ -58,7 +19,7 @@ class TaroResizer {
       // do nothing
       return (
         bytes: bytes,
-        cotentType: contentType,
+        contentType: contentType,
       );
     }
 
@@ -86,7 +47,7 @@ class TaroResizer {
     if (maxWidth == originalImage.width && maxHeight == originalImage.height) {
       return (
         bytes: bytes,
-        cotentType: contentType,
+        contentType: contentType,
       );
     }
 
@@ -163,7 +124,7 @@ class TaroResizer {
 
     return (
       bytes: result,
-      cotentType: encodeImageType,
+      contentType: encodeImageType,
     );
   }
 }

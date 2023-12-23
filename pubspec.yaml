@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  clock: ^1.0.0
   image: ^4.0.0
   http: ^1.0.0
   js: ^0.6.0
@@ -21,3 +22,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.0
+
+  build_runner: ^2.0.0
+  mockito: ^5.0.0

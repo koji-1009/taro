@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:clock/clock.dart';
 import 'package:taro/src/network/http_request.dart';
 import 'package:taro/src/taro_exception.dart';
 import 'package:taro/src/taro_resizer.dart';
+import 'package:taro/src/taro_type.dart';
 
 /// [TaroHttpResponse] is a class that holds the necessary response information.
 typedef TaroHttpResponse = ({
@@ -54,16 +56,13 @@ class TaroLoaderNetwork {
   Future<({Uint8List bytes, String contentType, DateTime? expireAt})?> load({
     required String url,
     required Map<String, String> headers,
-    required bool checkMaxAgeIfExist,
     required TaroResizeOption resizeOption,
+    required TaroHeaderOption headerOption,
   }) async {
-    final Uri uri;
-    try {
-      uri = Uri.parse(url);
-    } on FormatException catch (error) {
+    final uri = Uri.tryParse(url);
+    if (uri == null || !uri.hasHttpScheme) {
       throw TaroUriParseException(
         url: url,
-        error: error,
       );
     }
 
@@ -99,24 +98,25 @@ class TaroLoaderNetwork {
     }
 
     DateTime? expireAt;
-    if (checkMaxAgeIfExist) {
-      final cacheControl =
-          response.headers['cache-control']?.toLowerCase() ?? '';
-      final headerAge = response.headers['age']?.toLowerCase() ?? '';
+    if (headerOption.checkMaxAgeIfExist) {
+      final cacheControl = response.headers['cache-control'] ?? '';
+      final headerAge = response.headers['age'] ?? '';
       try {
         if (cacheControl.isNotEmpty) {
           final maxAge = _getMaxAge(cacheControl);
           final age = int.tryParse(headerAge) ?? 0;
           if (maxAge != null) {
-            final now = DateTime.now();
+            final now = clock.now();
             expireAt = now.add(Duration(seconds: maxAge - age));
           }
         }
       } on Exception catch (error) {
-        throw TaroNetworkException(
-          url: url,
-          error: error,
-        );
+        if (headerOption.ifThrowMaxAgeHeaderError) {
+          throw TaroNetworkException(
+            url: url,
+            error: error,
+          );
+        }
       }
     }
 
@@ -129,21 +129,21 @@ class TaroLoaderNetwork {
 
     return (
       bytes: result.bytes,
-      contentType: result.cotentType,
+      contentType: result.contentType,
       expireAt: expireAt,
     );
   }
 
   /// Returns the max age from the cache-control header.
   int? _getMaxAge(String cacheControl) {
-    final maxAgePattern = RegExp(r'max-age=(\d+)');
-    final match = maxAgePattern.firstMatch(cacheControl);
-    if (match != null) {
-      final maxAgeStr = match.group(1);
-      if (maxAgeStr != null) {
-        return int.parse(maxAgeStr);
-      }
+    final maxAgeStr = cacheControl.split('=').lastOrNull;
+    if (maxAgeStr != null) {
+      return int.parse(maxAgeStr);
     }
     return null;
   }
+}
+
+extension on Uri {
+  bool get hasHttpScheme => scheme == 'https' || scheme == 'http';
 }

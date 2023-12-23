@@ -5,6 +5,7 @@ import 'package:taro/src/taro_loader.dart';
 import 'package:taro/src/taro_loader_network.dart';
 import 'package:taro/src/taro_loader_storage.dart';
 import 'package:taro/src/taro_resizer.dart';
+import 'package:taro/src/taro_type.dart';
 
 /// [Taro] is a library for loading images. It uses two loaders: Storage and Network.
 class Taro {
@@ -30,6 +31,15 @@ class Taro {
   /// Changing this option will affect all image loading.
   set resizeOption(TaroResizeOption option) {
     _resizeOption = option;
+  }
+
+  TaroHeaderOption _headerOption = const (
+    checkMaxAgeIfExist: false,
+    ifThrowMaxAgeHeaderError: false,
+  );
+
+  set headerOption(TaroHeaderOption option) {
+    _headerOption = option;
   }
 
   /// Changes the current [TaroLoaderNetwork] to the provided new loader.
@@ -63,38 +73,38 @@ class Taro {
   /// Loads an image from the provided URL and returns it as a [TaroImage].
   /// The [headers] parameter is a map of request headers to send with the GET request.
   /// If [checkMaxAgeIfExist] is true, the method checks the max age of the data.
+  /// [ifThrowMaxAgeHeaderError] is used to throw an exception if the max age header is invalid.
   /// The [resizeOption] parameter is used to resize the image. If it is not provided, the default resize option is used.
   TaroImage loadImageProvider(
     String url, {
     double scale = 1.0,
     Map<String, String> headers = const {},
-    bool checkMaxAgeIfExist = false,
     TaroResizeOption? resizeOption,
+    TaroHeaderOption? headerOption,
   }) {
     return TaroImage(
       url,
       scale: scale,
       resizeOption: resizeOption ?? _resizeOption,
       headers: headers,
-      checkMaxAgeIfExist: checkMaxAgeIfExist,
+      headerOption: headerOption ?? _headerOption,
     );
   }
 
   /// Loads the data from the provided URL and returns it as a byte array.
   /// The [headers] parameter is a map of request headers to send with the GET request.
-  /// If [checkMaxAgeIfExist] is true, the method checks the max age of the data.
   /// The [resizeOption] parameter is used to resize the image. If it is not provided, the default resize option is used.
   Future<Uint8List> loadBytes(
     String url, {
     Map<String, String> headers = const {},
-    bool checkMaxAgeIfExist = false,
     TaroResizeOption? resizeOption,
+    TaroHeaderOption? headerOption,
   }) async {
     return await _loader.load(
       url: url,
       headers: headers,
-      checkMaxAgeIfExist: checkMaxAgeIfExist,
       resizeOption: resizeOption ?? _resizeOption,
+      headerOption: headerOption ?? _headerOption,
     );
   }
 }

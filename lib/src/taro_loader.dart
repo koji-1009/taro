@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:taro/src/taro_exception.dart';
 import 'package:taro/src/taro_loader_network.dart';
 import 'package:taro/src/taro_loader_storage.dart';
-import 'package:taro/src/taro_resizer.dart';
+import 'package:taro/src/taro_type.dart';
 
 /// [TaroLoader] is a class that manages different types of loaders.
 class TaroLoader {
@@ -33,8 +33,8 @@ class TaroLoader {
   Future<Uint8List> load({
     required String url,
     required Map<String, String> headers,
-    required checkMaxAgeIfExist,
     required TaroResizeOption resizeOption,
+    required TaroHeaderOption headerOption,
   }) async {
     final storageBytes = await _storageLoader.load(
       url: url,
@@ -47,8 +47,8 @@ class TaroLoader {
     final networkResponse = await _networkLoader.load(
       url: url,
       headers: headers,
-      checkMaxAgeIfExist: checkMaxAgeIfExist,
       resizeOption: resizeOption,
+      headerOption: headerOption,
     );
 
     if (networkResponse != null) {
