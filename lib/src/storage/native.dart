@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:clock/clock.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:taro/src/storage/cache_file_info.dart';
@@ -27,7 +28,7 @@ Future<Uint8List?> load({
   final cacheInfoFileData = await cacheInfoFile.readAsString();
   final cacheFileInfo = CacheFileInfo.fromJson(cacheInfoFileData);
 
-  final now = DateTime.now();
+  final now = clock.now();
   if (cacheFileInfo.expireAt != null && cacheFileInfo.expireAt!.isBefore(now)) {
     // cache is found but expired
     await cacheFile.delete();

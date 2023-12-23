@@ -1,25 +1,54 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:http/http.dart' as http;
+import 'package:clock/clock.dart';
+import 'package:taro/src/network/http_request.dart';
 import 'package:taro/src/taro_exception.dart';
 import 'package:taro/src/taro_resizer.dart';
+import 'package:taro/src/taro_type.dart';
 
-/// [TaroNetworkLoader] is a class that manages the loading of data from a network source.
+/// [TaroHttpResponse] is a class that holds the necessary response information.
+typedef TaroHttpResponse = ({
+  int statusCode,
+  Uint8List bodyBytes,
+  String? reasonPhrase,
+  int? contentLength,
+  Map<String, String> headers,
+  bool isRedirect,
+});
+
+/// [TaroHttpClient] is an interface class for GET requests to the specified URL.
+abstract interface class TaroHttpClient {
+  const TaroHttpClient();
+
+  Future<TaroHttpResponse> get({
+    required Uri uri,
+    required Map<String, String> headers,
+  });
+}
+
+/// [TaroLoaderNetwork] is a class that manages the loading of data from a network source.
 /// It uses the http package to send GET requests to the provided URL.
-class TaroNetworkLoader {
-  const TaroNetworkLoader({
-    this.timeout = const Duration(
-      seconds: 180,
-    ),
+class TaroLoaderNetwork {
+  const TaroLoaderNetwork({
     this.resizer = const TaroResizer(),
+    this.client = const HttpClient(),
   });
 
-  /// The timeout Duration for the GET request.
-  final Duration timeout;
+  factory TaroLoaderNetwork.timeout({
+    required Duration timeout,
+  }) =>
+      TaroLoaderNetwork(
+        client: HttpClient(
+          timeout: timeout,
+        ),
+      );
 
   /// The [TaroResizer] instance used to resize the image.
   final TaroResizer resizer;
+
+  /// The [TaroHttpClient] instance used to send GET requests.
+  final TaroHttpClient client;
 
   /// Loads the data from the provided URL with the given request headers.
   /// If [checkMaxAgeIfExist] is true, the method checks the max age of the data.
@@ -27,22 +56,22 @@ class TaroNetworkLoader {
   Future<({Uint8List bytes, String contentType, DateTime? expireAt})?> load({
     required String url,
     required Map<String, String> headers,
-    required bool checkMaxAgeIfExist,
     required TaroResizeOption resizeOption,
+    required TaroHeaderOption headerOption,
   }) async {
-    final Uri uri;
-    try {
-      uri = Uri.parse(url);
-    } on FormatException catch (error) {
+    final uri = Uri.tryParse(url);
+    if (uri == null || !uri.hasHttpScheme) {
       throw TaroUriParseException(
         url: url,
-        error: error,
       );
     }
 
-    final http.Response response;
+    final TaroHttpResponse response;
     try {
-      response = await http.get(uri, headers: headers).timeout(timeout);
+      response = await client.get(
+        uri: uri,
+        headers: headers,
+      );
     } on Exception catch (error) {
       throw TaroNetworkException(
         url: url,
@@ -69,24 +98,25 @@ class TaroNetworkLoader {
     }
 
     DateTime? expireAt;
-    if (checkMaxAgeIfExist) {
-      final cacheControl =
-          response.headers['cache-control']?.toLowerCase() ?? '';
-      final headerAge = response.headers['age']?.toLowerCase() ?? '';
+    if (headerOption.checkMaxAgeIfExist) {
+      final cacheControl = response.headers['cache-control'] ?? '';
+      final headerAge = response.headers['age'] ?? '';
       try {
         if (cacheControl.isNotEmpty) {
           final maxAge = _getMaxAge(cacheControl);
           final age = int.tryParse(headerAge) ?? 0;
           if (maxAge != null) {
-            final now = DateTime.now();
+            final now = clock.now();
             expireAt = now.add(Duration(seconds: maxAge - age));
           }
         }
       } on Exception catch (error) {
-        throw TaroNetworkException(
-          url: url,
-          error: error,
-        );
+        if (headerOption.ifThrowMaxAgeHeaderError) {
+          throw TaroNetworkException(
+            url: url,
+            error: error,
+          );
+        }
       }
     }
 
@@ -99,21 +129,21 @@ class TaroNetworkLoader {
 
     return (
       bytes: result.bytes,
-      contentType: result.cotentType,
+      contentType: result.contentType,
       expireAt: expireAt,
     );
   }
 
   /// Returns the max age from the cache-control header.
   int? _getMaxAge(String cacheControl) {
-    final maxAgePattern = RegExp(r'max-age=(\d+)');
-    final match = maxAgePattern.firstMatch(cacheControl);
-    if (match != null) {
-      final maxAgeStr = match.group(1);
-      if (maxAgeStr != null) {
-        return int.parse(maxAgeStr);
-      }
+    final maxAgeStr = cacheControl.split('=').lastOrNull;
+    if (maxAgeStr != null) {
+      return int.parse(maxAgeStr);
     }
     return null;
   }
+}
+
+extension on Uri {
+  bool get hasHttpScheme => scheme == 'https' || scheme == 'http';
 }

@@ -29,18 +29,16 @@ final class TaroStorageException extends TaroException {
 }
 
 /// [TaroUriParseException] is thrown when there is an issue with parsing a URI in the Taro library.
-/// It includes the URL that was being parsed and the original FormatException that caused the error.
+/// It includes the URL that was being parsed.
 final class TaroUriParseException extends TaroException {
   const TaroUriParseException({
     required this.url,
-    required this.error,
   });
 
   final String url;
-  final FormatException error;
 
   @override
-  String toString() => 'TaroUriParseException: url=$url, error=$error';
+  String toString() => 'TaroUriParseException: url=$url';
 }
 
 /// [TaroNetworkException] is thrown when there is an issue with network operations in the Taro library.
