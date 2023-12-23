@@ -8,7 +8,7 @@ import 'dart:typed_data' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:mockito/src/dummies.dart' as _i7;
-import 'package:taro/src/network/http_request.dart' as _i2;
+import 'package:taro/src/network/http_client.dart' as _i2;
 import 'package:taro/src/taro_resizer.dart' as _i5;
 import 'package:taro/src/taro_type.dart' as _i6;
 

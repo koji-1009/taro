@@ -5,7 +5,7 @@ import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:taro/src/network/http_request.dart';
+import 'package:taro/src/network/http_client.dart';
 import 'package:taro/src/taro_exception.dart';
 import 'package:taro/src/taro_loader_network.dart';
 import 'package:taro/src/taro_resizer.dart';

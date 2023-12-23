@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:clock/clock.dart';
-import 'package:taro/src/network/http_request.dart';
+import 'package:taro/src/network/http_client.dart';
 import 'package:taro/src/taro_exception.dart';
 import 'package:taro/src/taro_resizer.dart';
 import 'package:taro/src/taro_type.dart';
