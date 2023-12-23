@@ -78,10 +78,19 @@ class HomePage extends StatelessWidget {
 }
 ```
 
+## Cache directory
+
+If a native cache directory exists, such as Android or iOS, use [path_provider](https://pub.dev/packages/path_provider) to get the `Application Cache directory`. For web, use [Cache API](https://developer.mozilla.org/en-US/docs/Web/API/Cache) to save the cache.
+
 ## Depend libraries
 
 - [image](https://pub.dev/packages/image)
+  - Resize image
 - [http](https://pub.dev/packages/http)
+  - Fetch data from network
 - [js](https://pub.dev/packages/js)
+  - Request Cache API on web
 - [path_provider](https://pub.dev/packages/path_provider)
+  - Get application cache directory
 - [quiver](https://pub.dev/packages/quiver)
+  - Get 32-bit hash value
