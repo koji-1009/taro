@@ -33,6 +33,7 @@ class Taro {
     _resizeOption = option;
   }
 
+  /// The [TaroHeaderOption] used to check cache-control header.
   TaroHeaderOption _headerOption = const (
     checkMaxAgeIfExist: false,
     ifThrowMaxAgeHeaderError: false,
