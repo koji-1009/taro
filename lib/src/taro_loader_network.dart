@@ -25,18 +25,18 @@ abstract interface class TaroHttpClient {
   });
 }
 
-/// [TaroNetworkLoader] is a class that manages the loading of data from a network source.
+/// [TaroLoaderNetwork] is a class that manages the loading of data from a network source.
 /// It uses the http package to send GET requests to the provided URL.
-class TaroNetworkLoader {
-  const TaroNetworkLoader({
+class TaroLoaderNetwork {
+  const TaroLoaderNetwork({
     this.resizer = const TaroResizer(),
     this.client = const HttpClient(),
   });
 
-  factory TaroNetworkLoader.timeout({
+  factory TaroLoaderNetwork.timeout({
     required Duration timeout,
   }) =>
-      TaroNetworkLoader(
+      TaroLoaderNetwork(
         client: HttpClient(
           timeout: timeout,
         ),

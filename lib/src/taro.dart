@@ -32,31 +32,31 @@ class Taro {
     _resizeOption = option;
   }
 
-  /// Changes the current [TaroNetworkLoader] to the provided new loader.
-  set networkLoader(TaroNetworkLoader newLoader) {
+  /// Changes the current [TaroLoaderNetwork] to the provided new loader.
+  set networkLoader(TaroLoaderNetwork newLoader) {
     _loader.changeNetworkLoader(newLoader);
   }
 
-  /// Changes the timeout of the current [TaroNetworkLoader] to the provided duration.
+  /// Changes the timeout of the current [TaroLoaderNetwork] to the provided duration.
   set networkLoaderTimeout(Duration timeout) {
     _loader.changeNetworkLoader(
-      TaroNetworkLoader.timeout(
+      TaroLoaderNetwork.timeout(
         timeout: timeout,
       ),
     );
   }
 
-  /// Changes the [TaroResizer] of the current [TaroNetworkLoader] to the provided resizer.
+  /// Changes the [TaroResizer] of the current [TaroLoaderNetwork] to the provided resizer.
   set networkLoaderResizer(TaroResizer resizer) {
     _loader.changeNetworkLoader(
-      TaroNetworkLoader(
+      TaroLoaderNetwork(
         resizer: resizer,
       ),
     );
   }
 
-  /// Changes the current [TaroStorageLoader] to the provided new loader.
-  set storageLoader(TaroStorageLoader newLoader) {
+  /// Changes the current [TaroLoaderStorage] to the provided new loader.
+  set storageLoader(TaroLoaderStorage newLoader) {
     _loader.changeStorageLoader(newLoader);
   }
 

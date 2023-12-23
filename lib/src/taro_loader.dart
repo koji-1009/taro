@@ -9,21 +9,21 @@ import 'package:taro/src/taro_resizer.dart';
 class TaroLoader {
   TaroLoader();
 
-  /// The [TaroNetworkLoader] instance used to load data from the network.
+  /// The [TaroLoaderNetwork] instance used to load data from the network.
   /// Loader is able to change the original network loader.
-  TaroNetworkLoader _networkLoader = const TaroNetworkLoader();
+  TaroLoaderNetwork _networkLoader = const TaroLoaderNetwork();
 
-  /// The [TaroStorageLoader] instance used to load data from the storage.
+  /// The [TaroLoaderStorage] instance used to load data from the storage.
   /// Loader is able to change the original storage loader.
-  TaroStorageLoader _storageLoader = const TaroStorageLoader();
+  TaroLoaderStorage _storageLoader = const TaroLoaderStorage();
 
   /// Changes the current network loader to the provided loader.
-  void changeNetworkLoader(TaroNetworkLoader loader) {
+  void changeNetworkLoader(TaroLoaderNetwork loader) {
     _networkLoader = loader;
   }
 
   /// Changes the current storage loader to the provided loader.
-  void changeStorageLoader(TaroStorageLoader loader) {
+  void changeStorageLoader(TaroLoaderStorage loader) {
     _storageLoader = loader;
   }
 
