@@ -10,7 +10,12 @@ import 'package:taro/src/taro_resizer.dart';
 class TaroLoader {
   TaroLoader();
 
+  /// The [TaroNetworkLoader] instance used to load data from the network.
+  /// Loader is able to change the original network loader.
   TaroNetworkLoader _networkLoader = const TaroNetworkLoader();
+
+  /// The [TaroStorageLoader] instance used to load data from the storage.
+  /// Loader is able to change the original storage loader.
   TaroStorageLoader _storageLoader = const TaroStorageLoader();
 
   /// Changes the current network loader to the provided loader.
@@ -28,7 +33,7 @@ class TaroLoader {
   /// The [resizeOption] parameter is used to resize the image. If it is not provided, the default resize option is used.
   Future<({Uint8List bytes, TaroLoaderType type})> load({
     required String url,
-    required Map<String, String> requestHeaders,
+    required Map<String, String> headers,
     required checkMaxAgeIfExist,
     required TaroResizeOption resizeOption,
   }) async {
@@ -45,7 +50,7 @@ class TaroLoader {
 
     final networkResponse = await _networkLoader.load(
       url: url,
-      requestHeaders: requestHeaders,
+      headers: headers,
       checkMaxAgeIfExist: checkMaxAgeIfExist,
       resizeOption: resizeOption,
     );

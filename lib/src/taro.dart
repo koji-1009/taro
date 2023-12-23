@@ -7,13 +7,6 @@ import 'package:taro/src/taro_loader_storage.dart';
 import 'package:taro/src/taro_loader_type.dart';
 import 'package:taro/src/taro_resizer.dart';
 
-/// The default [TaroResizeOption] used by [Taro].
-const TaroResizeOption defaultResizeOption = (
-  mode: TaroResizeMode.skip,
-  maxWidth: null,
-  maxHeight: null,
-);
-
 /// [Taro] is a library for loading images. It uses two loaders: Storage and Network.
 class Taro {
   Taro._();
@@ -28,7 +21,11 @@ class Taro {
   final _loader = TaroLoader();
 
   /// The [TaroResizeOption] used to resize images.
-  TaroResizeOption _resizeOption = defaultResizeOption;
+  TaroResizeOption _resizeOption = const (
+    mode: TaroResizeMode.skip,
+    maxWidth: null,
+    maxHeight: null,
+  );
 
   /// The [TaroResizeOption] used to resize images.
   /// Changing this option will affect all image loading.
@@ -42,7 +39,6 @@ class Taro {
   }
 
   /// Changes the timeout of the current [TaroNetworkLoader] to the provided duration.
-  /// The default timeout is 3 minutes.
   set networkLoaderTimeout(Duration timeout) {
     _loader.changeNetworkLoader(
       TaroNetworkLoader(
@@ -75,14 +71,15 @@ class Taro {
     Map<String, String> headers = const {},
     bool checkMaxAgeIfExist = false,
     TaroResizeOption? resizeOption,
-  }) =>
-      TaroImage(
-        url,
-        scale: scale,
-        headers: headers,
-        checkMaxAgeIfExist: checkMaxAgeIfExist,
-        resizeOption: resizeOption ?? _resizeOption,
-      );
+  }) {
+    return TaroImage(
+      url,
+      scale: scale,
+      resizeOption: resizeOption ?? _resizeOption,
+      headers: headers,
+      checkMaxAgeIfExist: checkMaxAgeIfExist,
+    );
+  }
 
   /// Loads the data from the provided URL and returns it as a byte array.
   /// The [headers] parameter is a map of request headers to send with the GET request.
@@ -116,7 +113,7 @@ class Taro {
   }) async {
     final result = await _loader.load(
       url: url,
-      requestHeaders: headers,
+      headers: headers,
       checkMaxAgeIfExist: checkMaxAgeIfExist,
       resizeOption: resizeOption ?? _resizeOption,
     );

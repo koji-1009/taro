@@ -6,21 +6,20 @@ import 'package:flutter/widgets.dart';
 import 'package:taro/src/taro.dart';
 import 'package:taro/src/taro_resizer.dart';
 
-/// TaroImage is an [ImageProvider] that loads images from the [Taro].
-/// It uses two loaders: Storage and Network.
-/// The [url] parameter is the URL from which the image is loaded.
-/// The [scale] parameter is the scale to place in the [ImageInfo] object of the image.
-/// The [headers] parameter is the HTTP headers that will be used in the GET request.
-/// The [checkMaxAgeIfExist] parameter is whether to check the max age of the data.
-/// The [resizeOption] parameter is used to resize the image. If it is not provided, the default resize option is used.
+/// [TaroImage] is an [ImageProvider] that loads images from the network and caches them.
 @immutable
 class TaroImage extends ImageProvider<TaroImage> {
   const TaroImage(
     this.url, {
     this.scale = 1.0,
+    this.resizeOption = const (
+      mode: TaroResizeMode.skip,
+      maxWidth: null,
+      maxHeight: null,
+    ),
+    this.useHeadersHashCode = false,
     this.headers = const {},
     this.checkMaxAgeIfExist = false,
-    this.resizeOption = defaultResizeOption,
   });
 
   /// The URL from which the image is loaded.
@@ -29,14 +28,18 @@ class TaroImage extends ImageProvider<TaroImage> {
   /// The scale to place in the [ImageInfo] object of the image.
   final double scale;
 
+  /// The resize option used to resize the image.
+  final TaroResizeOption resizeOption;
+
+  /// Use network options to identify instances
+  /// If [useHeadersHashCode] is true, the [headers] and [checkMaxAgeIfExist] are used to identify instances.
+  final bool useHeadersHashCode;
+
   /// The HTTP headers that will be used in the GET request.
   final Map<String, String> headers;
 
   /// Whether to check the max age of the data.
   final bool checkMaxAgeIfExist;
-
-  /// The resize option used to resize the image.
-  final TaroResizeOption resizeOption;
 
   @override
   Future<TaroImage> obtainKey(ImageConfiguration configuration) {
@@ -103,19 +106,27 @@ class TaroImage extends ImageProvider<TaroImage> {
       return false;
     }
 
+    if (useHeadersHashCode) {
+      return other is TaroImage &&
+          other.url == url &&
+          other.scale == scale &&
+          other.resizeOption == resizeOption &&
+          other.headers == headers &&
+          other.checkMaxAgeIfExist == checkMaxAgeIfExist;
+    }
+
     return other is TaroImage &&
         other.url == url &&
         other.scale == scale &&
-        other.headers == headers &&
-        other.checkMaxAgeIfExist == checkMaxAgeIfExist &&
         other.resizeOption == resizeOption;
   }
 
   @override
-  int get hashCode =>
-      Object.hash(url, scale, headers, checkMaxAgeIfExist, resizeOption);
+  int get hashCode => useHeadersHashCode
+      ? Object.hash(url, scale, resizeOption, headers, checkMaxAgeIfExist)
+      : Object.hash(url, scale, resizeOption);
 
   @override
   String toString() => ''
-      '${objectRuntimeType(this, 'TaroImage')}(url: $url, scale: $scale, headers: $headers, checkMaxAgeIfExist: $checkMaxAgeIfExist, resizeOption: $resizeOption, )';
+      '${objectRuntimeType(this, 'TaroImage')}(url: $url, scale: $scale, checkMaxAgeIfExist: $checkMaxAgeIfExist, resizeOption: $resizeOption, useHeadersInHashCode: $useHeadersHashCode, headers: $headers, checkMaxAgeIfExist: $checkMaxAgeIfExist)';
 }

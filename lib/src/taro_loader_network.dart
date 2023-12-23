@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
@@ -10,7 +9,6 @@ import 'package:taro/src/taro_resizer.dart';
 /// It uses the http package to send GET requests to the provided URL.
 class TaroNetworkLoader {
   const TaroNetworkLoader({
-    /// The default timeout is 3 minutes.
     this.timeout = const Duration(
       seconds: 180,
     ),
@@ -28,7 +26,7 @@ class TaroNetworkLoader {
   /// The [resizeOption] parameter is used to resize the image. If it is not provided, the default resize option is used.
   Future<({Uint8List bytes, String contentType, DateTime? expireAt})?> load({
     required String url,
-    required Map<String, String> requestHeaders,
+    required Map<String, String> headers,
     required bool checkMaxAgeIfExist,
     required TaroResizeOption resizeOption,
   }) async {
@@ -44,7 +42,7 @@ class TaroNetworkLoader {
 
     final http.Response response;
     try {
-      response = await http.get(uri, headers: requestHeaders).timeout(timeout);
+      response = await http.get(uri, headers: headers).timeout(timeout);
     } on Exception catch (error) {
       throw TaroNetworkException(
         url: url,
@@ -70,7 +68,6 @@ class TaroNetworkLoader {
       );
     }
 
-    final contentType = response.headers['content-type'] ?? '';
     DateTime? expireAt;
     if (checkMaxAgeIfExist) {
       final cacheControl =
@@ -86,12 +83,14 @@ class TaroNetworkLoader {
           }
         }
       } on Exception catch (error) {
-        log('[taro][network] Error parsing cache-control header: $cacheControl');
-        log('[taro][network] Url: $url');
-        log('[taro][network] Error: $error');
+        throw TaroNetworkException(
+          url: url,
+          error: error,
+        );
       }
     }
 
+    final contentType = response.headers['content-type'] ?? '';
     final result = await resizer.resizeIfNeeded(
       bytes: response.bodyBytes,
       contentType: contentType,

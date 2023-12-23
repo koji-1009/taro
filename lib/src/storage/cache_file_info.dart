@@ -18,9 +18,7 @@ class CacheFileInfo {
 
     return CacheFileInfo(
       contentType: json['content_type'] as String,
-      expireAt: json['expire_at'] == null
-          ? null
-          : DateTime.parse(json['expire_at'] as String),
+      expireAt: DateTime.tryParse(json['expire_at'] ?? ''),
     );
   }
 
