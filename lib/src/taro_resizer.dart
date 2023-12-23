@@ -158,9 +158,7 @@ class TaroResizer {
     }
 
     if (result == null) {
-      throw TaroResizeException(
-        exception: Exception('Failed to resize image.'),
-      );
+      throw const TaroResizeFailedException();
     }
 
     return (
