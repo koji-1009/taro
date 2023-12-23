@@ -40,7 +40,7 @@ class Taro {
   /// Changes the timeout of the current [TaroNetworkLoader] to the provided duration.
   set networkLoaderTimeout(Duration timeout) {
     _loader.changeNetworkLoader(
-      TaroNetworkLoader(
+      TaroNetworkLoader.timeout(
         timeout: timeout,
       ),
     );

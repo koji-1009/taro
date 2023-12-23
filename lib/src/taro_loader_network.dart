@@ -1,25 +1,52 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:http/http.dart' as http;
+import 'package:taro/src/network/http_request.dart';
 import 'package:taro/src/taro_exception.dart';
 import 'package:taro/src/taro_resizer.dart';
+
+/// [TaroHttpResponse] is a class that holds the necessary response information.
+typedef TaroHttpResponse = ({
+  int statusCode,
+  Uint8List bodyBytes,
+  String? reasonPhrase,
+  int? contentLength,
+  Map<String, String> headers,
+  bool isRedirect,
+});
+
+/// [TaroHttpClient] is an interface class for GET requests to the specified URL.
+abstract interface class TaroHttpClient {
+  const TaroHttpClient();
+
+  Future<TaroHttpResponse> get({
+    required Uri uri,
+    required Map<String, String> headers,
+  });
+}
 
 /// [TaroNetworkLoader] is a class that manages the loading of data from a network source.
 /// It uses the http package to send GET requests to the provided URL.
 class TaroNetworkLoader {
   const TaroNetworkLoader({
-    this.timeout = const Duration(
-      seconds: 180,
-    ),
     this.resizer = const TaroResizer(),
+    this.client = const HttpClient(),
   });
 
-  /// The timeout Duration for the GET request.
-  final Duration timeout;
+  factory TaroNetworkLoader.timeout({
+    required Duration timeout,
+  }) =>
+      TaroNetworkLoader(
+        client: HttpClient(
+          timeout: timeout,
+        ),
+      );
 
   /// The [TaroResizer] instance used to resize the image.
   final TaroResizer resizer;
+
+  /// The [TaroHttpClient] instance used to send GET requests.
+  final TaroHttpClient client;
 
   /// Loads the data from the provided URL with the given request headers.
   /// If [checkMaxAgeIfExist] is true, the method checks the max age of the data.
@@ -40,9 +67,12 @@ class TaroNetworkLoader {
       );
     }
 
-    final http.Response response;
+    final TaroHttpResponse response;
     try {
-      response = await http.get(uri, headers: headers).timeout(timeout);
+      response = await client.get(
+        uri: uri,
+        headers: headers,
+      );
     } on Exception catch (error) {
       throw TaroNetworkException(
         url: url,
