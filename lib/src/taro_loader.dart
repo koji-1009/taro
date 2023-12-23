@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:taro/src/taro_exception.dart';
 import 'package:taro/src/taro_loader_network.dart';
 import 'package:taro/src/taro_loader_storage.dart';
-import 'package:taro/src/taro_loader_type.dart';
 import 'package:taro/src/taro_resizer.dart';
 
 /// [TaroLoader] is a class that manages different types of loaders.
@@ -31,7 +30,7 @@ class TaroLoader {
   /// Loads the data from the provided URL with the given request headers.
   /// If [checkMaxAgeIfExist] is true, the method checks the max age of the data.
   /// The [resizeOption] parameter is used to resize the image. If it is not provided, the default resize option is used.
-  Future<({Uint8List bytes, TaroLoaderType type})> load({
+  Future<Uint8List> load({
     required String url,
     required Map<String, String> headers,
     required checkMaxAgeIfExist,
@@ -42,10 +41,7 @@ class TaroLoader {
       resizeOption: resizeOption,
     );
     if (storageBytes != null) {
-      return (
-        bytes: storageBytes,
-        type: TaroLoaderType.storage,
-      );
+      return storageBytes;
     }
 
     final networkResponse = await _networkLoader.load(
@@ -65,10 +61,7 @@ class TaroLoader {
         resizeOption: resizeOption,
       );
 
-      return (
-        bytes: networkResponse.bytes,
-        type: TaroLoaderType.network,
-      );
+      return networkResponse.bytes;
     }
 
     throw TaroLoadException(
