@@ -9,6 +9,7 @@ final class TaroLoadException extends TaroException {
     required this.message,
   });
 
+  /// The message describing the error.
   final String message;
 
   @override
@@ -22,6 +23,7 @@ final class TaroStorageException extends TaroException {
     required this.exception,
   });
 
+  /// The original exception that caused the error.
   final Exception exception;
 
   @override
@@ -35,6 +37,7 @@ final class TaroUriParseException extends TaroException {
     required this.url,
   });
 
+  /// The URL that was being parsed.
   final String url;
 
   @override
@@ -49,7 +52,10 @@ final class TaroNetworkException extends TaroException {
     required this.error,
   });
 
+  /// The URL that was being accessed.
   final String url;
+
+  /// The original error that caused the issue.
   final Exception error;
 
   @override
@@ -68,10 +74,19 @@ final class TaroHttpResponseException extends TaroException {
     required this.isRedirect,
   });
 
+  /// The status code of the response.
   final int statusCode;
+
+  /// The reason phrase of the response.
   final String? reasonPhrase;
+
+  /// The content length of the response.
   final int? contentLength;
+
+  /// The headers of the response.
   final Map<String, String> headers;
+
+  /// Whether the response is a redirect.
   final bool isRedirect;
 
   @override
@@ -87,6 +102,7 @@ final class TaroEmptyResponseException extends TaroException {
     required this.url,
   });
 
+  /// The URL that was being accessed.
   final String url;
 
   @override
@@ -102,7 +118,10 @@ final class TaroCacheControlException extends TaroException {
     required this.error,
   });
 
+  /// The cache-control header.
   final String cacheControl;
+
+  /// The original exception that caused the error.
   final Exception error;
 
   @override
@@ -117,6 +136,7 @@ final class TaroResizeException extends TaroException {
     required this.exception,
   });
 
+  /// The original exception that caused the error.
   final Exception exception;
 
   @override
