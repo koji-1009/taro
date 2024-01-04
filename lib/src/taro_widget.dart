@@ -2,9 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:taro/src/taro.dart';
 import 'package:taro/src/taro_type.dart';
 
-/// A builder that creates a widget when the data is loaded.
-typedef TaroImageFrameBuilder = ImageFrameBuilder;
-
 /// A builder that creates a widget when an error occurs while loading the data.
 typedef TaroErrorBuilder = Widget Function(
   BuildContext context,
@@ -29,7 +26,6 @@ class TaroWidget extends StatelessWidget {
     this.resizeOption,
     this.headerOption,
     this.scale = 1.0,
-    this.frameBuilder,
     this.errorBuilder,
     this.placeholder,
     this.semanticLabel,
@@ -63,9 +59,6 @@ class TaroWidget extends StatelessWidget {
 
   /// The scale to place in the [ImageInfo] object of the image.
   final double scale;
-
-  /// A builder that creates a widget when the data is loaded.
-  final TaroImageFrameBuilder? frameBuilder;
 
   /// A builder that creates a widget when an error occurs while loading the data.
   final TaroErrorBuilder? errorBuilder;
@@ -129,11 +122,17 @@ class TaroWidget extends StatelessWidget {
         resizeOption: resizeOption,
         headerOption: headerOption,
       ),
-      frameBuilder: frameBuilder,
-      loadingBuilder: placeholder != null
-          ? (context, child, loadingProgress) =>
-              loadingProgress == null ? child : placeholder!(context, url)
-          : null,
+      frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+        if (wasSynchronouslyLoaded) {
+          return child;
+        }
+
+        if (frame == null && placeholder != null) {
+          return placeholder!(context, url);
+        }
+
+        return child;
+      },
       errorBuilder: errorBuilder != null
           ? (context, error, stackTrace) =>
               errorBuilder!(context, url, error, stackTrace)

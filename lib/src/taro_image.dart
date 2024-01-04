@@ -48,13 +48,6 @@ class TaroImage extends ImageProvider<TaroImage> {
     // method's responsibility to close the controller's stream when the image
     // has been loaded or an error is thrown.
     final chunkEvents = StreamController<ImageChunkEvent>();
-    // notify that the image is loading
-    chunkEvents.add(
-      const ImageChunkEvent(
-        cumulativeBytesLoaded: 1,
-        expectedTotalBytes: null,
-      ),
-    );
 
     return MultiFrameImageStreamCompleter(
       codec: _loadAsync(key, chunkEvents, decode: decode),
