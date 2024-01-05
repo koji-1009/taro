@@ -3,6 +3,7 @@ import 'package:taro/src/taro_loader_network.dart';
 
 /// [HttpClient] is a class that manages the sending of GET requests to the provided URL.
 class HttpClient implements TaroHttpClient {
+  /// Creates a [HttpClient].
   const HttpClient({
     this.timeout = const Duration(
       seconds: 180,

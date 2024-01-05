@@ -7,6 +7,7 @@ import 'package:taro/src/taro_type.dart';
 
 /// The [TaroLoaderStorage] class is used to load and save data from storage.
 class TaroLoaderStorage {
+  /// Creates a [TaroLoaderStorage].
   const TaroLoaderStorage();
 
   /// Loads the data from the provided URL from storage.

@@ -7,6 +7,7 @@ import 'package:taro/src/taro_type.dart';
 
 /// [TaroLoader] is a class that manages different types of loaders.
 class TaroLoader {
+  /// Creates a [TaroLoader].
   TaroLoader();
 
   /// The [TaroLoaderNetwork] instance used to load data from the network.

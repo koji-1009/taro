@@ -9,6 +9,7 @@ import 'package:taro/src/taro_type.dart';
 /// [TaroImage] is an [ImageProvider] that loads images from the network and caches them.
 @immutable
 class TaroImage extends ImageProvider<TaroImage> {
+  /// Creates a [TaroImage].
   const TaroImage(
     this.url, {
     this.scale = 1.0,

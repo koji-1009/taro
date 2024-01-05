@@ -19,6 +19,7 @@ typedef TaroHttpResponse = ({
 
 /// [TaroHttpClient] is an interface class for GET requests to the specified URL.
 abstract interface class TaroHttpClient {
+  /// Creates a [TaroHttpClient].
   const TaroHttpClient();
 
   Future<TaroHttpResponse> get({
@@ -30,6 +31,7 @@ abstract interface class TaroHttpClient {
 /// [TaroLoaderNetwork] is a class that manages the loading of data from a network source.
 /// It uses the http package to send GET requests to the provided URL.
 class TaroLoaderNetwork {
+  /// Creates a [TaroLoaderNetwork].
   const TaroLoaderNetwork({
     this.resizer = const TaroResizer(),
     this.client = const HttpClient(),
