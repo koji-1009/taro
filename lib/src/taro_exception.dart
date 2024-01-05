@@ -1,10 +1,12 @@
 /// [TaroException] is a base class for all exceptions in the Taro.
 sealed class TaroException implements Exception {
+  /// Creates a [TaroException].
   const TaroException();
 }
 
 /// [TaroLoadException] is thrown when there is an issue with loading data in the Taro library.
 final class TaroLoadException extends TaroException {
+  /// Creates a [TaroLoadException].
   const TaroLoadException({
     required this.message,
   });
@@ -19,6 +21,7 @@ final class TaroLoadException extends TaroException {
 /// [TaroStorageException] is thrown when there is an issue with storage operations in the Taro library.
 /// It includes the original exception that caused the error.
 final class TaroStorageException extends TaroException {
+  /// Creates a [TaroStorageException].
   const TaroStorageException({
     required this.exception,
   });
@@ -33,6 +36,7 @@ final class TaroStorageException extends TaroException {
 /// [TaroUriParseException] is thrown when there is an issue with parsing a URI in the Taro library.
 /// It includes the URL that was being parsed.
 final class TaroUriParseException extends TaroException {
+  /// Creates a [TaroUriParseException].
   const TaroUriParseException({
     required this.url,
   });
@@ -47,6 +51,7 @@ final class TaroUriParseException extends TaroException {
 /// [TaroNetworkException] is thrown when there is an issue with network operations in the Taro library.
 /// It includes the URL that was being accessed and the original error that caused the issue.
 final class TaroNetworkException extends TaroException {
+  /// Creates a [TaroNetworkException].
   const TaroNetworkException({
     required this.url,
     required this.error,
@@ -66,6 +71,7 @@ final class TaroNetworkException extends TaroException {
 /// It includes the status code, reason phrase, content length, headers, and whether the response is a redirect.
 /// This exception is thrown when the status code is not in the range 200-399.
 final class TaroHttpResponseException extends TaroException {
+  /// Creates a [TaroHttpResponseException].
   const TaroHttpResponseException({
     required this.statusCode,
     required this.reasonPhrase,
@@ -98,6 +104,7 @@ final class TaroHttpResponseException extends TaroException {
 /// It includes the URL that was being accessed.
 /// This exception is thrown when the response body is empty.
 final class TaroEmptyResponseException extends TaroException {
+  /// Creates a [TaroEmptyResponseException].
   const TaroEmptyResponseException({
     required this.url,
   });
@@ -113,6 +120,7 @@ final class TaroEmptyResponseException extends TaroException {
 /// It includes the cache-control header and the original exception that caused the error.
 /// This exception is thrown when the status code is in the range 200-399.
 final class TaroCacheControlException extends TaroException {
+  /// Creates a [TaroCacheControlException].
   const TaroCacheControlException({
     required this.cacheControl,
     required this.error,
@@ -132,6 +140,7 @@ final class TaroCacheControlException extends TaroException {
 /// [TaroResizeException] is thrown when there is an issue with resizing an image in the Taro library.
 /// It includes the original exception that caused the error.
 final class TaroResizeException extends TaroException {
+  /// Creates a [TaroResizeException].
   const TaroResizeException({
     required this.exception,
   });
@@ -145,6 +154,7 @@ final class TaroResizeException extends TaroException {
 
 /// [TaroResizeFailedException] is thrown when there is an issue with resizing an image in the Taro library.
 final class TaroResizeFailedException extends TaroException {
+  /// Creates a [TaroResizeFailedException].
   const TaroResizeFailedException();
 
   @override

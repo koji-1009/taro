@@ -7,6 +7,7 @@ import 'package:taro/src/taro_type.dart';
 
 /// The [TaroResizer] class is used to resize images.
 class TaroResizer {
+  /// Creates a [TaroResizer].
   const TaroResizer();
 
   /// Resize the image if needed.

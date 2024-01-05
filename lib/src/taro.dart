@@ -9,6 +9,7 @@ import 'package:taro/src/taro_type.dart';
 
 /// [Taro] is a library for loading images. It uses two loaders: Storage and Network.
 class Taro {
+  /// Creates a [Taro].
   Taro._();
 
   /// Creates a new instance of the [Taro] class.
