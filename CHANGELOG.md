@@ -1,3 +1,8 @@
+## 0.0.3
+
+* Cleanup API
+* Add comments
+
 ## 0.0.2
 
 * More documentation
