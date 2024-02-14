@@ -90,8 +90,6 @@ If a native cache directory exists, such as Android or iOS, use [path_provider](
   - Resize image
 - [http](https://pub.dev/packages/http)
   - Fetch data from network
-- [js](https://pub.dev/packages/js)
-  - Request Cache API on web
 - [path_provider](https://pub.dev/packages/path_provider)
   - Get application cache directory
 - [quiver](https://pub.dev/packages/quiver)
