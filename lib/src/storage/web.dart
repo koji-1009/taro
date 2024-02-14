@@ -2,64 +2,48 @@ import 'dart:js_interop';
 import 'dart:typed_data';
 
 import 'package:clock/clock.dart';
-import 'package:js/js_util.dart' as js_util;
 import 'package:taro/src/storage/cache_file_info.dart';
 import 'package:taro/src/storage/web_cache.dart';
+
+const _cacheName = 'taro';
 
 /// Load [Uint8List] from storage.
 Future<Uint8List?> load({
   required String filename,
 }) async {
-  final cacheFileName = filename.toJS;
-  final cacheFileInfoFile = 'info_$filename'.toJS;
-
   final cacheStorage = window.caches;
   if (cacheStorage == null) {
     throw UnsupportedError('[taro][storage] Cache API is not supported');
   }
 
-  final cache = await js_util.promiseToFuture<Cache>(
-    cacheStorage.open('taro'),
-  );
-
-  final cacheFileInfoJs = await js_util.promiseToFuture<Response?>(
-    cache.match(cacheFileInfoFile),
-  );
-  final cacheFileJs = await js_util.promiseToFuture<Response?>(
-    cache.match(cacheFileName),
-  );
-
+  final cache = await cacheStorage.open(_cacheName.toJS).toDart as Cache;
+  final cacheFileInfoFile = 'info_$filename'.toJS;
+  final cacheFileInfoJs =
+      await cache.match(cacheFileInfoFile).toDart as Response?;
   if (cacheFileInfoJs == null) {
     // cache info file is not found
     return null;
   }
+
+  final cacheFileName = filename.toJS;
+  final cacheFileJs = await cache.match(cacheFileName).toDart as Response?;
   if (cacheFileJs == null) {
-    await js_util.promiseToFuture(
-      cache.delete(cacheFileInfoFile),
-    );
+    await cache.delete(cacheFileInfoFile).toDart;
     return null;
   }
 
-  final cacheFileInfo = await js_util.promiseToFuture(
-    cacheFileInfoJs.text(),
-  );
-  final cacheInfo = CacheFileInfo.fromJson(cacheFileInfo);
+  final cacheFileInfo = await cacheFileInfoJs.text().toDart as JSString;
+  final cacheInfo = CacheFileInfo.fromJson(cacheFileInfo.toDart);
 
   final now = clock.now();
   if (cacheInfo.expireAt != null && cacheInfo.expireAt!.isBefore(now)) {
     // cache is expired
-    await js_util.promiseToFuture(
-      cache.delete(cacheFileName),
-    );
-    await js_util.promiseToFuture(
-      cache.delete(cacheFileInfoFile),
-    );
+    await cache.delete(cacheFileName).toDart;
+    await cache.delete(cacheFileInfoFile).toDart;
     return null;
   }
 
-  final bufferJs = await js_util.promiseToFuture<JSArrayBuffer>(
-    cacheFileJs.arrayBuffer(),
-  );
+  final bufferJs = await cacheFileJs.arrayBuffer().toDart as JSArrayBuffer;
   final bytes = Uint8List.view(bufferJs.toDart);
   return bytes;
 }
@@ -71,6 +55,11 @@ Future<void> save({
   required String contentType,
   required DateTime? expireAt,
 }) async {
+  final cacheStorage = window.caches;
+  if (cacheStorage == null) {
+    throw UnsupportedError('[taro][storage] Cache API is not supported');
+  }
+
   final cacheFileInfo = CacheFileInfo(
     contentType: contentType,
     expireAt: expireAt,
@@ -79,46 +68,35 @@ Future<void> save({
   final cacheFileName = filename.toJS;
   final cacheFileInfoFile = 'info_$filename'.toJS;
 
-  final cacheStorage = window.caches;
-  if (cacheStorage == null) {
-    throw UnsupportedError('[taro][storage] Cache API is not supported');
-  }
-
-  final cache = await js_util.promiseToFuture<Cache>(
-    cacheStorage.open('taro'),
-  );
-  await js_util.promiseToFuture<void>(
-    cache.put(
-      cacheFileName,
-      Response(
-        bytes.toJS,
-        ResponseInit(
-          headers: js_util.jsify(
-            {
+  final cache = await cacheStorage.open(_cacheName.toJS).toDart as Cache;
+  await cache
+      .put(
+        cacheFileName,
+        Response(
+          bytes.toJS,
+          ResponseInit(
+            headers: {
               'content-type': contentType,
               'content-length': '${bytes.length}',
-            },
+            }.jsify(),
           ),
         ),
-      ),
-    ),
-  );
+      )
+      .toDart;
 
   final cacheFileInfoJson = cacheFileInfo.toJson();
-  await js_util.promiseToFuture<void>(
-    cache.put(
-      cacheFileInfoFile,
-      Response(
-        cacheFileInfoJson.toJS,
-        ResponseInit(
-          headers: js_util.jsify(
-            {
+  await cache
+      .put(
+        cacheFileInfoFile,
+        Response(
+          cacheFileInfoJson.toJS,
+          ResponseInit(
+            headers: {
               'content-type': 'text/plain',
               'content-length': '${cacheFileInfoJson.length}'
-            },
+            }.jsify(),
           ),
         ),
-      ),
-    ),
-  );
+      )
+      .toDart;
 }

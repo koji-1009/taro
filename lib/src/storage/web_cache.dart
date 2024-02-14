@@ -1,23 +1,7 @@
 import 'dart:js_interop';
 
-import 'package:js/js.dart';
-
 @JS()
-class Promise<T> {
-  external Promise(
-    void Function(
-      void Function(T result) resolve,
-      Function reject,
-    ) executor,
-  );
-
-  external Promise then(
-    void Function(T result) onFulfilled, [
-    Function onRejected,
-  ]);
-}
-
-@JS()
+@staticInterop
 external Window get window;
 
 /// see [https://developer.mozilla.org/en-US/docs/Web/API/Window]
@@ -35,11 +19,11 @@ extension WindowExtension on Window {
 class Cache {}
 
 extension CacheExtension on Cache {
-  external Promise<Response?> match(JSAny request);
+  external JSPromise match(JSString request);
 
-  external Promise<void> put(JSAny request, Response response);
+  external JSPromise put(JSString request, Response response);
 
-  external Promise<void> delete(JSAny request);
+  external JSPromise delete(JSString request);
 }
 
 /// see [https://developer.mozilla.org/en-US/docs/Web/API/CacheStorage]
@@ -48,7 +32,7 @@ extension CacheExtension on Cache {
 class CacheStorage {}
 
 extension CacheStorageExtension on CacheStorage {
-  external Promise<Cache> open(String cacheName);
+  external JSPromise open(JSString cacheName);
 }
 
 /// see [https://developer.mozilla.org/en-US/docs/Web/API/Response]
@@ -62,9 +46,9 @@ class Response {
 }
 
 extension ResponseExtension on Response {
-  external Promise<String> text();
+  external JSPromise text();
 
-  external Promise<JSArrayBuffer> arrayBuffer();
+  external JSPromise arrayBuffer();
 }
 
 @JS()
@@ -72,6 +56,6 @@ extension ResponseExtension on Response {
 @anonymous
 class ResponseInit {
   external factory ResponseInit({
-    JSAny headers,
+    JSAny? headers,
   });
 }
