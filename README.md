@@ -5,6 +5,10 @@ By using `TaroImage`, you can also use the memory cache by CacheImage of Flutter
 
 This library aims to be easy to use and maintain by reducing the amount of dependent libraries and code.
 
+## Demo
+
+The demo application is available at [here](https://koji-1009.github.io/taro/).
+
 ## Features
 
 - Load image as byte arrays or as `TaroImage` object.
