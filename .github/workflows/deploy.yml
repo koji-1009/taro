@@ -6,6 +6,10 @@ on:
       - main
   workflow_dispatch:
 
+defaults:
+  run:
+    working-directory: example
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
