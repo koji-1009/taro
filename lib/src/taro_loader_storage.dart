@@ -1,6 +1,7 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:quiver/core.dart';
+import 'package:crypto/crypto.dart';
 import 'package:taro/src/storage/shared.dart' as storage;
 import 'package:taro/src/taro_exception.dart';
 import 'package:taro/src/taro_type.dart';
@@ -17,8 +18,9 @@ class TaroLoaderStorage {
     required TaroResizeOption resizeOption,
   }) async {
     try {
+      final filename = sha256.convert(utf8.encode('$url+$resizeOption'));
       return await storage.load(
-        filename: '${hashObjects([url, resizeOption])}',
+        filename: '$filename',
       );
     } on Exception catch (exception) {
       throw TaroStorageException(
@@ -36,8 +38,9 @@ class TaroLoaderStorage {
     required TaroResizeOption resizeOption,
   }) async {
     try {
+      final filename = sha256.convert(utf8.encode('$url+$resizeOption'));
       return await storage.save(
-        filename: '${hashObjects([url, resizeOption])}',
+        filename: '$filename',
         bytes: bytes,
         contentType: contentType,
         expireAt: expireAt,
