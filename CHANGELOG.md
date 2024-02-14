@@ -1,3 +1,8 @@
+## 0.1.0
+
+* Migrate to js_interop
+* Create filename by sha256 hash of URL and options
+
 ## 0.0.3
 
 * Cleanup API
