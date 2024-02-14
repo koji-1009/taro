@@ -43,8 +43,8 @@ Future<Uint8List?> load({
     return null;
   }
 
-  final bufferJs = await cacheFileJs.arrayBuffer().toDart as JSArrayBuffer;
-  final bytes = Uint8List.view(bufferJs.toDart);
+  final arrayBufferJs = await cacheFileJs.arrayBuffer().toDart as JSArrayBuffer;
+  final bytes = arrayBufferJs.toDart.asUint8List();
   return bytes;
 }
 

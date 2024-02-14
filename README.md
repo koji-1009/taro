@@ -92,5 +92,5 @@ If a native cache directory exists, such as Android or iOS, use [path_provider](
   - Fetch data from network
 - [path_provider](https://pub.dev/packages/path_provider)
   - Get application cache directory
-- [quiver](https://pub.dev/packages/quiver)
-  - Get 32-bit hash value
+- [crypto](https://pub.dev/packages/crypto)
+  - en: Get persistent file name from URL and options
