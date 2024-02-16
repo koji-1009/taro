@@ -16,23 +16,22 @@ Future<Uint8List?> load({
     throw UnsupportedError('[taro][storage] Cache API is not supported');
   }
 
-  final cache = await cacheStorage.open(_cacheName.toJS).toDart as Cache;
+  final cache = await cacheStorage.open(_cacheName.toJS).toDart;
   final cacheFileInfoFile = 'info_$filename'.toJS;
-  final cacheFileInfoJs =
-      await cache.match(cacheFileInfoFile).toDart as Response?;
+  final cacheFileInfoJs = await cache.match(cacheFileInfoFile).toDart;
   if (cacheFileInfoJs == null) {
     // cache info file is not found
     return null;
   }
 
   final cacheFileName = filename.toJS;
-  final cacheFileJs = await cache.match(cacheFileName).toDart as Response?;
+  final cacheFileJs = await cache.match(cacheFileName).toDart;
   if (cacheFileJs == null) {
     await cache.delete(cacheFileInfoFile).toDart;
     return null;
   }
 
-  final cacheFileInfo = await cacheFileInfoJs.text().toDart as JSString;
+  final cacheFileInfo = await cacheFileInfoJs.text().toDart;
   final cacheInfo = CacheFileInfo.fromJson(cacheFileInfo.toDart);
 
   final now = clock.now();
@@ -43,7 +42,7 @@ Future<Uint8List?> load({
     return null;
   }
 
-  final arrayBufferJs = await cacheFileJs.arrayBuffer().toDart as JSArrayBuffer;
+  final arrayBufferJs = await cacheFileJs.arrayBuffer().toDart;
   final bytes = arrayBufferJs.toDart.asUint8List();
   return bytes;
 }
@@ -68,7 +67,7 @@ Future<void> save({
   final cacheFileName = filename.toJS;
   final cacheFileInfoFile = 'info_$filename'.toJS;
 
-  final cache = await cacheStorage.open(_cacheName.toJS).toDart as Cache;
+  final cache = await cacheStorage.open(_cacheName.toJS).toDart;
   await cache
       .put(
         cacheFileName,

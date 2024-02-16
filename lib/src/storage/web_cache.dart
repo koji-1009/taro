@@ -11,7 +11,7 @@ extension type Window(JSObject _) implements JSObject {
 
 /// [https://developer.mozilla.org/en-US/docs/Web/API/Cache]
 extension type Cache(JSObject _) implements JSObject {
-  external JSPromise match(
+  external JSPromise<Response?> match(
     JSString request,
   );
 
@@ -27,7 +27,7 @@ extension type Cache(JSObject _) implements JSObject {
 
 /// [https://developer.mozilla.org/en-US/docs/Web/API/CacheStorage]
 extension type CacheStorage(JSObject _) implements JSObject {
-  external JSPromise open(
+  external JSPromise<Cache> open(
     JSString cacheName,
   );
 }
@@ -39,9 +39,9 @@ extension type Response._(JSObject _) implements JSObject {
     ResponseOptions options,
   ]);
 
-  external JSPromise text();
+  external JSPromise<JSString> text();
 
-  external JSPromise arrayBuffer();
+  external JSPromise<JSArrayBuffer> arrayBuffer();
 }
 
 /// [https://developer.mozilla.org/en-US/docs/Web/API/Response/Response#options]
