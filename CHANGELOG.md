@@ -1,3 +1,7 @@
+## 0.2.1
+
+* Specify generic type
+
 ## 0.2.0
 
 * Require Dart 3.3.0 and Flutter 3.19.0
