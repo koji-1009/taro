@@ -11,16 +11,25 @@ extension type Window(JSObject _) implements JSObject {
 
 /// [https://developer.mozilla.org/en-US/docs/Web/API/Cache]
 extension type Cache(JSObject _) implements JSObject {
-  external JSPromise match(JSString request);
+  external JSPromise match(
+    JSString request,
+  );
 
-  external JSPromise put(JSString request, Response response);
+  external JSPromise put(
+    JSString request,
+    Response response,
+  );
 
-  external JSPromise delete(JSString request);
+  external JSPromise delete(
+    JSString request,
+  );
 }
 
 /// [https://developer.mozilla.org/en-US/docs/Web/API/CacheStorage]
 extension type CacheStorage(JSObject _) implements JSObject {
-  external JSPromise open(JSString cacheName);
+  external JSPromise open(
+    JSString cacheName,
+  );
 }
 
 /// [https://developer.mozilla.org/en-US/docs/Web/API/Response]
