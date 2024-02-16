@@ -74,7 +74,7 @@ Future<void> save({
         cacheFileName,
         Response(
           bytes.toJS,
-          ResponseInit(
+          ResponseOptions(
             headers: {
               'content-type': contentType,
               'content-length': '${bytes.length}',
@@ -90,7 +90,7 @@ Future<void> save({
         cacheFileInfoFile,
         Response(
           cacheFileInfoJson.toJS,
-          ResponseInit(
+          ResponseOptions(
             headers: {
               'content-type': 'text/plain',
               'content-length': '${cacheFileInfoJson.length}'
