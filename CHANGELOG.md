@@ -1,3 +1,8 @@
+## 0.2.0
+
+* Require Dart 3.3.0 and Flutter 3.19.0
+* Update to extension type
+
 ## 0.1.0
 
 * Migrate to js_interop
