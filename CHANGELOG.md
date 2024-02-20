@@ -1,3 +1,7 @@
+## 0.2.2
+
+* Change js class names to match Dart class names
+
 ## 0.2.1
 
 * Specify generic type
