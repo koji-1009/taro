@@ -2,22 +2,24 @@ import 'dart:js_interop';
 
 /// [https://developer.mozilla.org/en-US/docs/Web/API/Window]
 @JS()
-external Window get window;
+external JSWindow get window;
 
 /// [https://developer.mozilla.org/en-US/docs/Web/API/Window]
-extension type Window(JSObject _) implements JSObject {
-  external CacheStorage? get caches;
+@JS('Window')
+extension type JSWindow(JSObject _) implements JSObject {
+  external JSCacheStorage? get caches;
 }
 
 /// [https://developer.mozilla.org/en-US/docs/Web/API/Cache]
-extension type Cache(JSObject _) implements JSObject {
-  external JSPromise<Response?> match(
+@JS('Cache')
+extension type JSCache(JSObject _) implements JSObject {
+  external JSPromise<JSResponse?> match(
     JSString request,
   );
 
   external JSPromise put(
     JSString request,
-    Response response,
+    JSResponse response,
   );
 
   external JSPromise delete(
@@ -26,17 +28,19 @@ extension type Cache(JSObject _) implements JSObject {
 }
 
 /// [https://developer.mozilla.org/en-US/docs/Web/API/CacheStorage]
-extension type CacheStorage(JSObject _) implements JSObject {
-  external JSPromise<Cache> open(
+@JS('CacheStorage')
+extension type JSCacheStorage(JSObject _) implements JSObject {
+  external JSPromise<JSCache> open(
     JSString cacheName,
   );
 }
 
 /// [https://developer.mozilla.org/en-US/docs/Web/API/Response]
-extension type Response._(JSObject _) implements JSObject {
-  external factory Response([
+@JS('Response')
+extension type JSResponse._(JSObject _) implements JSObject {
+  external factory JSResponse([
     JSAny? body,
-    ResponseOptions options,
+    JSResponseOptions options,
   ]);
 
   external JSPromise<JSString> text();
@@ -45,8 +49,8 @@ extension type Response._(JSObject _) implements JSObject {
 }
 
 /// [https://developer.mozilla.org/en-US/docs/Web/API/Response/Response#options]
-extension type ResponseOptions._(JSObject _) implements JSObject {
-  external factory ResponseOptions({
+extension type JSResponseOptions._(JSObject _) implements JSObject {
+  external factory JSResponseOptions({
     JSAny? headers,
   });
 }
