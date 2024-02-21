@@ -1,3 +1,7 @@
+## 0.3.0
+
+* http 1.2.1
+
 ## 0.2.2
 
 * Change js class names to match Dart class names
