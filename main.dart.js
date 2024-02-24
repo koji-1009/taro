@@ -24497,22 +24497,22 @@ var $async$iH=A.P(function(b,c){if(b===1)return A.L(c,r)
 while(true)switch(s){case 0:i=self.window.caches
 if(i==null)throw A.c(A.aZ(u.s))
 s=3
-return A.K(A.cv(A.i(i,"open",["taro"]),t.lZ),$async$iH)
+return A.K(A.cv(i.open("taro"),t.lZ),$async$iH)
 case 3:p=c
 o="info_"+a
 n=t.NX
 s=4
-return A.K(A.cv(A.i(p,"match",[o]),n),$async$iH)
+return A.K(A.cv(p.match(o),n),$async$iH)
 case 4:m=c
 if(m==null){q=null
 s=1
 break}s=5
-return A.K(A.cv(A.i(p,"match",[a]),n),$async$iH)
+return A.K(A.cv(p.match(a),n),$async$iH)
 case 5:l=c
 s=l==null?6:7
 break
 case 6:s=8
-return A.K(A.cv(A.i(p,"delete",[o]),t.X),$async$iH)
+return A.K(A.cv(p.delete(o),t.X),$async$iH)
 case 8:q=null
 s=1
 break
@@ -24524,15 +24524,17 @@ case 9:k=h.a(g.MK(c,null))
 A.ct(k.i(0,"content_type"))
 n=k.i(0,"expire_at")
 n=A.aqY(n==null?"":n)
-A.azq()
+if(n!=null){A.azq()
 j=A.ank()
-s=n!=null&&n.a<j.a?10:11
+j=n.a<j.a
+n=j}else n=!1
+s=n?10:11
 break
 case 10:n=t.X
 s=12
-return A.K(A.cv(A.i(p,"delete",[a]),n),$async$iH)
+return A.K(A.cv(p.delete(a),n),$async$iH)
 case 12:s=13
-return A.K(A.cv(A.i(p,"delete",[o]),n),$async$iH)
+return A.K(A.cv(p.delete(o),n),$async$iH)
 case 13:q=null
 s=1
 break
@@ -24550,7 +24552,7 @@ while(true)switch(s){case 0:m=self
 l=m.window.caches
 if(l==null)throw A.c(A.aZ(u.s))
 s=2
-return A.K(A.cv(A.i(l,"open",["taro"]),t.lZ),$async$B7)
+return A.K(A.cv(l.open("taro"),t.lZ),$async$B7)
 case 2:q=f
 p=t.N
 o=t.X
