@@ -14,16 +14,16 @@ extension type JSWindow(JSObject _) implements JSObject {
 @JS('Cache')
 extension type JSCache(JSObject _) implements JSObject {
   external JSPromise<JSResponse?> match(
-    JSString request,
+    String request,
   );
 
   external JSPromise put(
-    JSString request,
+    String request,
     JSResponse response,
   );
 
   external JSPromise delete(
-    JSString request,
+    String request,
   );
 }
 
@@ -31,7 +31,7 @@ extension type JSCache(JSObject _) implements JSObject {
 @JS('CacheStorage')
 extension type JSCacheStorage(JSObject _) implements JSObject {
   external JSPromise<JSCache> open(
-    JSString cacheName,
+    String cacheName,
   );
 }
 

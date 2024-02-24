@@ -16,29 +16,27 @@ Future<Uint8List?> load({
     throw UnsupportedError('[taro][storage] Cache API is not supported');
   }
 
-  final cache = await cacheStorage.open(_cacheName.toJS).toDart;
-  final cacheFileInfoFile = 'info_$filename'.toJS;
-  final cacheFileInfoJs = await cache.match(cacheFileInfoFile).toDart;
+  final cache = await cacheStorage.open(_cacheName).toDart;
+
+  final cacheInfoFilename = 'info_$filename';
+  final cacheFileInfoJs = await cache.match(cacheInfoFilename).toDart;
   if (cacheFileInfoJs == null) {
     // cache info file is not found
     return null;
   }
 
-  final cacheFileName = filename.toJS;
-  final cacheFileJs = await cache.match(cacheFileName).toDart;
+  final cacheFileJs = await cache.match(filename).toDart;
   if (cacheFileJs == null) {
-    await cache.delete(cacheFileInfoFile).toDart;
+    await cache.delete(cacheInfoFilename).toDart;
     return null;
   }
 
   final cacheFileInfo = await cacheFileInfoJs.text().toDart;
   final cacheInfo = CacheFileInfo.fromJson(cacheFileInfo.toDart);
-
-  final now = clock.now();
-  if (cacheInfo.expireAt != null && cacheInfo.expireAt!.isBefore(now)) {
+  if (cacheInfo.expireAt != null && cacheInfo.expireAt!.isBefore(clock.now())) {
     // cache is expired
-    await cache.delete(cacheFileName).toDart;
-    await cache.delete(cacheFileInfoFile).toDart;
+    await cache.delete(filename).toDart;
+    await cache.delete(cacheInfoFilename).toDart;
     return null;
   }
 
@@ -59,18 +57,10 @@ Future<void> save({
     throw UnsupportedError('[taro][storage] Cache API is not supported');
   }
 
-  final cacheFileInfo = CacheFileInfo(
-    contentType: contentType,
-    expireAt: expireAt,
-  );
-
-  final cacheFileName = filename.toJS;
-  final cacheFileInfoFile = 'info_$filename'.toJS;
-
-  final cache = await cacheStorage.open(_cacheName.toJS).toDart;
+  final cache = await cacheStorage.open(_cacheName).toDart;
   await cache
       .put(
-        cacheFileName,
+        filename,
         JSResponse(
           bytes.toJS,
           JSResponseOptions(
@@ -83,16 +73,20 @@ Future<void> save({
       )
       .toDart;
 
-  final cacheFileInfoJson = cacheFileInfo.toJson();
+  final cacheInfoFilename = 'info_$filename';
+  final cacheInfoFileJson = CacheFileInfo(
+    contentType: contentType,
+    expireAt: expireAt,
+  ).toJson();
   await cache
       .put(
-        cacheFileInfoFile,
+        cacheInfoFilename,
         JSResponse(
-          cacheFileInfoJson.toJS,
+          cacheInfoFileJson.toJS,
           JSResponseOptions(
             headers: {
               'content-type': 'text/plain',
-              'content-length': '${cacheFileInfoJson.length}'
+              'content-length': '${cacheInfoFileJson.length}'
             }.jsify(),
           ),
         ),
