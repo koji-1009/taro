@@ -1,3 +1,6 @@
+@JS()
+library;
+
 import 'dart:js_interop';
 
 /// [https://developer.mozilla.org/en-US/docs/Web/API/Window]
@@ -35,8 +38,13 @@ extension type JSCacheStorage(JSObject _) implements JSObject {
 /// [https://developer.mozilla.org/en-US/docs/Web/API/Response]
 @JS('Response')
 extension type JSResponse._(JSObject _) implements JSObject {
-  external factory JSResponse([
-    JSAny? body,
+  external factory JSResponse.bytes([
+    JSUint8Array body,
+    JSResponseOptions options,
+  ]);
+
+  external factory JSResponse.text([
+    String body,
     JSResponseOptions options,
   ]);
 
