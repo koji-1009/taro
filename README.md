@@ -82,6 +82,60 @@ class HomePage extends StatelessWidget {
 }
 ```
 
+### Use another http client
+
+If you want to use another http client, like [dio](https://pub.dev/packages/dio), you can create a custom `TaroHttpClient`.
+
+```dart
+class DioHttp implements TaroHttpClient {
+  /// Creates a [DioHttp].
+  const DioHttp({
+    required this.dio,
+  });
+
+  final Dio dio;
+
+  @override
+  Future<TaroHttpResponse> get({
+    required Uri uri,
+    required Map<String, String> headers,
+  }) async {
+    final response = await dio.getUri<Uint8List>(
+      uri,
+      options: Options(
+        headers: headers,
+        responseType: ResponseType.bytes,
+      ),
+    );
+    final data = response.data ?? Uint8List(0);
+    return (
+      statusCode: response.statusCode!,
+      bodyBytes: data,
+      reasonPhrase: response.statusMessage,
+      contentLength: data.length,
+      headers: response.headers.map.map(
+        (key, value) => MapEntry(key, value.join(';')),
+      ),
+      isRedirect: response.isRedirect,
+    );
+  }
+}
+```
+
+Then, create a `Taro` instance with the custom http client.
+
+```dart
+Taro.instance.networkLoader = TaroLoaderNetwork(
+  client: DioHttp(
+    dio: Dio()
+      ..options.connectTimeout = const Duration(seconds: 10)
+      ..options.receiveTimeout = const Duration(seconds: 10),
+  ),
+);
+```
+
+
+
 ## Cache directory
 
 If a native cache directory exists, such as Android or iOS, use [path_provider](https://pub.dev/packages/path_provider) to get the `Application Cache directory`. For web, use [Cache API](https://developer.mozilla.org/en-US/docs/Web/API/Cache) to save the cache.
