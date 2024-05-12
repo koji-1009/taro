@@ -10,7 +10,7 @@ import 'package:taro/src/storage/cache_file_info.dart';
 Future<Uint8List?> load({
   required String filename,
 }) async {
-  final Directory appCacheDir = await getApplicationCacheDirectory();
+  final appCacheDir = await getApplicationCacheDirectory();
   final cacheDir = Directory('${appCacheDir.path}/taro');
   final cacheFile = File('${cacheDir.path}/$filename');
   final cacheInfoFile = File('${cacheDir.path}/$filename.json');
