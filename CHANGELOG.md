@@ -1,3 +1,9 @@
+## 1.0.1
+
+* Add sample code with `Dio` http client
+* Update README
+* Code cleanup
+
 ## 1.0.0
 
 * Initial stable release
