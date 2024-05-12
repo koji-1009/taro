@@ -1,6 +1,3 @@
-@JS()
-library;
-
 import 'dart:js_interop';
 
 /// [https://developer.mozilla.org/en-US/docs/Web/API/Window]
