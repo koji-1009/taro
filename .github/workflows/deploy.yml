@@ -21,7 +21,7 @@ jobs:
         working-directory: example
       - run: flutter build web --base-href "/taro/"
         working-directory: example
-      - uses: peaceiris/actions-gh-pages@v3
+      - uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./example/build/web
