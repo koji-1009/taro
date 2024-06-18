@@ -7,7 +7,7 @@ This library aims to be easy to use and maintain by reducing the amount of depen
 
 ## Demo
 
-The demo application is available at [here](https://koji-1009.github.io/taro/).
+The demo application is available at [GitHub Pages](https://koji-1009.github.io/taro/).
 
 ## Features
 
@@ -100,6 +100,7 @@ class DioHttp implements TaroHttpClient {
     required Uri uri,
     required Map<String, String> headers,
   }) async {
+    // Fetch data via dio
     final response = await dio.getUri<Uint8List>(
       uri,
       options: Options(
@@ -134,8 +135,6 @@ Taro.instance.networkLoader = TaroLoaderNetwork(
 );
 ```
 
-
-
 ## Cache directory
 
 If a native cache directory exists, such as Android or iOS, use [path_provider](https://pub.dev/packages/path_provider) to get the `Application Cache directory`. For web, use [Cache API](https://developer.mozilla.org/en-US/docs/Web/API/Cache) to save the cache.
@@ -151,4 +150,4 @@ If a native cache directory exists, such as Android or iOS, use [path_provider](
 - [path_provider](https://pub.dev/packages/path_provider)
   - Get application cache directory
 - [crypto](https://pub.dev/packages/crypto)
-  - en: Get persistent file name from URL and options
+  - Get persistent file name from URL and options
