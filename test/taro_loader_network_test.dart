@@ -11,9 +11,12 @@ import 'package:taro/src/taro_loader_network.dart';
 import 'package:taro/src/taro_resizer.dart';
 import 'package:taro/src/taro_type.dart';
 
+@GenerateNiceMocks([
+  MockSpec<HttpClient>(),
+  MockSpec<TaroResizer>(),
+])
 import 'taro_loader_network_test.mocks.dart';
 
-@GenerateNiceMocks([MockSpec<HttpClient>(), MockSpec<TaroResizer>()])
 void main() {
   final mockHttpClient = MockHttpClient();
   final mockTaroResizer = MockTaroResizer();

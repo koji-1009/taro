@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:taro/taro.dart';
 
+/// [DioHttp] is a class that performs GET requests using the dio package
 class DioHttp implements TaroHttpClient {
   /// Creates a [DioHttp].
   const DioHttp({
