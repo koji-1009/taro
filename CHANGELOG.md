@@ -1,3 +1,8 @@
+## 1.1.0
+
+* Remove `http` dependency
+* Use `dart.library.io` and 'dart.library.js_interop'
+
 ## 1.0.1
 
 * Add sample code with `Dio` http client
