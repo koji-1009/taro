@@ -2,22 +2,22 @@ import 'dart:js_interop';
 
 /// [https://developer.mozilla.org/en-US/docs/Web/API/Window]
 @JS()
-external JSWindow get window;
+external Window get window;
 
 /// [https://developer.mozilla.org/en-US/docs/Web/API/Window]
-extension type JSWindow(JSObject _) implements JSObject {
-  external JSCacheStorage? get caches;
+extension type Window(JSObject _) implements JSObject {
+  external CacheStorage? get caches;
 }
 
 /// [https://developer.mozilla.org/en-US/docs/Web/API/Cache]
-extension type JSCache(JSObject _) implements JSObject {
-  external JSPromise<JSResponse?> match(
+extension type Cache(JSObject _) implements JSObject {
+  external JSPromise<Response?> match(
     String request,
   );
 
   external JSPromise put(
     String request,
-    JSResponse response,
+    Response response,
   );
 
   external JSPromise delete(
@@ -26,23 +26,22 @@ extension type JSCache(JSObject _) implements JSObject {
 }
 
 /// [https://developer.mozilla.org/en-US/docs/Web/API/CacheStorage]
-extension type JSCacheStorage(JSObject _) implements JSObject {
-  external JSPromise<JSCache> open(
+extension type CacheStorage(JSObject _) implements JSObject {
+  external JSPromise<Cache> open(
     String cacheName,
   );
 }
 
 /// [https://developer.mozilla.org/en-US/docs/Web/API/Response]
-@JS('Response')
-extension type JSResponse._(JSObject _) implements JSObject {
-  external factory JSResponse.bytes([
+extension type Response._(JSObject _) implements JSObject {
+  external factory Response.bytes([
     JSUint8Array body,
-    JSResponseOptions options,
+    ResponseOptions options,
   ]);
 
-  external factory JSResponse.text([
+  external factory Response.text([
     String body,
-    JSResponseOptions options,
+    ResponseOptions options,
   ]);
 
   external JSPromise<JSString> text();
@@ -51,8 +50,8 @@ extension type JSResponse._(JSObject _) implements JSObject {
 }
 
 /// [https://developer.mozilla.org/en-US/docs/Web/API/Response/Response#options]
-extension type JSResponseOptions._(JSObject _) implements JSObject {
-  external factory JSResponseOptions({
+extension type ResponseOptions._(JSObject _) implements JSObject {
+  external factory ResponseOptions({
     JSAny? headers,
   });
 }

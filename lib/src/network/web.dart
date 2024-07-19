@@ -9,7 +9,7 @@ Future<TaroHttpResponse> get({
   required Uri uri,
   required Map<String, String> headers,
 }) async {
-  final requestHeaders = JSHeaders();
+  final requestHeaders = Headers();
   for (final entry in headers.entries) {
     requestHeaders.append(entry.key, entry.value);
   }
