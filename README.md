@@ -84,11 +84,56 @@ class HomePage extends StatelessWidget {
 
 ### Use another http client
 
-If you want to use another http client, like [dio](https://pub.dev/packages/dio), you can create a custom `TaroHttpClient`.
+If you want to use another http client, like [http](https://pub.dev/packages/http) or [dio](https://pub.dev/packages/dio), you can create a custom `TaroHttpClient`.
+
+#### http
+
+```dart
+class HttpHttp implements TaroHttpClient {
+  const HttpHttp({
+    this.timeout = const Duration(
+      seconds: 180,
+    ),
+  });
+
+  final Duration timeout;
+
+  @override
+  Future<TaroHttpResponse> get({
+    required Uri uri,
+    required Map<String, String> headers,
+    StreamController<ImageChunkEvent>? chunkEvents,
+  }) async {
+    final response = await http
+        .get(
+          uri,
+          headers: headers,
+        )
+        .timeout(timeout);
+    return (
+      statusCode: response.statusCode,
+      bodyBytes: response.bodyBytes,
+      reasonPhrase: response.reasonPhrase,
+      contentLength: response.contentLength,
+      headers: response.headers,
+      isRedirect: response.isRedirect,
+    );
+  }
+}
+```
+
+Then, create a `Taro` instance with the custom http client.
+
+```dart
+Taro.instance.networkLoader = TaroLoaderNetwork(
+  client: const HttpHttp(),
+);
+```
+
+#### dio
 
 ```dart
 class DioHttp implements TaroHttpClient {
-  /// Creates a [DioHttp].
   const DioHttp({
     required this.dio,
   });
@@ -143,11 +188,9 @@ If a native cache directory exists, such as Android or iOS, use [path_provider](
 
 - [clock](https://pub.dev/packages/clock)
   - Get current time and mock time
-- [image](https://pub.dev/packages/image)
-  - Resize image
-- [http](https://pub.dev/packages/http)
-  - Fetch data from network
-- [path_provider](https://pub.dev/packages/path_provider)
-  - Get application cache directory
 - [crypto](https://pub.dev/packages/crypto)
   - Get persistent file name from URL and options
+- [image](https://pub.dev/packages/image)
+  - Resize image
+- [path_provider](https://pub.dev/packages/path_provider)
+  - Get application cache directory

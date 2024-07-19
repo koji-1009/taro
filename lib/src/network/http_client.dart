@@ -1,5 +1,8 @@
-import 'package:http/http.dart' as http;
+import 'dart:async';
+
 import 'package:taro/src/taro_loader_network.dart';
+
+import 'shared.dart' as client;
 
 /// [HttpClient] is a class that manages the sending of GET requests to the provided URL.
 class HttpClient implements TaroHttpClient {
@@ -17,14 +20,13 @@ class HttpClient implements TaroHttpClient {
     required Uri uri,
     required Map<String, String> headers,
   }) async {
-    final response = await http.get(uri, headers: headers).timeout(timeout);
-    return (
-      statusCode: response.statusCode,
-      bodyBytes: response.bodyBytes,
-      reasonPhrase: response.reasonPhrase,
-      contentLength: response.contentLength,
-      headers: response.headers,
-      isRedirect: response.isRedirect,
-    );
+    final response = await client
+        .get(
+          uri: uri,
+          headers: headers,
+        )
+        .timeout(timeout);
+
+    return response;
   }
 }
