@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:flutter/painting.dart';
 import 'package:taro/src/taro_image.dart';
 import 'package:taro/src/taro_loader.dart';
 import 'package:taro/src/taro_loader_network.dart';
@@ -78,20 +79,30 @@ class Taro {
   /// If [checkMaxAgeIfExist] is true, the method checks the max age of the data.
   /// [ifThrowMaxAgeHeaderError] is used to throw an exception if the max age header is invalid.
   /// The [resizeOption] parameter is used to resize the image. If it is not provided, the default resize option is used.
-  TaroImage loadImageProvider(
+  ImageProvider loadImageProvider(
     String url, {
     double scale = 1.0,
     Map<String, String> headers = const {},
     TaroResizeOption? resizeOption,
     TaroHeaderOption? headerOption,
   }) {
-    return TaroImage(
+    final image = TaroImage(
       url,
       scale: scale,
       resizeOption: resizeOption ?? _resizeOption,
       headers: headers,
       headerOption: headerOption ?? _headerOption,
     );
+
+    if (resizeOption?.mode == TaroResizeMode.memory) {
+      return ResizeImage.resizeIfNeeded(
+        resizeOption?.maxWidth,
+        resizeOption?.maxHeight,
+        image,
+      );
+    }
+
+    return image;
   }
 
   /// Loads the data from the provided URL and returns it as a byte array.
