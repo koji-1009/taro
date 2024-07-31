@@ -16,25 +16,28 @@ enum TaroResizeMode {
   /// The image is not resized.
   skip,
 
-  /// The image is resized to the original contentType.
+  /// The image is resized and saved original image.
+  memory,
+
+  /// The image is resized to the original contentType and saved cache.
   original,
 
-  /// The image is resized to a gif.
+  /// The image is resized to a gif and saved cache.
   gif,
 
-  /// The image is resized to a jpg.
+  /// The image is resized to a jpg and saved cache.
   jpeg,
 
-  /// The image is resized to a png.
+  /// The image is resized to a png and saved cache.
   png,
 
-  /// The image is resized to a bmp.
+  /// The image is resized to a bmp and saved cache.
   bmp,
 
-  /// The image is resized to a ico.
+  /// The image is resized to a ico and saved cache.
   ico,
 
-  /// The image is resized to a tiff.
+  /// The image is resized to a tiff and saved cache.
   tiff,
 }
 

@@ -16,7 +16,7 @@ class TaroResizer {
     required String contentType,
     required TaroResizeOption resizeOption,
   }) async {
-    if (resizeOption.mode == TaroResizeMode.skip) {
+    if (resizeOption.mode case TaroResizeMode.skip || TaroResizeMode.memory) {
       // do nothing
       return (
         bytes: bytes,
