@@ -1,6 +1,6 @@
 name: taro
 description: "Taro is a library for loading data from network and saving it to storage to speed up data loading."
-version: 1.1.0
+version: 1.2.0
 homepage: https://github.com/koji-1009/taro
 
 environment:

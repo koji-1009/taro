@@ -1,7 +1,11 @@
+## 1.2.0
+
+* Refactor `TaroResizeOption`
+
 ## 1.1.0
 
 * Remove `http` dependency
-* Use `dart.library.io` and 'dart.library.js_interop'
+* Use `dart.library.io` and `dart.library.js_interop`
 
 ## 1.0.1
 
