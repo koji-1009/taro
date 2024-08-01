@@ -125,11 +125,7 @@ class MockTaroResizer extends _i1.Mock implements _i5.TaroResizer {
   _i3.Future<({_i4.Uint8List bytes, String contentType})> resizeIfNeeded({
     required _i4.Uint8List? bytes,
     required String? contentType,
-    required ({
-      int? maxHeight,
-      int? maxWidth,
-      _i6.TaroResizeMode mode
-    })? resizeOption,
+    required _i6.TaroResizeOption? resizeOption,
   }) =>
       (super.noSuchMethod(
         Invocation.method(

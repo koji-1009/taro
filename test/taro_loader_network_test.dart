@@ -27,11 +27,7 @@ void main() {
   );
 
   final bodyBytes = Uint8List(100);
-  const resizeOption = (
-    mode: TaroResizeMode.skip,
-    maxWidth: null,
-    maxHeight: null,
-  );
+  const resizeOption = TaroResizeOptionSkip();
   const headerOption = (
     checkMaxAgeIfExist: false,
     ifThrowMaxAgeHeaderError: false,
