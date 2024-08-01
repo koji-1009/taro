@@ -575,7 +575,6 @@ _1785: (o, start, length) => new Float64Array(o.buffer, o.byteOffset + start, le
 _1786: Object.is,
 _1787: (t, s) => t.set(s),
 _1789: (o) => new DataView(o.buffer, o.byteOffset, o.byteLength),
-_1790: o => o.byteLength,
 _1791: o => o.buffer,
 _1792: o => o.byteOffset,
 _1793: Function.prototype.call.bind(Object.getOwnPropertyDescriptor(DataView.prototype, 'byteLength').get),
