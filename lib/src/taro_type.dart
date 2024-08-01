@@ -1,43 +1,65 @@
-/// [TaroRequestOption] is used to configure the options for a resizing request.
-typedef TaroResizeOption = ({
-  /// The resize mode of the image.
-  TaroResizeMode mode,
+/// The [TaroResizeOption] is used to determine how images are resized and saved.
+/// Please refer to [https://pub.dev/packages/image] for supported formats.
+sealed class TaroResizeOption {
+  const TaroResizeOption();
+}
+
+/// The image is not resized, saved original size and format.
+class TaroResizeOptionSkip extends TaroResizeOption {
+  const TaroResizeOptionSkip();
+}
+
+/// The image is resized in memory, saved original size and format.
+class TaroResizeOptionMemory extends TaroResizeOption {
+  const TaroResizeOptionMemory({
+    required this.maxWidth,
+    required this.maxHeight,
+  });
+
+  /// The maximum width of the image.
+  final int maxWidth;
+
+  /// The maximum height of the image.
+  final int maxHeight;
+}
+
+class TaroResizeOptionDisk extends TaroResizeOption {
+  const TaroResizeOptionDisk({
+    required this.format,
+    this.maxWidth,
+    this.maxHeight,
+  });
+
+  /// The format of the image.
+  final TaroResizeFormat format;
 
   /// The maximum width of the image. If null, the width is not limited.
-  int? maxWidth,
+  final int? maxWidth;
 
   /// The maximum height of the image. If null, the height is not limited.
-  int? maxHeight,
-});
+  final int? maxHeight;
+}
 
-/// The [TaroResizeMode] enum is used to determine how images are resized.
-/// Please refer to [https://pub.dev/packages/image] for supported formats.
-enum TaroResizeMode {
-  /// The image is not resized.
-  skip,
-
-  /// The image is resized and saved original image.
-  memory,
-
-  /// The image is resized to the original contentType and saved cache.
+enum TaroResizeFormat {
+  /// The original format of the image.
   original,
 
-  /// The image is resized to a gif and saved cache.
+  /// The image is saved as a gif.
   gif,
 
-  /// The image is resized to a jpg and saved cache.
+  /// The image is saved as a jpeg.
   jpeg,
 
-  /// The image is resized to a png and saved cache.
+  /// The image is saved as a png.
   png,
 
-  /// The image is resized to a bmp and saved cache.
+  /// The image is saved as a bmp.
   bmp,
 
-  /// The image is resized to a ico and saved cache.
+  /// The image is saved as an icon.
   ico,
 
-  /// The image is resized to a tiff and saved cache.
+  /// The image is saved as a tiff.
   tiff,
 }
 

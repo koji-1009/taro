@@ -23,11 +23,7 @@ class Taro {
   final _loader = TaroLoader();
 
   /// The [TaroResizeOption] used to resize images.
-  TaroResizeOption _resizeOption = const (
-    mode: TaroResizeMode.skip,
-    maxWidth: null,
-    maxHeight: null,
-  );
+  TaroResizeOption _resizeOption = const TaroResizeOptionSkip();
 
   /// The [TaroResizeOption] used to resize images.
   /// Changing this option will affect all image loading.
@@ -94,10 +90,10 @@ class Taro {
       headerOption: headerOption ?? _headerOption,
     );
 
-    if (resizeOption?.mode == TaroResizeMode.memory) {
+    if (resizeOption is TaroResizeOptionMemory) {
       return ResizeImage.resizeIfNeeded(
-        resizeOption?.maxWidth,
-        resizeOption?.maxHeight,
+        resizeOption.maxWidth,
+        resizeOption.maxHeight,
         image,
       );
     }
