@@ -9,9 +9,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Taro demo'),
-      ),
+      appBar: AppBar(title: const Text('Taro demo')),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: 100,
@@ -33,9 +31,7 @@ class HomePage extends StatelessWidget {
                       log('Image $index failed to load.');
                       log('error: $error');
                       log('stackTrace: $stackTrace');
-                      return const Center(
-                        child: Icon(Icons.error),
-                      );
+                      return const Center(child: Icon(Icons.error));
                     },
                   ),
                 ),

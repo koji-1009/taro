@@ -1,4 +1,4 @@
-library taro;
+library;
 
 export 'src/taro.dart';
 export 'src/taro_exception.dart';

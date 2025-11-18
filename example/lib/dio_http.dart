@@ -6,9 +6,7 @@ import 'package:taro/taro.dart';
 /// [DioHttp] is a class that performs GET requests using the dio package
 class DioHttp implements TaroHttpClient {
   /// Creates a [DioHttp].
-  const DioHttp({
-    required this.dio,
-  });
+  const DioHttp({required this.dio});
 
   final Dio dio;
 
@@ -19,10 +17,7 @@ class DioHttp implements TaroHttpClient {
   }) async {
     final response = await dio.getUri<Uint8List>(
       uri,
-      options: Options(
-        headers: headers,
-        responseType: ResponseType.bytes,
-      ),
+      options: Options(headers: headers, responseType: ResponseType.bytes),
     );
     final data = response.data ?? Uint8List(0);
     return (

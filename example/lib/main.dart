@@ -5,19 +5,13 @@ import 'package:example/http_http.dart';
 import 'package:flutter/material.dart';
 import 'package:taro/taro.dart';
 
-enum HttpMode {
-  http,
-  dio,
-  none,
-}
+enum HttpMode { http, dio, none }
 
 void main() {
   const mode = HttpMode.none;
   switch (mode) {
     case HttpMode.http:
-      Taro.instance.networkLoader = const TaroLoaderNetwork(
-        client: HttpHttp(),
-      );
+      Taro.instance.networkLoader = const TaroLoaderNetwork(client: HttpHttp());
     case HttpMode.dio:
       Taro.instance.networkLoader = TaroLoaderNetwork(
         client: DioHttp(
