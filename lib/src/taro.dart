@@ -31,10 +31,7 @@ class Taro {
   }
 
   /// The [TaroHeaderOption] used to check cache-control header.
-  TaroHeaderOption _headerOption = const (
-    checkMaxAgeIfExist: false,
-    ifThrowMaxAgeHeaderError: false,
-  );
+  TaroHeaderOption _headerOption = const TaroHeaderOption();
 
   /// The [TaroHeaderOption] used to check cache-control header.
   set headerOption(TaroHeaderOption option) {
@@ -91,10 +88,13 @@ class Taro {
   }
 
   /// Loads an image from the provided URL and returns it as a [TaroImage].
+  ///
   /// The [headers] parameter is a map of request headers to send with the GET request.
-  /// If [checkMaxAgeIfExist] is true, the method checks the max age of the data.
-  /// [ifThrowMaxAgeHeaderError] is used to throw an exception if the max age header is invalid.
-  /// The [resizeOption] parameter is used to resize the image. If it is not provided, the default resize option is used.
+  /// The [resizeOption] parameter is used to resize the image. If not provided, uses the default.
+  /// The [headerOption] configures cache behavior:
+  /// - [checkMaxAgeIfExist]: Whether to check cache-control headers
+  /// - [ifThrowMaxAgeHeaderError]: Whether to throw on invalid max-age headers
+  /// - [customCacheDuration]: Custom cache duration that overrides server headers
   ImageProvider loadImageProvider(
     String url, {
     double scale = 1.0,

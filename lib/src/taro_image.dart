@@ -28,8 +28,9 @@ class TaroImage extends ImageProvider<TaroImage> {
   /// The resize option used to resize the image.
   final TaroResizeOption? resizeOption;
 
-  /// Use network options to identify instances
-  /// If [useHeadersHashCode] is true, the [headers] and [checkMaxAgeIfExist] are used to identify instances.
+  /// Use network options to identify instances.
+  /// If [useHeadersHashCode] is true, the [headers] and [headerOption] are used to identify instances.
+  /// This is useful when different headers or cache policies should create separate cache entries.
   final bool useHeadersHashCode;
 
   /// The HTTP headers that will be used in the GET request.

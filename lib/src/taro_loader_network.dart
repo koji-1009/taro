@@ -100,7 +100,11 @@ class TaroLoaderNetwork {
     }
 
     DateTime? expireAt;
-    if (headerOption.checkMaxAgeIfExist) {
+    // Check if custom cache duration is provided
+    if (headerOption.customCacheDuration != null) {
+      final now = clock.now();
+      expireAt = now.add(headerOption.customCacheDuration!);
+    } else if (headerOption.checkMaxAgeIfExist) {
       final cacheControl = response.headers['cache-control'] ?? '';
       final headerAge = response.headers['age'] ?? '';
       try {

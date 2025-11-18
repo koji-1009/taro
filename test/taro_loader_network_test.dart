@@ -28,10 +28,7 @@ void main() {
 
   final bodyBytes = Uint8List(100);
   const resizeOption = TaroResizeOptionSkip();
-  const headerOption = (
-    checkMaxAgeIfExist: false,
-    ifThrowMaxAgeHeaderError: false,
-  );
+  const headerOption = TaroHeaderOption();
 
   const contentType = 'image/jpeg';
 
@@ -167,7 +164,7 @@ void main() {
         url: url,
         headers: const {},
         resizeOption: resizeOption,
-        headerOption: (
+        headerOption: const TaroHeaderOption(
           checkMaxAgeIfExist: true,
           ifThrowMaxAgeHeaderError: true,
         ),
@@ -349,9 +346,8 @@ void main() {
       url: url,
       headers: const {},
       resizeOption: resizeOption,
-      headerOption: (
+      headerOption: const TaroHeaderOption(
         checkMaxAgeIfExist: true,
-        ifThrowMaxAgeHeaderError: false,
       ),
     );
 
@@ -392,7 +388,7 @@ void main() {
           url: url,
           headers: const {},
           resizeOption: resizeOption,
-          headerOption: (
+          headerOption: const TaroHeaderOption(
             checkMaxAgeIfExist: true,
             ifThrowMaxAgeHeaderError: true,
           ),
@@ -401,5 +397,96 @@ void main() {
       },
       throwsA(isA<TaroNetworkException>()),
     );
+  });
+
+  test('custom cache duration (7 days)', () async {
+    const url = 'https://example.com';
+    final now = DateTime(2024, 1, 1, 12, 0, 0);
+
+    await withClock(Clock.fixed(now), () async {
+      when(mockHttpClient.get(
+        uri: Uri.parse(url),
+        headers: const {},
+      )).thenAnswer(
+        (_) async => (
+          statusCode: 200,
+          bodyBytes: bodyBytes,
+          reasonPhrase: null,
+          contentLength: bodyBytes.length,
+          headers: {
+            'content-type': contentType,
+          },
+          isRedirect: false,
+        ),
+      );
+      when(mockTaroResizer.resizeIfNeeded(
+        bytes: bodyBytes,
+        contentType: contentType,
+        resizeOption: resizeOption,
+      )).thenAnswer(
+        (_) async => (
+          bytes: bodyBytes,
+          contentType: contentType,
+        ),
+      );
+
+      final result = await loader.load(
+        url: url,
+        headers: const {},
+        resizeOption: resizeOption,
+        headerOption: const TaroHeaderOption(
+          customCacheDuration: Duration(days: 7),
+        ),
+      );
+
+      expect(result?.expireAt, equals(now.add(const Duration(days: 7))));
+    });
+  });
+
+  test('custom cache duration overrides cache-control header', () async {
+    const url = 'https://example.com';
+    final now = DateTime(2024, 1, 1, 12, 0, 0);
+
+    await withClock(Clock.fixed(now), () async {
+      when(mockHttpClient.get(
+        uri: Uri.parse(url),
+        headers: const {},
+      )).thenAnswer(
+        (_) async => (
+          statusCode: 200,
+          bodyBytes: bodyBytes,
+          reasonPhrase: null,
+          contentLength: bodyBytes.length,
+          headers: {
+            'content-type': contentType,
+            'cache-control': 'max-age=3600', // 1 hour
+          },
+          isRedirect: false,
+        ),
+      );
+      when(mockTaroResizer.resizeIfNeeded(
+        bytes: bodyBytes,
+        contentType: contentType,
+        resizeOption: resizeOption,
+      )).thenAnswer(
+        (_) async => (
+          bytes: bodyBytes,
+          contentType: contentType,
+        ),
+      );
+
+      final result = await loader.load(
+        url: url,
+        headers: const {},
+        resizeOption: resizeOption,
+        headerOption: const TaroHeaderOption(
+          checkMaxAgeIfExist: true,
+          customCacheDuration: Duration(days: 7), // should override
+        ),
+      );
+
+      // Should use custom duration (7 days), not cache-control (1 hour)
+      expect(result?.expireAt, equals(now.add(const Duration(days: 7))));
+    });
   });
 }
