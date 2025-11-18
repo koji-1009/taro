@@ -1,5 +1,4 @@
-import 'dart:typed_data';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
 import 'package:taro/src/taro_image.dart';
 import 'package:taro/src/taro_loader.dart';
@@ -68,6 +67,27 @@ class Taro {
   /// Changes the current [TaroLoaderStorage] to the provided new loader.
   set storageLoader(TaroLoaderStorage newLoader) {
     _loader.changeStorageLoader(newLoader);
+  }
+
+  /// Configures multiple settings at once for better consistency.
+  void configure({
+    TaroResizeOption? resizeOption,
+    TaroHeaderOption? headerOption,
+    TaroLoaderNetwork? networkLoader,
+    TaroLoaderStorage? storageLoader,
+  }) {
+    if (resizeOption != null) {
+      _resizeOption = resizeOption;
+    }
+    if (headerOption != null) {
+      _headerOption = headerOption;
+    }
+    if (networkLoader != null) {
+      _loader.changeNetworkLoader(networkLoader);
+    }
+    if (storageLoader != null) {
+      _loader.changeStorageLoader(storageLoader);
+    }
   }
 
   /// Loads an image from the provided URL and returns it as a [TaroImage].

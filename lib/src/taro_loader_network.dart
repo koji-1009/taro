@@ -106,6 +106,11 @@ class TaroLoaderNetwork {
       try {
         if (cacheControl.isNotEmpty) {
           final maxAge = _getMaxAge(cacheControl);
+          if (maxAge == null && cacheControl.contains('max-age=')) {
+            // max-age directive exists but couldn't be parsed
+            throw FormatException(
+                'Invalid max-age value in cache-control header');
+          }
           final age = int.tryParse(headerAge) ?? 0;
           if (maxAge != null) {
             final now = clock.now();
@@ -138,9 +143,13 @@ class TaroLoaderNetwork {
 
   /// Returns the max age from the cache-control header.
   int? _getMaxAge(String cacheControl) {
-    final maxAgeStr = cacheControl.split('=').lastOrNull;
-    if (maxAgeStr != null) {
-      return int.parse(maxAgeStr);
+    // Parse cache-control directives (e.g., "max-age=3600, must-revalidate")
+    final directives = cacheControl.split(',').map((e) => e.trim());
+    for (final directive in directives) {
+      if (directive.startsWith('max-age=')) {
+        final maxAgeStr = directive.substring('max-age='.length);
+        return int.tryParse(maxAgeStr);
+      }
     }
     return null;
   }

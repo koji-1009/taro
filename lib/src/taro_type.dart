@@ -7,6 +7,9 @@ sealed class TaroResizeOption {
 /// The image is not resized, saved original size and format.
 class TaroResizeOptionSkip extends TaroResizeOption {
   const TaroResizeOptionSkip();
+
+  @override
+  String toString() => 'skip';
 }
 
 /// The image is resized in memory, saved original size and format.
@@ -21,6 +24,9 @@ class TaroResizeOptionMemory extends TaroResizeOption {
 
   /// The maximum height of the image.
   final int maxHeight;
+
+  @override
+  String toString() => 'memory_${maxWidth}x$maxHeight';
 }
 
 class TaroResizeOptionDisk extends TaroResizeOption {
@@ -38,6 +44,10 @@ class TaroResizeOptionDisk extends TaroResizeOption {
 
   /// The maximum height of the image. If null, the height is not limited.
   final int? maxHeight;
+
+  @override
+  String toString() =>
+      'disk_${format.name}_${maxWidth ?? 'auto'}x${maxHeight ?? 'auto'}';
 }
 
 enum TaroResizeFormat {
