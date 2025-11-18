@@ -4,11 +4,7 @@ import 'package:taro/taro.dart';
 /// [HttpHttp] is a class that performs GET requests using the http package
 class HttpHttp implements TaroHttpClient {
   /// Creates a [HttpClient].
-  const HttpHttp({
-    this.timeout = const Duration(
-      seconds: 180,
-    ),
-  });
+  const HttpHttp({this.timeout = const Duration(seconds: 180)});
 
   final Duration timeout;
 
@@ -17,12 +13,7 @@ class HttpHttp implements TaroHttpClient {
     required Uri uri,
     required Map<String, String> headers,
   }) async {
-    final response = await http
-        .get(
-          uri,
-          headers: headers,
-        )
-        .timeout(timeout);
+    final response = await http.get(uri, headers: headers).timeout(timeout);
     return (
       statusCode: response.statusCode,
       bodyBytes: response.bodyBytes,
