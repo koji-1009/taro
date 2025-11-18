@@ -1,3 +1,11 @@
+## 1.3.0
+
+* Add `customCacheDuration` option to `TaroHeaderOption`
+* **BREAKING CHANGE**: Convert `TaroHeaderOption` from record to class for better extensibility
+* Add `toString()`, `==`, and `hashCode` to all `TaroResizeOption` subclasses
+* Fix `cache-control` header parsing to support multiple directives
+* Improve error handling in `TaroResizer`
+
 ## 1.2.0
 
 * Refactor `TaroResizeOption`
