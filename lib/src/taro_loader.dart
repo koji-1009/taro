@@ -52,21 +52,21 @@ class TaroLoader {
       headerOption: headerOption,
     );
 
-    if (networkResponse != null) {
-      // save to storage
-      await _storageLoader.save(
-        url: url,
-        bytes: networkResponse.bytes,
-        contentType: networkResponse.contentType,
-        expireAt: networkResponse.expireAt,
-        resizeOption: resizeOption,
+    if (networkResponse == null) {
+      throw TaroLoadException(
+        message: 'Failed to load $url: Network response is null',
       );
-
-      return networkResponse.bytes;
     }
 
-    throw TaroLoadException(
-      message: 'Failed to load $url',
+    // save to storage
+    await _storageLoader.save(
+      url: url,
+      bytes: networkResponse.bytes,
+      contentType: networkResponse.contentType,
+      expireAt: networkResponse.expireAt,
+      resizeOption: resizeOption,
     );
+
+    return networkResponse.bytes;
   }
 }

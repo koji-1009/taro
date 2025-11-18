@@ -30,7 +30,7 @@ class TaroResizer {
         ):
         final originalImage = img.decodeImage(bytes);
         if (originalImage == null) {
-          return throw TaroResizeException(
+          throw TaroResizeException(
             exception: Exception('Failed to decode image.'),
           );
         }

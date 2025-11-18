@@ -14,6 +14,7 @@ The demo application is available at [GitHub Pages](https://koji-1009.github.io/
 - Load image as byte arrays or as `TaroImage` object.
 - Set custom headers for GET requests.
 - Check the max age of the data.
+- Set custom cache duration (e.g., 7 days) independent of server headers.
 - Reduce the size of the data by resizing the image.
 
 ## Usage
@@ -81,6 +82,33 @@ class HomePage extends StatelessWidget {
   }
 }
 ```
+
+### Custom cache duration
+
+You can set a custom cache duration that overrides the server's cache-control headers. This is useful when:
+- The API doesn't provide cache-control headers
+- You want to cache longer or shorter than the server specifies
+- You want a consistent cache policy across all images
+
+```dart
+// Cache images for 7 days regardless of server headers
+final imageProvider = Taro.instance.loadImageProvider(
+  'https://example.com/image.jpg',
+  headerOption: const TaroHeaderOption(
+    customCacheDuration: Duration(days: 7),
+  ),
+);
+
+// Or use with TaroWidget
+TaroWidget(
+  url: 'https://example.com/image.jpg',
+  headerOption: const TaroHeaderOption(
+    customCacheDuration: Duration(days: 7),
+  ),
+)
+```
+
+The `customCacheDuration` takes precedence over cache-control headers, even if `checkMaxAgeIfExist` is true.
 
 ### Use another http client
 
