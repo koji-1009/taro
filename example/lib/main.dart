@@ -11,7 +11,7 @@ void main() {
   const mode = HttpMode.none;
   switch (mode) {
     case HttpMode.http:
-      Taro.instance.networkLoader = const TaroLoaderNetwork(client: HttpHttp());
+      Taro.instance.networkLoader = TaroLoaderNetwork(client: const HttpHttp());
     case HttpMode.dio:
       Taro.instance.networkLoader = TaroLoaderNetwork(
         client: DioHttp(

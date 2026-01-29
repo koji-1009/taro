@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:clock/clock.dart';
 import 'package:taro/src/network/http_client.dart';
 import 'package:taro/src/taro_exception.dart';
-import 'package:taro/src/taro_type.dart';
 
 /// [TaroHttpResponse] is a class that holds the necessary response information.
 typedef TaroHttpResponse = ({
@@ -52,7 +51,9 @@ class TaroLoaderNetwork {
   Future<({Uint8List bytes, String contentType, DateTime? expireAt})?> load({
     required String url,
     required Map<String, String> headers,
-    required TaroHeaderOption headerOption,
+    bool checkMaxAgeIfExist = false,
+    bool ifThrowMaxAgeHeaderError = false,
+    Duration? customCacheDuration,
   }) async {
     final uri = Uri.tryParse(url);
     if (uri == null || !uri.hasHttpScheme) {
@@ -94,10 +95,10 @@ class TaroLoaderNetwork {
 
     DateTime? expireAt;
     // Check if custom cache duration is provided
-    if (headerOption.customCacheDuration != null) {
+    if (customCacheDuration != null) {
       final now = clock.now();
-      expireAt = now.add(headerOption.customCacheDuration!);
-    } else if (headerOption.checkMaxAgeIfExist) {
+      expireAt = now.add(customCacheDuration);
+    } else if (checkMaxAgeIfExist) {
       final cacheControl = response.headers['cache-control'] ?? '';
       final headerAge = response.headers['age'] ?? '';
       try {
@@ -115,7 +116,7 @@ class TaroLoaderNetwork {
           }
         }
       } on Exception catch (error) {
-        if (headerOption.ifThrowMaxAgeHeaderError) {
+        if (ifThrowMaxAgeHeaderError) {
           throw TaroNetworkException(
             url: url,
             error: error,

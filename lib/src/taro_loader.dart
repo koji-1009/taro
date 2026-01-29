@@ -3,7 +3,6 @@ import 'dart:typed_data';
 import 'package:taro/src/taro_exception.dart';
 import 'package:taro/src/taro_loader_network.dart';
 import 'package:taro/src/taro_loader_storage.dart';
-import 'package:taro/src/taro_type.dart';
 
 /// [TaroLoader] is a class that manages different types of loaders.
 class TaroLoader {
@@ -12,7 +11,7 @@ class TaroLoader {
 
   /// The [TaroLoaderNetwork] instance used to load data from the network.
   /// Loader is able to change the original network loader.
-  TaroLoaderNetwork _networkLoader = const TaroLoaderNetwork();
+  TaroLoaderNetwork _networkLoader = TaroLoaderNetwork();
 
   /// The [TaroLoaderStorage] instance used to load data from the storage.
   /// Loader is able to change the original storage loader.
@@ -33,7 +32,9 @@ class TaroLoader {
   Future<Uint8List> load({
     required String url,
     required Map<String, String> headers,
-    required TaroHeaderOption headerOption,
+    bool checkMaxAgeIfExist = false,
+    bool ifThrowMaxAgeHeaderError = false,
+    Duration? customCacheDuration,
   }) async {
     final storageBytes = await _storageLoader.load(
       url: url,
@@ -45,7 +46,9 @@ class TaroLoader {
     final networkResponse = await _networkLoader.load(
       url: url,
       headers: headers,
-      headerOption: headerOption,
+      checkMaxAgeIfExist: checkMaxAgeIfExist,
+      ifThrowMaxAgeHeaderError: ifThrowMaxAgeHeaderError,
+      customCacheDuration: customCacheDuration,
     );
 
     if (networkResponse == null) {
