@@ -65,12 +65,16 @@ class TaroHttpResponse {
 
   @override
   int get hashCode {
-    return statusCode.hashCode ^
-        bodyBytes.hashCode ^
-        reasonPhrase.hashCode ^
-        contentLength.hashCode ^
-        headers.hashCode ^
-        isRedirect.hashCode;
+    return Object.hash(
+      statusCode,
+      Object.hashAll(bodyBytes),
+      reasonPhrase,
+      contentLength,
+      Object.hashAllUnordered(
+        headers.entries.map((e) => Object.hash(e.key, e.value)),
+      ),
+      isRedirect,
+    );
   }
 }
 
