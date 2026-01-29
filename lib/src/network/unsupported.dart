@@ -6,5 +6,6 @@ import 'package:taro/src/taro_loader_network.dart';
 Future<TaroHttpResponse> get({
   required Uri uri,
   required Map<String, String> headers,
+  required Duration timeout,
 }) async =>
     throw UnimplementedError();
