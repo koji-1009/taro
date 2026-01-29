@@ -24,7 +24,8 @@ class TaroWidget extends StatelessWidget {
     super.key,
     required this.url,
     this.headers = const {},
-    this.resizeOption,
+    this.maxWidth,
+    this.maxHeight,
     this.headerOption,
     this.scale = 1.0,
     this.errorBuilder,
@@ -52,8 +53,11 @@ class TaroWidget extends StatelessWidget {
   /// A map of request headers to send with the GET request.
   final Map<String, String> headers;
 
-  /// The resize option used to resize the image.
-  final TaroResizeOption? resizeOption;
+  /// The maximum width of the image.
+  final int? maxWidth;
+
+  /// The maximum height of the image.
+  final int? maxHeight;
 
   /// The header option used to handle response header.
   final TaroHeaderOption? headerOption;
@@ -120,7 +124,8 @@ class TaroWidget extends StatelessWidget {
         url,
         scale: scale,
         headers: headers,
-        resizeOption: resizeOption,
+        maxWidth: maxWidth,
+        maxHeight: maxHeight,
         headerOption: headerOption,
       ),
       frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {

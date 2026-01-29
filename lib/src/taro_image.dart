@@ -13,7 +13,6 @@ class TaroImage extends ImageProvider<TaroImage> {
   const TaroImage(
     this.url, {
     this.scale = 1.0,
-    this.resizeOption,
     this.useHeadersHashCode = false,
     this.headers = const {},
     this.headerOption,
@@ -24,11 +23,6 @@ class TaroImage extends ImageProvider<TaroImage> {
 
   /// The scale to place in the [ImageInfo] object of the image.
   final double scale;
-
-  /// The resize option used to resize the image.
-  /// When using [TaroResizeOptionMemory], the image will be resized in memory
-  /// using Flutter's [ResizeImage].
-  final TaroResizeOption? resizeOption;
 
   /// Use network options to identify instances.
   /// If [useHeadersHashCode] is true, the [headers] and [headerOption] are used to identify instances.
@@ -102,23 +96,19 @@ class TaroImage extends ImageProvider<TaroImage> {
       return other is TaroImage &&
           other.url == url &&
           other.scale == scale &&
-          other.resizeOption == resizeOption &&
           other.headers == headers &&
           other.headerOption == headerOption;
     }
 
-    return other is TaroImage &&
-        other.url == url &&
-        other.scale == scale &&
-        other.resizeOption == resizeOption;
+    return other is TaroImage && other.url == url && other.scale == scale;
   }
 
   @override
   int get hashCode => useHeadersHashCode
-      ? Object.hash(url, scale, resizeOption, headers, headerOption)
-      : Object.hash(url, scale, resizeOption);
+      ? Object.hash(url, scale, headers, headerOption)
+      : Object.hash(url, scale);
 
   @override
   String toString() => ''
-      '${objectRuntimeType(this, 'TaroImage')}(url: $url, scale: $scale, resizeOption: $resizeOption, useHeadersInHashCode: $useHeadersHashCode, headers: $headers, headerOption: $headerOption)';
+      '${objectRuntimeType(this, 'TaroImage')}(url: $url, scale: $scale, useHeadersInHashCode: $useHeadersHashCode, headers: $headers, headerOption: $headerOption)';
 }

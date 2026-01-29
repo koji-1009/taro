@@ -20,15 +20,6 @@ class Taro {
   /// The [TaroLoader] instance used to load data.
   final _loader = TaroLoader();
 
-  /// The [TaroResizeOption] used to resize images.
-  TaroResizeOption _resizeOption = const TaroResizeOptionSkip();
-
-  /// The [TaroResizeOption] used to resize images.
-  /// Changing this option will affect all image loading.
-  set resizeOption(TaroResizeOption option) {
-    _resizeOption = option;
-  }
-
   /// The [TaroHeaderOption] used to check cache-control header.
   TaroHeaderOption _headerOption = const TaroHeaderOption();
 
@@ -58,14 +49,10 @@ class Taro {
 
   /// Configures multiple settings at once for better consistency.
   void configure({
-    TaroResizeOption? resizeOption,
     TaroHeaderOption? headerOption,
     TaroLoaderNetwork? networkLoader,
     TaroLoaderStorage? storageLoader,
   }) {
-    if (resizeOption != null) {
-      _resizeOption = resizeOption;
-    }
     if (headerOption != null) {
       _headerOption = headerOption;
     }
@@ -80,7 +67,7 @@ class Taro {
   /// Loads an image from the provided URL and returns it as a [TaroImage].
   ///
   /// The [headers] parameter is a map of request headers to send with the GET request.
-  /// The [resizeOption] parameter is used to resize the image. If not provided, uses the default.
+  /// The [maxWidth] and [maxHeight] parameters are used to resize the image.
   /// The [headerOption] configures cache behavior:
   /// - [checkMaxAgeIfExist]: Whether to check cache-control headers
   /// - [ifThrowMaxAgeHeaderError]: Whether to throw on invalid max-age headers
@@ -89,27 +76,22 @@ class Taro {
     String url, {
     double scale = 1.0,
     Map<String, String> headers = const {},
-    TaroResizeOption? resizeOption,
+    int? maxWidth,
+    int? maxHeight,
     TaroHeaderOption? headerOption,
   }) {
-    final effectiveResizeOption = resizeOption ?? _resizeOption;
     final image = TaroImage(
       url,
       scale: scale,
-      resizeOption: effectiveResizeOption,
       headers: headers,
       headerOption: headerOption ?? _headerOption,
     );
 
-    if (effectiveResizeOption is TaroResizeOptionMemory) {
-      return ResizeImage.resizeIfNeeded(
-        effectiveResizeOption.maxWidth,
-        effectiveResizeOption.maxHeight,
-        image,
-      );
-    }
-
-    return image;
+    return ResizeImage.resizeIfNeeded(
+      maxWidth,
+      maxHeight,
+      image,
+    );
   }
 
   /// Loads the data from the provided URL and returns it as a byte array.
