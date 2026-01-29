@@ -1,5 +1,4 @@
 /// The [TaroResizeOption] is used to determine how images are resized and saved.
-/// Please refer to [https://pub.dev/packages/image] for supported formats.
 sealed class TaroResizeOption {
   const TaroResizeOption();
 }

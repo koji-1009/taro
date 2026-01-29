@@ -11,11 +11,11 @@ The demo application is available at [GitHub Pages](https://koji-1009.github.io/
 
 ## Features
 
-- Load image as byte arrays or as `TaroImage` object.
-- Set custom headers for GET requests.
-- Check the max age of the data.
-- Set custom cache duration (e.g., 7 days) independent of server headers.
-- Reduce the size of the data by resizing the image.
+* Load image as byte arrays or as `TaroImage` object.
+* Set custom headers for GET requests.
+* Check the max age of the data.
+* Set custom cache duration (e.g., 7 days) independent of server headers.
+* Reduce the size of the data by resizing the image.
 
 ## Usage
 
@@ -86,9 +86,10 @@ class HomePage extends StatelessWidget {
 ### Custom cache duration
 
 You can set a custom cache duration that overrides the server's cache-control headers. This is useful when:
-- The API doesn't provide cache-control headers
-- You want to cache longer or shorter than the server specifies
-- You want a consistent cache policy across all images
+
+* The API doesn't provide cache-control headers
+* You want to cache longer or shorter than the server specifies
+* You want a consistent cache policy across all images
 
 ```dart
 // Cache images for 7 days regardless of server headers
@@ -214,11 +215,11 @@ If a native cache directory exists, such as Android or iOS, use [path_provider](
 
 ## Depend libraries
 
-- [clock](https://pub.dev/packages/clock)
-  - Get current time and mock time
-- [crypto](https://pub.dev/packages/crypto)
-  - Get persistent file name from URL and options
-- [image](https://pub.dev/packages/image)
-  - Resize image
-- [path_provider](https://pub.dev/packages/path_provider)
-  - Get application cache directory
+* [clock](https://pub.dev/packages/clock)
+  * Get current time and mock time
+* [crypto](https://pub.dev/packages/crypto)
+  * Get persistent file name from URL and options
+* [image](https://pub.dev/packages/image)
+  * Resize image
+* [path_provider](https://pub.dev/packages/path_provider)
+  * Get application cache directory
