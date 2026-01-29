@@ -1,4 +1,4 @@
-## Next
+## 1.4.0
 
 * **BREAKING CHANGE**: Remove `image` dependency.
 * **BREAKING CHANGE**: Remove `TaroResizer`, `TaroResizeOptionDisk`, and `TaroResizeFormat`.
