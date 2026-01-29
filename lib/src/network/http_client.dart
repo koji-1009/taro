@@ -20,12 +20,11 @@ class HttpClient implements TaroHttpClient {
     required Uri uri,
     required Map<String, String> headers,
   }) async {
-    final response = await client
-        .get(
-          uri: uri,
-          headers: headers,
-        )
-        .timeout(timeout);
+    final response = await client.get(
+      uri: uri,
+      headers: headers,
+      timeout: timeout,
+    );
 
     return response;
   }

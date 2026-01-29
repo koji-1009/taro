@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
 import 'package:taro/src/taro.dart';
-import 'package:taro/src/taro_type.dart';
 
 /// A builder that creates a widget when an error occurs while loading the data.
 typedef TaroErrorBuilder = Widget Function(
@@ -24,9 +23,11 @@ class TaroWidget extends StatelessWidget {
     super.key,
     required this.url,
     this.headers = const {},
-    this.maxWidth,
-    this.maxHeight,
-    this.headerOption,
+    this.cacheWidth,
+    this.cacheHeight,
+    this.checkMaxAgeIfExist = false,
+    this.ifThrowMaxAgeHeaderError = false,
+    this.customCacheDuration,
     this.scale = 1.0,
     this.errorBuilder,
     this.placeholder,
@@ -53,14 +54,20 @@ class TaroWidget extends StatelessWidget {
   /// A map of request headers to send with the GET request.
   final Map<String, String> headers;
 
-  /// The maximum width of the image.
-  final int? maxWidth;
+  /// The cache width of the image.
+  final int? cacheWidth;
 
-  /// The maximum height of the image.
-  final int? maxHeight;
+  /// The cache height of the image.
+  final int? cacheHeight;
 
-  /// The header option used to handle response header.
-  final TaroHeaderOption? headerOption;
+  /// If true, the method checks the cache-control: max-age.
+  final bool checkMaxAgeIfExist;
+
+  /// If true, the method throws an exception if the max-age header is invalid.
+  final bool ifThrowMaxAgeHeaderError;
+
+  /// Custom cache duration. If set, this overrides the cache-control header.
+  final Duration? customCacheDuration;
 
   /// The scale to place in the [ImageInfo] object of the image.
   final double scale;
@@ -124,9 +131,11 @@ class TaroWidget extends StatelessWidget {
         url,
         scale: scale,
         headers: headers,
-        maxWidth: maxWidth,
-        maxHeight: maxHeight,
-        headerOption: headerOption,
+        cacheWidth: cacheWidth,
+        cacheHeight: cacheHeight,
+        checkMaxAgeIfExist: checkMaxAgeIfExist,
+        ifThrowMaxAgeHeaderError: ifThrowMaxAgeHeaderError,
+        customCacheDuration: customCacheDuration,
       ),
       frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
         if (wasSynchronouslyLoaded) {

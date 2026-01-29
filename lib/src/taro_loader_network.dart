@@ -1,20 +1,82 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:clock/clock.dart';
+import 'package:flutter/foundation.dart';
 import 'package:taro/src/network/http_client.dart';
 import 'package:taro/src/taro_exception.dart';
-import 'package:taro/src/taro_type.dart';
 
 /// [TaroHttpResponse] is a class that holds the necessary response information.
-typedef TaroHttpResponse = ({
-  int statusCode,
-  Uint8List bodyBytes,
-  String? reasonPhrase,
-  int? contentLength,
-  Map<String, String> headers,
-  bool isRedirect,
-});
+@immutable
+class TaroHttpResponse {
+  /// Creates a [TaroHttpResponse].
+  TaroHttpResponse({
+    required this.statusCode,
+    required this.bodyBytes,
+    required Map<String, String> headers,
+    this.reasonPhrase,
+    this.contentLength,
+    this.isRedirect = false,
+  }) : headers = headers.map(
+          (key, value) => MapEntry(key.toLowerCase(), value),
+        );
+
+  /// The status code of the response.
+  final int statusCode;
+
+  /// The body bytes of the response.
+  final Uint8List bodyBytes;
+
+  /// The reason phrase of the response.
+  final String? reasonPhrase;
+
+  /// The content length of the response.
+  final int? contentLength;
+
+  /// The headers of the response.
+  final Map<String, String> headers;
+
+  /// Whether the response is a redirect.
+  final bool isRedirect;
+
+  @override
+  String toString() {
+    return 'TaroHttpResponse('
+        'statusCode: $statusCode, '
+        'bodyBytes: ${bodyBytes.length} bytes, '
+        'headers: $headers, '
+        'reasonPhrase: $reasonPhrase, '
+        'contentLength: $contentLength, '
+        'isRedirect: $isRedirect'
+        ')';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is TaroHttpResponse &&
+        other.statusCode == statusCode &&
+        listEquals(other.bodyBytes, bodyBytes) &&
+        other.reasonPhrase == reasonPhrase &&
+        other.contentLength == contentLength &&
+        mapEquals(other.headers, headers) &&
+        other.isRedirect == isRedirect;
+  }
+
+  @override
+  int get hashCode {
+    return Object.hash(
+      statusCode,
+      Object.hashAll(bodyBytes),
+      reasonPhrase,
+      contentLength,
+      Object.hashAllUnordered(
+        headers.entries.map((e) => Object.hash(e.key, e.value)),
+      ),
+      isRedirect,
+    );
+  }
+}
 
 /// [TaroHttpClient] is an interface class for GET requests to the specified URL.
 abstract interface class TaroHttpClient {
@@ -52,7 +114,9 @@ class TaroLoaderNetwork {
   Future<({Uint8List bytes, String contentType, DateTime? expireAt})?> load({
     required String url,
     required Map<String, String> headers,
-    required TaroHeaderOption headerOption,
+    bool checkMaxAgeIfExist = false,
+    bool ifThrowMaxAgeHeaderError = false,
+    Duration? customCacheDuration,
   }) async {
     final uri = Uri.tryParse(url);
     if (uri == null || !uri.hasHttpScheme) {
@@ -94,10 +158,10 @@ class TaroLoaderNetwork {
 
     DateTime? expireAt;
     // Check if custom cache duration is provided
-    if (headerOption.customCacheDuration != null) {
+    if (customCacheDuration != null) {
       final now = clock.now();
-      expireAt = now.add(headerOption.customCacheDuration!);
-    } else if (headerOption.checkMaxAgeIfExist) {
+      expireAt = now.add(customCacheDuration);
+    } else if (checkMaxAgeIfExist) {
       final cacheControl = response.headers['cache-control'] ?? '';
       final headerAge = response.headers['age'] ?? '';
       try {
@@ -115,7 +179,7 @@ class TaroLoaderNetwork {
           }
         }
       } on Exception catch (error) {
-        if (headerOption.ifThrowMaxAgeHeaderError) {
+        if (ifThrowMaxAgeHeaderError) {
           throw TaroNetworkException(
             url: url,
             error: error,

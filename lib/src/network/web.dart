@@ -8,6 +8,7 @@ import 'package:taro/src/taro_loader_network.dart';
 Future<TaroHttpResponse> get({
   required Uri uri,
   required Map<String, String> headers,
+  required Duration timeout,
 }) async {
   final requestHeaders = Headers();
   for (final entry in headers.entries) {
@@ -16,7 +17,7 @@ Future<TaroHttpResponse> get({
   final response = await fetch(
     uri.toString(),
     requestHeaders,
-  ).toDart;
+  ).toDart.timeout(timeout);
 
   final responseBuffer = await response.arrayBuffer().toDart;
   final responseBytes = responseBuffer.toDart.asUint8List();
@@ -25,7 +26,7 @@ Future<TaroHttpResponse> get({
     responseHeaders[key] = value;
   }.toJS);
 
-  return (
+  return TaroHttpResponse(
     statusCode: response.status,
     bodyBytes: responseBytes,
     reasonPhrase: response.statusText,

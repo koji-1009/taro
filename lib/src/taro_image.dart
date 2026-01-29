@@ -4,7 +4,6 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:taro/src/taro.dart';
-import 'package:taro/src/taro_type.dart';
 
 /// [TaroImage] is an [ImageProvider] that loads images from the network and caches them.
 @immutable
@@ -15,7 +14,9 @@ class TaroImage extends ImageProvider<TaroImage> {
     this.scale = 1.0,
     this.useHeadersHashCode = false,
     this.headers = const {},
-    this.headerOption,
+    this.checkMaxAgeIfExist = false,
+    this.ifThrowMaxAgeHeaderError = false,
+    this.customCacheDuration,
   });
 
   /// The URL from which the image is loaded.
@@ -32,8 +33,14 @@ class TaroImage extends ImageProvider<TaroImage> {
   /// The HTTP headers that will be used in the GET request.
   final Map<String, String> headers;
 
-  /// The header option used to handle response header.
-  final TaroHeaderOption? headerOption;
+  /// If true, the method checks the cache-control: max-age.
+  final bool checkMaxAgeIfExist;
+
+  /// If true, the method throws an exception if the max-age header is invalid.
+  final bool ifThrowMaxAgeHeaderError;
+
+  /// Custom cache duration. If set, this overrides the cache-control header.
+  final Duration? customCacheDuration;
 
   @override
   Future<TaroImage> obtainKey(ImageConfiguration configuration) {
@@ -69,7 +76,9 @@ class TaroImage extends ImageProvider<TaroImage> {
       final bytes = await Taro.instance.loadBytes(
         key.url,
         headers: key.headers,
-        headerOption: key.headerOption,
+        checkMaxAgeIfExist: key.checkMaxAgeIfExist,
+        ifThrowMaxAgeHeaderError: key.ifThrowMaxAgeHeaderError,
+        customCacheDuration: key.customCacheDuration,
       );
 
       return decode(await ui.ImmutableBuffer.fromUint8List(bytes));
@@ -97,7 +106,9 @@ class TaroImage extends ImageProvider<TaroImage> {
           other.url == url &&
           other.scale == scale &&
           other.headers == headers &&
-          other.headerOption == headerOption;
+          other.checkMaxAgeIfExist == checkMaxAgeIfExist &&
+          other.ifThrowMaxAgeHeaderError == ifThrowMaxAgeHeaderError &&
+          other.customCacheDuration == customCacheDuration;
     }
 
     return other is TaroImage && other.url == url && other.scale == scale;
@@ -105,10 +116,17 @@ class TaroImage extends ImageProvider<TaroImage> {
 
   @override
   int get hashCode => useHeadersHashCode
-      ? Object.hash(url, scale, headers, headerOption)
+      ? Object.hash(
+          url,
+          scale,
+          headers,
+          checkMaxAgeIfExist,
+          ifThrowMaxAgeHeaderError,
+          customCacheDuration,
+        )
       : Object.hash(url, scale);
 
   @override
   String toString() => ''
-      '${objectRuntimeType(this, 'TaroImage')}(url: $url, scale: $scale, useHeadersInHashCode: $useHeadersHashCode, headers: $headers, headerOption: $headerOption)';
+      '${objectRuntimeType(this, 'TaroImage')}(url: $url, scale: $scale, useHeadersInHashCode: $useHeadersHashCode, headers: $headers, checkMaxAgeIfExist: $checkMaxAgeIfExist, ifThrowMaxAgeHeaderError: $ifThrowMaxAgeHeaderError, customCacheDuration: $customCacheDuration)';
 }

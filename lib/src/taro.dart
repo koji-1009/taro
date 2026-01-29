@@ -4,7 +4,6 @@ import 'package:taro/src/taro_image.dart';
 import 'package:taro/src/taro_loader.dart';
 import 'package:taro/src/taro_loader_network.dart';
 import 'package:taro/src/taro_loader_storage.dart';
-import 'package:taro/src/taro_type.dart';
 
 /// [Taro] is a library for loading images. It uses two loaders: Storage and Network.
 class Taro {
@@ -20,12 +19,28 @@ class Taro {
   /// The [TaroLoader] instance used to load data.
   final _loader = TaroLoader();
 
-  /// The [TaroHeaderOption] used to check cache-control header.
-  TaroHeaderOption _headerOption = const TaroHeaderOption();
+  /// If true, the method checks the cache-control: max-age.
+  bool _checkMaxAgeIfExist = false;
 
-  /// The [TaroHeaderOption] used to check cache-control header.
-  set headerOption(TaroHeaderOption option) {
-    _headerOption = option;
+  /// If true, the method checks the cache-control: max-age.
+  set checkMaxAgeIfExist(bool value) {
+    _checkMaxAgeIfExist = value;
+  }
+
+  /// If true, the method throws an exception if the max-age header is invalid.
+  bool _ifThrowMaxAgeHeaderError = false;
+
+  /// If true, the method throws an exception if the max-age header is invalid.
+  set ifThrowMaxAgeHeaderError(bool value) {
+    _ifThrowMaxAgeHeaderError = value;
+  }
+
+  /// Custom cache duration. If set, this overrides the cache-control header.
+  Duration? _customCacheDuration;
+
+  /// Custom cache duration. If set, this overrides the cache-control header.
+  set customCacheDuration(Duration? value) {
+    _customCacheDuration = value;
   }
 
   /// Changes the current [TaroLoaderNetwork] to the provided new loader.
@@ -49,12 +64,20 @@ class Taro {
 
   /// Configures multiple settings at once for better consistency.
   void configure({
-    TaroHeaderOption? headerOption,
+    bool? checkMaxAgeIfExist,
+    bool? ifThrowMaxAgeHeaderError,
+    Duration? customCacheDuration,
     TaroLoaderNetwork? networkLoader,
     TaroLoaderStorage? storageLoader,
   }) {
-    if (headerOption != null) {
-      _headerOption = headerOption;
+    if (checkMaxAgeIfExist != null) {
+      _checkMaxAgeIfExist = checkMaxAgeIfExist;
+    }
+    if (ifThrowMaxAgeHeaderError != null) {
+      _ifThrowMaxAgeHeaderError = ifThrowMaxAgeHeaderError;
+    }
+    if (customCacheDuration != null) {
+      _customCacheDuration = customCacheDuration;
     }
     if (networkLoader != null) {
       _loader.changeNetworkLoader(networkLoader);
@@ -67,29 +90,33 @@ class Taro {
   /// Loads an image from the provided URL and returns it as a [TaroImage].
   ///
   /// The [headers] parameter is a map of request headers to send with the GET request.
-  /// The [maxWidth] and [maxHeight] parameters are used to resize the image.
-  /// The [headerOption] configures cache behavior:
-  /// - [checkMaxAgeIfExist]: Whether to check cache-control headers
-  /// - [ifThrowMaxAgeHeaderError]: Whether to throw on invalid max-age headers
-  /// - [customCacheDuration]: Custom cache duration that overrides server headers
+  /// The [cacheWidth] and [cacheHeight] parameters are used to resize the image.
+  /// The [checkMaxAgeIfExist] parameter checks the cache-control: max-age.
+  /// The [ifThrowMaxAgeHeaderError] parameter throws an exception if the max-age header is invalid.
+  /// The [customCacheDuration] parameter overrides the cache-control header.
   ImageProvider loadImageProvider(
     String url, {
     double scale = 1.0,
     Map<String, String> headers = const {},
-    int? maxWidth,
-    int? maxHeight,
-    TaroHeaderOption? headerOption,
+    int? cacheWidth,
+    int? cacheHeight,
+    bool? checkMaxAgeIfExist,
+    bool? ifThrowMaxAgeHeaderError,
+    Duration? customCacheDuration,
   }) {
     final image = TaroImage(
       url,
       scale: scale,
       headers: headers,
-      headerOption: headerOption ?? _headerOption,
+      checkMaxAgeIfExist: checkMaxAgeIfExist ?? _checkMaxAgeIfExist,
+      ifThrowMaxAgeHeaderError:
+          ifThrowMaxAgeHeaderError ?? _ifThrowMaxAgeHeaderError,
+      customCacheDuration: customCacheDuration ?? _customCacheDuration,
     );
 
     return ResizeImage.resizeIfNeeded(
-      maxWidth,
-      maxHeight,
+      cacheWidth,
+      cacheHeight,
       image,
     );
   }
@@ -99,12 +126,17 @@ class Taro {
   Future<Uint8List> loadBytes(
     String url, {
     Map<String, String> headers = const {},
-    TaroHeaderOption? headerOption,
+    bool? checkMaxAgeIfExist,
+    bool? ifThrowMaxAgeHeaderError,
+    Duration? customCacheDuration,
   }) async {
     return await _loader.load(
       url: url,
       headers: headers,
-      headerOption: headerOption ?? _headerOption,
+      checkMaxAgeIfExist: checkMaxAgeIfExist ?? _checkMaxAgeIfExist,
+      ifThrowMaxAgeHeaderError:
+          ifThrowMaxAgeHeaderError ?? _ifThrowMaxAgeHeaderError,
+      customCacheDuration: customCacheDuration ?? _customCacheDuration,
     );
   }
 }

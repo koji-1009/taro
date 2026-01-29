@@ -20,7 +20,7 @@ class DioHttp implements TaroHttpClient {
       options: Options(headers: headers, responseType: ResponseType.bytes),
     );
     final data = response.data ?? Uint8List(0);
-    return (
+    return TaroHttpResponse(
       statusCode: response.statusCode!,
       bodyBytes: data,
       reasonPhrase: response.statusMessage,

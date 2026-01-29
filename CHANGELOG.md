@@ -1,3 +1,10 @@
+## 2.0.0
+
+* **BREAKING CHANGE**: Refactor `TaroHttpResponse` from `Record` to `class`.
+* **BREAKING CHANGE**: `TaroHttpResponse` constructor is no longer `const` due to header normalization.
+* **FEAT**: Add `toString`, `==`, `hashCode` implementation to `TaroHttpResponse`.
+* **FEAT**: Normalize `TaroHttpResponse` headers keys to lowercase.
+
 ## 1.5.0
 
 * **BREAKING CHANGE**: Remove `TaroResizeOption`, `TaroResizeOptionSkip`, and `TaroResizeOptionMemory`.

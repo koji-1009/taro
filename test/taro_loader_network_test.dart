@@ -5,25 +5,22 @@ import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:taro/src/network/http_client.dart';
 import 'package:taro/src/taro_exception.dart';
 import 'package:taro/src/taro_loader_network.dart';
-import 'package:taro/src/taro_type.dart';
 
 @GenerateNiceMocks([
-  MockSpec<HttpClient>(),
+  MockSpec<TaroHttpClient>(),
 ])
 import 'taro_loader_network_test.mocks.dart';
 
 void main() {
-  final mockHttpClient = MockHttpClient();
+  final mockHttpClient = MockTaroHttpClient();
 
   final loader = TaroLoaderNetwork(
     client: mockHttpClient,
   );
 
   final bodyBytes = Uint8List(100);
-  const headerOption = TaroHeaderOption();
 
   const contentType = 'image/jpeg';
 
@@ -34,7 +31,7 @@ void main() {
       uri: Uri.parse(url),
       headers: const {},
     )).thenAnswer(
-      (_) async => (
+      (_) async => TaroHttpResponse(
         statusCode: 200,
         bodyBytes: bodyBytes,
         reasonPhrase: null,
@@ -49,7 +46,6 @@ void main() {
     final result = await loader.load(
       url: url,
       headers: const {},
-      headerOption: headerOption,
     );
 
     expect(
@@ -71,7 +67,7 @@ void main() {
       uri: Uri.parse(url),
       headers: const {},
     )).thenAnswer(
-      (_) async => (
+      (_) async => TaroHttpResponse(
         statusCode: 200,
         bodyBytes: bodyBytes,
         reasonPhrase: null,
@@ -87,7 +83,6 @@ void main() {
     final result = await loader.load(
       url: url,
       headers: const {},
-      headerOption: headerOption,
     );
 
     expect(
@@ -110,7 +105,7 @@ void main() {
         uri: Uri.parse(url),
         headers: const {},
       )).thenAnswer(
-        (_) async => (
+        (_) async => TaroHttpResponse(
           statusCode: 200,
           bodyBytes: bodyBytes,
           reasonPhrase: null,
@@ -126,10 +121,8 @@ void main() {
       final result = await loader.load(
         url: url,
         headers: const {},
-        headerOption: const TaroHeaderOption(
-          checkMaxAgeIfExist: true,
-          ifThrowMaxAgeHeaderError: true,
-        ),
+        checkMaxAgeIfExist: true,
+        ifThrowMaxAgeHeaderError: true,
       );
 
       expect(
@@ -153,7 +146,6 @@ void main() {
         await loader.load(
           url: url,
           headers: const {},
-          headerOption: headerOption,
         );
         fail('should throw TaroUriInvalidException');
       },
@@ -178,7 +170,6 @@ void main() {
         await loader.load(
           url: url,
           headers: const {},
-          headerOption: headerOption,
         );
         fail('should throw TaroNetworkException');
       },
@@ -194,7 +185,7 @@ void main() {
       uri: Uri.parse(url),
       headers: const {},
     )).thenAnswer(
-      (_) async => (
+      (_) async => TaroHttpResponse(
         statusCode: 400,
         bodyBytes: emptyBodyBytes,
         reasonPhrase: 'Bad Request',
@@ -209,7 +200,6 @@ void main() {
         await loader.load(
           url: url,
           headers: const {},
-          headerOption: headerOption,
         );
         fail('should throw TaroHttpResponseException');
       },
@@ -224,7 +214,7 @@ void main() {
       uri: Uri.parse(url),
       headers: const {},
     )).thenAnswer(
-      (_) async => (
+      (_) async => TaroHttpResponse(
         statusCode: 400,
         bodyBytes: Uint8List(0),
         reasonPhrase: null,
@@ -239,7 +229,6 @@ void main() {
         await loader.load(
           url: url,
           headers: const {},
-          headerOption: headerOption,
         );
         fail('should throw TaroHttpResponseException');
       },
@@ -254,7 +243,7 @@ void main() {
       uri: Uri.parse(url),
       headers: const {},
     )).thenAnswer(
-      (_) async => (
+      (_) async => TaroHttpResponse(
         statusCode: 200,
         bodyBytes: Uint8List(0),
         reasonPhrase: null,
@@ -271,7 +260,6 @@ void main() {
         await loader.load(
           url: url,
           headers: const {},
-          headerOption: headerOption,
         );
         fail('should throw TaroEmptyResponseException');
       },
@@ -286,7 +274,7 @@ void main() {
       uri: Uri.parse(url),
       headers: const {},
     )).thenAnswer(
-      (_) async => (
+      (_) async => TaroHttpResponse(
         statusCode: 200,
         bodyBytes: bodyBytes,
         reasonPhrase: null,
@@ -302,9 +290,7 @@ void main() {
     final result = await loader.load(
       url: url,
       headers: const {},
-      headerOption: const TaroHeaderOption(
-        checkMaxAgeIfExist: true,
-      ),
+      checkMaxAgeIfExist: true,
     );
 
     expect(
@@ -326,7 +312,7 @@ void main() {
       uri: Uri.parse(url),
       headers: const {},
     )).thenAnswer(
-      (_) async => (
+      (_) async => TaroHttpResponse(
         statusCode: 200,
         bodyBytes: bodyBytes,
         reasonPhrase: null,
@@ -343,10 +329,8 @@ void main() {
         await loader.load(
           url: url,
           headers: const {},
-          headerOption: const TaroHeaderOption(
-            checkMaxAgeIfExist: true,
-            ifThrowMaxAgeHeaderError: true,
-          ),
+          checkMaxAgeIfExist: true,
+          ifThrowMaxAgeHeaderError: true,
         );
         fail('should throw TaroNetworkException');
       },
@@ -363,7 +347,7 @@ void main() {
         uri: Uri.parse(url),
         headers: const {},
       )).thenAnswer(
-        (_) async => (
+        (_) async => TaroHttpResponse(
           statusCode: 200,
           bodyBytes: bodyBytes,
           reasonPhrase: null,
@@ -378,9 +362,7 @@ void main() {
       final result = await loader.load(
         url: url,
         headers: const {},
-        headerOption: const TaroHeaderOption(
-          customCacheDuration: Duration(days: 7),
-        ),
+        customCacheDuration: const Duration(days: 7),
       );
 
       expect(result?.expireAt, equals(now.add(const Duration(days: 7))));
@@ -396,7 +378,7 @@ void main() {
         uri: Uri.parse(url),
         headers: const {},
       )).thenAnswer(
-        (_) async => (
+        (_) async => TaroHttpResponse(
           statusCode: 200,
           bodyBytes: bodyBytes,
           reasonPhrase: null,
@@ -412,10 +394,8 @@ void main() {
       final result = await loader.load(
         url: url,
         headers: const {},
-        headerOption: const TaroHeaderOption(
-          checkMaxAgeIfExist: true,
-          customCacheDuration: Duration(days: 7), // should override
-        ),
+        checkMaxAgeIfExist: true,
+        customCacheDuration: const Duration(days: 7), // should override
       );
 
       // Should use custom duration (7 days), not cache-control (1 hour)

@@ -4,18 +4,28 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:taro/src/taro_loader_network.dart';
 
-final _httpClient = HttpClient()..autoUncompress = false;
+final _httpClient = HttpClient();
 
 /// Load image data as [TaroHttpResponse] from the network.
 Future<TaroHttpResponse> get({
   required Uri uri,
   required Map<String, String> headers,
+  required Duration timeout,
 }) async {
   final request = await _httpClient.getUrl(uri);
   for (final entry in headers.entries) {
     request.headers.add(entry.key, entry.value);
   }
-  final response = await request.close();
+  final response = await request.close().timeout(
+    timeout,
+    onTimeout: () {
+      request.abort();
+      throw TimeoutException(
+        'The connection has timed out, Please try again.',
+        timeout,
+      );
+    },
+  );
 
   final responseBytes = await consolidateHttpClientResponseBytes(response);
   final responseHeaders = <String, String>{};
@@ -23,7 +33,7 @@ Future<TaroHttpResponse> get({
     responseHeaders[key] = values.join(',');
   });
 
-  return (
+  return TaroHttpResponse(
     statusCode: response.statusCode,
     bodyBytes: responseBytes,
     reasonPhrase: response.reasonPhrase,

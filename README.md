@@ -139,7 +139,7 @@ class HttpHttp implements TaroHttpClient {
           headers: headers,
         )
         .timeout(timeout);
-    return (
+    return TaroHttpResponse(
       statusCode: response.statusCode,
       bodyBytes: response.bodyBytes,
       reasonPhrase: response.reasonPhrase,
@@ -183,7 +183,7 @@ class DioHttp implements TaroHttpClient {
       ),
     );
     final data = response.data ?? Uint8List(0);
-    return (
+    return TaroHttpResponse(
       statusCode: response.statusCode!,
       bodyBytes: data,
       reasonPhrase: response.statusMessage,
