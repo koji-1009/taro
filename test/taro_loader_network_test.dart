@@ -9,12 +9,12 @@ import 'package:taro/src/taro_exception.dart';
 import 'package:taro/src/taro_loader_network.dart';
 
 @GenerateNiceMocks([
-  MockSpec<HttpClient>(),
+  MockSpec<TaroHttpClient>(),
 ])
 import 'taro_loader_network_test.mocks.dart';
 
 void main() {
-  final mockHttpClient = MockHttpClient();
+  final mockHttpClient = MockTaroHttpClient();
 
   final loader = TaroLoaderNetwork(
     client: mockHttpClient,
