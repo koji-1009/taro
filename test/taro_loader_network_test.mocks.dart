@@ -4,10 +4,10 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i3;
-import 'dart:typed_data' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:taro/src/network/http_client.dart' as _i2;
+import 'package:taro/src/taro_loader_network.dart' as _i4;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -34,6 +34,17 @@ class _FakeDuration_0 extends _i1.SmartFake implements Duration {
         );
 }
 
+class _FakeTaroHttpResponse_1 extends _i1.SmartFake
+    implements _i4.TaroHttpResponse {
+  _FakeTaroHttpResponse_1(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [HttpClient].
 ///
 /// See the documentation for Mockito's code generation for more information.
@@ -52,15 +63,7 @@ class MockHttpClient extends _i1.Mock implements _i2.HttpClient {
       ) as Duration);
 
   @override
-  _i3.Future<
-      ({
-        _i4.Uint8List bodyBytes,
-        int? contentLength,
-        Map<String, String> headers,
-        bool isRedirect,
-        String? reasonPhrase,
-        int statusCode
-      })> get({
+  _i3.Future<_i4.TaroHttpResponse> get({
     required Uri? uri,
     required Map<String, String>? headers,
   }) =>
@@ -73,45 +76,29 @@ class MockHttpClient extends _i1.Mock implements _i2.HttpClient {
             #headers: headers,
           },
         ),
-        returnValue: _i3.Future<
-            ({
-              _i4.Uint8List bodyBytes,
-              int? contentLength,
-              Map<String, String> headers,
-              bool isRedirect,
-              String? reasonPhrase,
-              int statusCode
-            })>.value((
-          bodyBytes: _i4.Uint8List(0),
-          contentLength: null,
-          headers: <String, String>{},
-          isRedirect: false,
-          reasonPhrase: null,
-          statusCode: 0
+        returnValue:
+            _i3.Future<_i4.TaroHttpResponse>.value(_FakeTaroHttpResponse_1(
+          this,
+          Invocation.method(
+            #get,
+            [],
+            {
+              #uri: uri,
+              #headers: headers,
+            },
+          ),
         )),
-        returnValueForMissingStub: _i3.Future<
-            ({
-              _i4.Uint8List bodyBytes,
-              int? contentLength,
-              Map<String, String> headers,
-              bool isRedirect,
-              String? reasonPhrase,
-              int statusCode
-            })>.value((
-          bodyBytes: _i4.Uint8List(0),
-          contentLength: null,
-          headers: <String, String>{},
-          isRedirect: false,
-          reasonPhrase: null,
-          statusCode: 0
+        returnValueForMissingStub:
+            _i3.Future<_i4.TaroHttpResponse>.value(_FakeTaroHttpResponse_1(
+          this,
+          Invocation.method(
+            #get,
+            [],
+            {
+              #uri: uri,
+              #headers: headers,
+            },
+          ),
         )),
-      ) as _i3.Future<
-          ({
-            _i4.Uint8List bodyBytes,
-            int? contentLength,
-            Map<String, String> headers,
-            bool isRedirect,
-            String? reasonPhrase,
-            int statusCode
-          })>);
+      ) as _i3.Future<_i4.TaroHttpResponse>);
 }

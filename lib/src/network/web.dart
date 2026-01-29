@@ -26,7 +26,7 @@ Future<TaroHttpResponse> get({
     responseHeaders[key] = value;
   }.toJS);
 
-  return (
+  return TaroHttpResponse(
     statusCode: response.status,
     bodyBytes: responseBytes,
     reasonPhrase: response.statusText,

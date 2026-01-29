@@ -14,7 +14,7 @@ class HttpHttp implements TaroHttpClient {
     required Map<String, String> headers,
   }) async {
     final response = await http.get(uri, headers: headers).timeout(timeout);
-    return (
+    return TaroHttpResponse(
       statusCode: response.statusCode,
       bodyBytes: response.bodyBytes,
       reasonPhrase: response.reasonPhrase,

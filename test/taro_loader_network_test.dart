@@ -31,7 +31,7 @@ void main() {
       uri: Uri.parse(url),
       headers: const {},
     )).thenAnswer(
-      (_) async => (
+      (_) async => TaroHttpResponse(
         statusCode: 200,
         bodyBytes: bodyBytes,
         reasonPhrase: null,
@@ -67,7 +67,7 @@ void main() {
       uri: Uri.parse(url),
       headers: const {},
     )).thenAnswer(
-      (_) async => (
+      (_) async => TaroHttpResponse(
         statusCode: 200,
         bodyBytes: bodyBytes,
         reasonPhrase: null,
@@ -105,7 +105,7 @@ void main() {
         uri: Uri.parse(url),
         headers: const {},
       )).thenAnswer(
-        (_) async => (
+        (_) async => TaroHttpResponse(
           statusCode: 200,
           bodyBytes: bodyBytes,
           reasonPhrase: null,
@@ -185,7 +185,7 @@ void main() {
       uri: Uri.parse(url),
       headers: const {},
     )).thenAnswer(
-      (_) async => (
+      (_) async => TaroHttpResponse(
         statusCode: 400,
         bodyBytes: emptyBodyBytes,
         reasonPhrase: 'Bad Request',
@@ -214,7 +214,7 @@ void main() {
       uri: Uri.parse(url),
       headers: const {},
     )).thenAnswer(
-      (_) async => (
+      (_) async => TaroHttpResponse(
         statusCode: 400,
         bodyBytes: Uint8List(0),
         reasonPhrase: null,
@@ -243,7 +243,7 @@ void main() {
       uri: Uri.parse(url),
       headers: const {},
     )).thenAnswer(
-      (_) async => (
+      (_) async => TaroHttpResponse(
         statusCode: 200,
         bodyBytes: Uint8List(0),
         reasonPhrase: null,
@@ -274,7 +274,7 @@ void main() {
       uri: Uri.parse(url),
       headers: const {},
     )).thenAnswer(
-      (_) async => (
+      (_) async => TaroHttpResponse(
         statusCode: 200,
         bodyBytes: bodyBytes,
         reasonPhrase: null,
@@ -312,7 +312,7 @@ void main() {
       uri: Uri.parse(url),
       headers: const {},
     )).thenAnswer(
-      (_) async => (
+      (_) async => TaroHttpResponse(
         statusCode: 200,
         bodyBytes: bodyBytes,
         reasonPhrase: null,
@@ -347,7 +347,7 @@ void main() {
         uri: Uri.parse(url),
         headers: const {},
       )).thenAnswer(
-        (_) async => (
+        (_) async => TaroHttpResponse(
           statusCode: 200,
           bodyBytes: bodyBytes,
           reasonPhrase: null,
@@ -378,7 +378,7 @@ void main() {
         uri: Uri.parse(url),
         headers: const {},
       )).thenAnswer(
-        (_) async => (
+        (_) async => TaroHttpResponse(
           statusCode: 200,
           bodyBytes: bodyBytes,
           reasonPhrase: null,

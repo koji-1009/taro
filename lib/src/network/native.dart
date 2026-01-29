@@ -33,7 +33,7 @@ Future<TaroHttpResponse> get({
     responseHeaders[key] = values.join(',');
   });
 
-  return (
+  return TaroHttpResponse(
     statusCode: response.statusCode,
     bodyBytes: responseBytes,
     reasonPhrase: response.reasonPhrase,

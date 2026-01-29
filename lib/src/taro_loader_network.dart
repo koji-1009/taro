@@ -1,19 +1,64 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:clock/clock.dart';
+import 'package:flutter/foundation.dart';
 import 'package:taro/src/network/http_client.dart';
 import 'package:taro/src/taro_exception.dart';
 
 /// [TaroHttpResponse] is a class that holds the necessary response information.
-typedef TaroHttpResponse = ({
-  int statusCode,
-  Uint8List bodyBytes,
-  String? reasonPhrase,
-  int? contentLength,
-  Map<String, String> headers,
-  bool isRedirect,
-});
+@immutable
+class TaroHttpResponse {
+  /// Creates a [TaroHttpResponse].
+  const TaroHttpResponse({
+    required this.statusCode,
+    required this.bodyBytes,
+    required this.headers,
+    this.reasonPhrase,
+    this.contentLength,
+    this.isRedirect = false,
+  });
+
+  /// The status code of the response.
+  final int statusCode;
+
+  /// The body bytes of the response.
+  final Uint8List bodyBytes;
+
+  /// The reason phrase of the response.
+  final String? reasonPhrase;
+
+  /// The content length of the response.
+  final int? contentLength;
+
+  /// The headers of the response.
+  final Map<String, String> headers;
+
+  /// Whether the response is a redirect.
+  final bool isRedirect;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is TaroHttpResponse &&
+        other.statusCode == statusCode &&
+        listEquals(other.bodyBytes, bodyBytes) &&
+        other.reasonPhrase == reasonPhrase &&
+        other.contentLength == contentLength &&
+        mapEquals(other.headers, headers) &&
+        other.isRedirect == isRedirect;
+  }
+
+  @override
+  int get hashCode {
+    return statusCode.hashCode ^
+        bodyBytes.hashCode ^
+        reasonPhrase.hashCode ^
+        contentLength.hashCode ^
+        headers.hashCode ^
+        isRedirect.hashCode;
+  }
+}
 
 /// [TaroHttpClient] is an interface class for GET requests to the specified URL.
 abstract interface class TaroHttpClient {
