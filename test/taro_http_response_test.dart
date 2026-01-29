@@ -43,5 +43,34 @@ void main() {
 
       expect(response1.hashCode, equals(response2.hashCode));
     });
+
+    test('header normalization', () {
+      final response = TaroHttpResponse(
+        statusCode: 200,
+        bodyBytes: Uint8List(0),
+        headers: {
+          'Content-Type': 'application/json',
+          'CACHE-CONTROL': 'no-cache',
+        },
+      );
+
+      expect(response.headers['content-type'], equals('application/json'));
+      expect(response.headers['cache-control'], equals('no-cache'));
+    });
+
+    test('toString', () {
+      final response = TaroHttpResponse(
+        statusCode: 200,
+        bodyBytes: Uint8List.fromList([1, 2, 3]),
+        headers: {'content-type': 'application/octet-stream'},
+        reasonPhrase: 'OK',
+      );
+
+      final str = response.toString();
+      expect(str, contains('statusCode: 200'));
+      expect(str, contains('bodyBytes: 3 bytes'));
+      expect(str, contains('content-type: application/octet-stream'));
+      expect(str, contains('reasonPhrase: OK'));
+    });
   });
 }

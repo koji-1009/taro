@@ -9,14 +9,16 @@ import 'package:taro/src/taro_exception.dart';
 @immutable
 class TaroHttpResponse {
   /// Creates a [TaroHttpResponse].
-  const TaroHttpResponse({
+  TaroHttpResponse({
     required this.statusCode,
     required this.bodyBytes,
-    required this.headers,
+    required Map<String, String> headers,
     this.reasonPhrase,
     this.contentLength,
     this.isRedirect = false,
-  });
+  }) : headers = headers.map(
+          (key, value) => MapEntry(key.toLowerCase(), value),
+        );
 
   /// The status code of the response.
   final int statusCode;
@@ -35,6 +37,18 @@ class TaroHttpResponse {
 
   /// Whether the response is a redirect.
   final bool isRedirect;
+
+  @override
+  String toString() {
+    return 'TaroHttpResponse('
+        'statusCode: $statusCode, '
+        'bodyBytes: ${bodyBytes.length} bytes, '
+        'headers: $headers, '
+        'reasonPhrase: $reasonPhrase, '
+        'contentLength: $contentLength, '
+        'isRedirect: $isRedirect'
+        ')';
+  }
 
   @override
   bool operator ==(Object other) {
