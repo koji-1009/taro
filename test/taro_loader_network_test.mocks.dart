@@ -7,10 +7,7 @@ import 'dart:async' as _i3;
 import 'dart:typed_data' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i7;
 import 'package:taro/src/network/http_client.dart' as _i2;
-import 'package:taro/src/taro_resizer.dart' as _i5;
-import 'package:taro/src/taro_type.dart' as _i6;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -117,59 +114,4 @@ class MockHttpClient extends _i1.Mock implements _i2.HttpClient {
             String? reasonPhrase,
             int statusCode
           })>);
-}
-
-/// A class which mocks [TaroResizer].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockTaroResizer extends _i1.Mock implements _i5.TaroResizer {
-  @override
-  _i3.Future<({_i4.Uint8List bytes, String contentType})> resizeIfNeeded({
-    required _i4.Uint8List? bytes,
-    required String? contentType,
-    required _i6.TaroResizeOption? resizeOption,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #resizeIfNeeded,
-          [],
-          {
-            #bytes: bytes,
-            #contentType: contentType,
-            #resizeOption: resizeOption,
-          },
-        ),
-        returnValue:
-            _i3.Future<({_i4.Uint8List bytes, String contentType})>.value((
-          bytes: _i4.Uint8List(0),
-          contentType: _i7.dummyValue<String>(
-            this,
-            Invocation.method(
-              #resizeIfNeeded,
-              [],
-              {
-                #bytes: bytes,
-                #contentType: contentType,
-                #resizeOption: resizeOption,
-              },
-            ),
-          )
-        )),
-        returnValueForMissingStub:
-            _i3.Future<({_i4.Uint8List bytes, String contentType})>.value((
-          bytes: _i4.Uint8List(0),
-          contentType: _i7.dummyValue<String>(
-            this,
-            Invocation.method(
-              #resizeIfNeeded,
-              [],
-              {
-                #bytes: bytes,
-                #contentType: contentType,
-                #resizeOption: resizeOption,
-              },
-            ),
-          )
-        )),
-      ) as _i3.Future<({_i4.Uint8List bytes, String contentType})>);
 }

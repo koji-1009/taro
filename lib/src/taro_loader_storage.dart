@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:taro/src/storage/shared.dart' as storage;
 import 'package:taro/src/taro_exception.dart';
-import 'package:taro/src/taro_type.dart';
 
 /// The [TaroLoaderStorage] class is used to load and save data from storage.
 class TaroLoaderStorage {
@@ -15,10 +14,9 @@ class TaroLoaderStorage {
   /// Returns a Future that completes with the data.
   Future<Uint8List?> load({
     required String url,
-    required TaroResizeOption resizeOption,
   }) async {
     try {
-      final filename = sha256.convert(utf8.encode('$url+$resizeOption'));
+      final filename = sha256.convert(utf8.encode(url));
       return await storage.load(
         filename: '$filename',
       );
@@ -35,10 +33,9 @@ class TaroLoaderStorage {
     required Uint8List bytes,
     required String contentType,
     required DateTime? expireAt,
-    required TaroResizeOption resizeOption,
   }) async {
     try {
-      final filename = sha256.convert(utf8.encode('$url+$resizeOption'));
+      final filename = sha256.convert(utf8.encode(url));
       return await storage.save(
         filename: '$filename',
         bytes: bytes,

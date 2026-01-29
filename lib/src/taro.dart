@@ -4,7 +4,6 @@ import 'package:taro/src/taro_image.dart';
 import 'package:taro/src/taro_loader.dart';
 import 'package:taro/src/taro_loader_network.dart';
 import 'package:taro/src/taro_loader_storage.dart';
-import 'package:taro/src/taro_resizer.dart';
 import 'package:taro/src/taro_type.dart';
 
 /// [Taro] is a library for loading images. It uses two loaders: Storage and Network.
@@ -52,15 +51,6 @@ class Taro {
     );
   }
 
-  /// Changes the [TaroResizer] of the current [TaroLoaderNetwork] to the provided resizer.
-  set networkLoaderResizer(TaroResizer resizer) {
-    _loader.changeNetworkLoader(
-      TaroLoaderNetwork(
-        resizer: resizer,
-      ),
-    );
-  }
-
   /// Changes the current [TaroLoaderStorage] to the provided new loader.
   set storageLoader(TaroLoaderStorage newLoader) {
     _loader.changeStorageLoader(newLoader);
@@ -102,18 +92,19 @@ class Taro {
     TaroResizeOption? resizeOption,
     TaroHeaderOption? headerOption,
   }) {
+    final effectiveResizeOption = resizeOption ?? _resizeOption;
     final image = TaroImage(
       url,
       scale: scale,
-      resizeOption: resizeOption ?? _resizeOption,
+      resizeOption: effectiveResizeOption,
       headers: headers,
       headerOption: headerOption ?? _headerOption,
     );
 
-    if (resizeOption is TaroResizeOptionMemory) {
+    if (effectiveResizeOption is TaroResizeOptionMemory) {
       return ResizeImage.resizeIfNeeded(
-        resizeOption.maxWidth,
-        resizeOption.maxHeight,
+        effectiveResizeOption.maxWidth,
+        effectiveResizeOption.maxHeight,
         image,
       );
     }
@@ -123,17 +114,14 @@ class Taro {
 
   /// Loads the data from the provided URL and returns it as a byte array.
   /// The [headers] parameter is a map of request headers to send with the GET request.
-  /// The [resizeOption] parameter is used to resize the image. If it is not provided, the default resize option is used.
   Future<Uint8List> loadBytes(
     String url, {
     Map<String, String> headers = const {},
-    TaroResizeOption? resizeOption,
     TaroHeaderOption? headerOption,
   }) async {
     return await _loader.load(
       url: url,
       headers: headers,
-      resizeOption: resizeOption ?? _resizeOption,
       headerOption: headerOption ?? _headerOption,
     );
   }

@@ -46,67 +46,6 @@ void main() {
         expect(option.toString(), equals('memory_100x200'));
       });
     });
-
-    group('TaroResizeOptionDisk', () {
-      test('equality - same values', () {
-        const option1 = TaroResizeOptionDisk(
-          format: TaroResizeFormat.png,
-          maxWidth: 100,
-          maxHeight: 200,
-        );
-        const option2 = TaroResizeOptionDisk(
-          format: TaroResizeFormat.png,
-          maxWidth: 100,
-          maxHeight: 200,
-        );
-
-        expect(option1, equals(option2));
-        expect(option1.hashCode, equals(option2.hashCode));
-      });
-
-      test('equality - different format', () {
-        const option1 = TaroResizeOptionDisk(
-          format: TaroResizeFormat.png,
-          maxWidth: 100,
-          maxHeight: 200,
-        );
-        const option2 = TaroResizeOptionDisk(
-          format: TaroResizeFormat.jpeg,
-          maxWidth: 100,
-          maxHeight: 200,
-        );
-
-        expect(option1, isNot(equals(option2)));
-      });
-
-      test('equality - null dimensions', () {
-        const option1 = TaroResizeOptionDisk(
-          format: TaroResizeFormat.png,
-        );
-        const option2 = TaroResizeOptionDisk(
-          format: TaroResizeFormat.png,
-        );
-
-        expect(option1, equals(option2));
-        expect(option1.hashCode, equals(option2.hashCode));
-      });
-
-      test('toString with dimensions', () {
-        const option = TaroResizeOptionDisk(
-          format: TaroResizeFormat.png,
-          maxWidth: 100,
-          maxHeight: 200,
-        );
-        expect(option.toString(), equals('disk_png_100x200'));
-      });
-
-      test('toString with null dimensions', () {
-        const option = TaroResizeOptionDisk(
-          format: TaroResizeFormat.jpeg,
-        );
-        expect(option.toString(), equals('disk_jpeg_autoxauto'));
-      });
-    });
   });
 
   group('TaroHeaderOption', () {

@@ -48,62 +48,6 @@ class TaroResizeOptionMemory extends TaroResizeOption {
   int get hashCode => Object.hash(maxWidth, maxHeight);
 }
 
-class TaroResizeOptionDisk extends TaroResizeOption {
-  const TaroResizeOptionDisk({
-    required this.format,
-    this.maxWidth,
-    this.maxHeight,
-  });
-
-  /// The format of the image.
-  final TaroResizeFormat format;
-
-  /// The maximum width of the image. If null, the width is not limited.
-  final int? maxWidth;
-
-  /// The maximum height of the image. If null, the height is not limited.
-  final int? maxHeight;
-
-  @override
-  String toString() =>
-      'disk_${format.name}_${maxWidth ?? 'auto'}x${maxHeight ?? 'auto'}';
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TaroResizeOptionDisk &&
-          runtimeType == other.runtimeType &&
-          format == other.format &&
-          maxWidth == other.maxWidth &&
-          maxHeight == other.maxHeight;
-
-  @override
-  int get hashCode => Object.hash(format, maxWidth, maxHeight);
-}
-
-enum TaroResizeFormat {
-  /// The original format of the image.
-  original,
-
-  /// The image is saved as a gif.
-  gif,
-
-  /// The image is saved as a jpeg.
-  jpeg,
-
-  /// The image is saved as a png.
-  png,
-
-  /// The image is saved as a bmp.
-  bmp,
-
-  /// The image is saved as an icon.
-  ico,
-
-  /// The image is saved as a tiff.
-  tiff,
-}
-
 /// [TaroHeaderOption] is used to configure the options for a header request.
 class TaroHeaderOption {
   /// Creates a [TaroHeaderOption].

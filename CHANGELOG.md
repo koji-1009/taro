@@ -1,3 +1,10 @@
+## Next
+
+* **BREAKING CHANGE**: Remove `image` dependency.
+* **BREAKING CHANGE**: Remove `TaroResizer`, `TaroResizeOptionDisk`, and `TaroResizeFormat`.
+* **BREAKING CHANGE**: Remove `resizeOption` argument from `loadBytes`.
+* **BREAKING CHANGE**: Remove `networkLoaderResizer` setter from `Taro`.
+
 ## 1.3.0
 
 * Add `customCacheDuration` option to `TaroHeaderOption`
