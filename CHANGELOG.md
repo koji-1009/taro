@@ -1,3 +1,8 @@
+## Next
+
+* **BREAKING CHANGE**: Remove `TaroResizeOption`, `TaroResizeOptionSkip`, and `TaroResizeOptionMemory`.
+* **BREAKING CHANGE**: `Taro.loadImageProvider` and `TaroWidget` now use `maxWidth` and `maxHeight` arguments instead of `resizeOption`.
+
 ## 1.4.0
 
 * **BREAKING CHANGE**: Remove `image` dependency.
