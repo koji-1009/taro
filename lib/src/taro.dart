@@ -90,7 +90,7 @@ class Taro {
   /// Loads an image from the provided URL and returns it as a [TaroImage].
   ///
   /// The [headers] parameter is a map of request headers to send with the GET request.
-  /// The [maxWidth] and [maxHeight] parameters are used to resize the image.
+  /// The [cacheWidth] and [cacheHeight] parameters are used to resize the image.
   /// The [checkMaxAgeIfExist] parameter checks the cache-control: max-age.
   /// The [ifThrowMaxAgeHeaderError] parameter throws an exception if the max-age header is invalid.
   /// The [customCacheDuration] parameter overrides the cache-control header.
@@ -98,8 +98,8 @@ class Taro {
     String url, {
     double scale = 1.0,
     Map<String, String> headers = const {},
-    int? maxWidth,
-    int? maxHeight,
+    int? cacheWidth,
+    int? cacheHeight,
     bool? checkMaxAgeIfExist,
     bool? ifThrowMaxAgeHeaderError,
     Duration? customCacheDuration,
@@ -115,8 +115,8 @@ class Taro {
     );
 
     return ResizeImage.resizeIfNeeded(
-      maxWidth,
-      maxHeight,
+      cacheWidth,
+      cacheHeight,
       image,
     );
   }

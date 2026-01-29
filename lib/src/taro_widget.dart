@@ -23,8 +23,8 @@ class TaroWidget extends StatelessWidget {
     super.key,
     required this.url,
     this.headers = const {},
-    this.maxWidth,
-    this.maxHeight,
+    this.cacheWidth,
+    this.cacheHeight,
     this.checkMaxAgeIfExist = false,
     this.ifThrowMaxAgeHeaderError = false,
     this.customCacheDuration,
@@ -54,11 +54,11 @@ class TaroWidget extends StatelessWidget {
   /// A map of request headers to send with the GET request.
   final Map<String, String> headers;
 
-  /// The maximum width of the image.
-  final int? maxWidth;
+  /// The cache width of the image.
+  final int? cacheWidth;
 
-  /// The maximum height of the image.
-  final int? maxHeight;
+  /// The cache height of the image.
+  final int? cacheHeight;
 
   /// If true, the method checks the cache-control: max-age.
   final bool checkMaxAgeIfExist;
@@ -131,8 +131,8 @@ class TaroWidget extends StatelessWidget {
         url,
         scale: scale,
         headers: headers,
-        maxWidth: maxWidth,
-        maxHeight: maxHeight,
+        cacheWidth: cacheWidth,
+        cacheHeight: cacheHeight,
         checkMaxAgeIfExist: checkMaxAgeIfExist,
         ifThrowMaxAgeHeaderError: ifThrowMaxAgeHeaderError,
         customCacheDuration: customCacheDuration,
