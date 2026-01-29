@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:clock/clock.dart';
 import 'package:taro/src/network/http_client.dart';
 import 'package:taro/src/taro_exception.dart';
-import 'package:taro/src/taro_resizer.dart';
 import 'package:taro/src/taro_type.dart';
 
 /// [TaroHttpResponse] is a class that holds the necessary response information.
@@ -33,7 +32,6 @@ abstract interface class TaroHttpClient {
 class TaroLoaderNetwork {
   /// Creates a [TaroLoaderNetwork].
   const TaroLoaderNetwork({
-    this.resizer = const TaroResizer(),
     this.client = const HttpClient(),
   });
 
@@ -46,19 +44,14 @@ class TaroLoaderNetwork {
         ),
       );
 
-  /// The [TaroResizer] instance used to resize the image.
-  final TaroResizer resizer;
-
   /// The [TaroHttpClient] instance used to send GET requests.
   final TaroHttpClient client;
 
   /// Loads the data from the provided URL with the given request headers.
   /// If [checkMaxAgeIfExist] is true, the method checks the max age of the data.
-  /// The [resizeOption] parameter is used to resize the image. If it is not provided, the default resize option is used.
   Future<({Uint8List bytes, String contentType, DateTime? expireAt})?> load({
     required String url,
     required Map<String, String> headers,
-    required TaroResizeOption resizeOption,
     required TaroHeaderOption headerOption,
   }) async {
     final uri = Uri.tryParse(url);
@@ -132,15 +125,10 @@ class TaroLoaderNetwork {
     }
 
     final contentType = response.headers['content-type'] ?? '';
-    final result = await resizer.resizeIfNeeded(
-      bytes: response.bodyBytes,
-      contentType: contentType,
-      resizeOption: resizeOption,
-    );
 
     return (
-      bytes: result.bytes,
-      contentType: result.contentType,
+      bytes: response.bodyBytes,
+      contentType: contentType,
       expireAt: expireAt,
     );
   }

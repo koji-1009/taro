@@ -26,6 +26,8 @@ class TaroImage extends ImageProvider<TaroImage> {
   final double scale;
 
   /// The resize option used to resize the image.
+  /// When using [TaroResizeOptionMemory], the image will be resized in memory
+  /// using Flutter's [ResizeImage].
   final TaroResizeOption? resizeOption;
 
   /// Use network options to identify instances.
@@ -73,7 +75,6 @@ class TaroImage extends ImageProvider<TaroImage> {
       final bytes = await Taro.instance.loadBytes(
         key.url,
         headers: key.headers,
-        resizeOption: key.resizeOption,
         headerOption: key.headerOption,
       );
 

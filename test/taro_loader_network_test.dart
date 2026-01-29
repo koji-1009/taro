@@ -8,26 +8,21 @@ import 'package:mockito/mockito.dart';
 import 'package:taro/src/network/http_client.dart';
 import 'package:taro/src/taro_exception.dart';
 import 'package:taro/src/taro_loader_network.dart';
-import 'package:taro/src/taro_resizer.dart';
 import 'package:taro/src/taro_type.dart';
 
 @GenerateNiceMocks([
   MockSpec<HttpClient>(),
-  MockSpec<TaroResizer>(),
 ])
 import 'taro_loader_network_test.mocks.dart';
 
 void main() {
   final mockHttpClient = MockHttpClient();
-  final mockTaroResizer = MockTaroResizer();
 
   final loader = TaroLoaderNetwork(
     client: mockHttpClient,
-    resizer: mockTaroResizer,
   );
 
   final bodyBytes = Uint8List(100);
-  const resizeOption = TaroResizeOptionSkip();
   const headerOption = TaroHeaderOption();
 
   const contentType = 'image/jpeg';
@@ -50,21 +45,10 @@ void main() {
         isRedirect: false,
       ),
     );
-    when(mockTaroResizer.resizeIfNeeded(
-      bytes: bodyBytes,
-      contentType: contentType,
-      resizeOption: resizeOption,
-    )).thenAnswer(
-      (_) async => (
-        bytes: bodyBytes,
-        contentType: contentType,
-      ),
-    );
 
     final result = await loader.load(
       url: url,
       headers: const {},
-      resizeOption: resizeOption,
       headerOption: headerOption,
     );
 
@@ -99,21 +83,10 @@ void main() {
         isRedirect: false,
       ),
     );
-    when(mockTaroResizer.resizeIfNeeded(
-      bytes: bodyBytes,
-      contentType: contentType,
-      resizeOption: resizeOption,
-    )).thenAnswer(
-      (_) async => (
-        bytes: bodyBytes,
-        contentType: contentType,
-      ),
-    );
 
     final result = await loader.load(
       url: url,
       headers: const {},
-      resizeOption: resizeOption,
       headerOption: headerOption,
     );
 
@@ -149,21 +122,10 @@ void main() {
           isRedirect: false,
         ),
       );
-      when(mockTaroResizer.resizeIfNeeded(
-        bytes: bodyBytes,
-        contentType: contentType,
-        resizeOption: resizeOption,
-      )).thenAnswer(
-        (_) async => (
-          bytes: bodyBytes,
-          contentType: contentType,
-        ),
-      );
 
       final result = await loader.load(
         url: url,
         headers: const {},
-        resizeOption: resizeOption,
         headerOption: const TaroHeaderOption(
           checkMaxAgeIfExist: true,
           ifThrowMaxAgeHeaderError: true,
@@ -191,7 +153,6 @@ void main() {
         await loader.load(
           url: url,
           headers: const {},
-          resizeOption: resizeOption,
           headerOption: headerOption,
         );
         fail('should throw TaroUriInvalidException');
@@ -217,7 +178,6 @@ void main() {
         await loader.load(
           url: url,
           headers: const {},
-          resizeOption: resizeOption,
           headerOption: headerOption,
         );
         fail('should throw TaroNetworkException');
@@ -249,7 +209,6 @@ void main() {
         await loader.load(
           url: url,
           headers: const {},
-          resizeOption: resizeOption,
           headerOption: headerOption,
         );
         fail('should throw TaroHttpResponseException');
@@ -258,7 +217,7 @@ void main() {
     );
   });
 
-  test('load response error 400', () async {
+  test('load response error 400 (no reason phrase)', () async {
     const url = 'https://example.com';
 
     when(mockHttpClient.get(
@@ -280,7 +239,6 @@ void main() {
         await loader.load(
           url: url,
           headers: const {},
-          resizeOption: resizeOption,
           headerOption: headerOption,
         );
         fail('should throw TaroHttpResponseException');
@@ -313,7 +271,6 @@ void main() {
         await loader.load(
           url: url,
           headers: const {},
-          resizeOption: resizeOption,
           headerOption: headerOption,
         );
         fail('should throw TaroEmptyResponseException');
@@ -345,7 +302,6 @@ void main() {
     final result = await loader.load(
       url: url,
       headers: const {},
-      resizeOption: resizeOption,
       headerOption: const TaroHeaderOption(
         checkMaxAgeIfExist: true,
       ),
@@ -387,7 +343,6 @@ void main() {
         await loader.load(
           url: url,
           headers: const {},
-          resizeOption: resizeOption,
           headerOption: const TaroHeaderOption(
             checkMaxAgeIfExist: true,
             ifThrowMaxAgeHeaderError: true,
@@ -419,21 +374,10 @@ void main() {
           isRedirect: false,
         ),
       );
-      when(mockTaroResizer.resizeIfNeeded(
-        bytes: bodyBytes,
-        contentType: contentType,
-        resizeOption: resizeOption,
-      )).thenAnswer(
-        (_) async => (
-          bytes: bodyBytes,
-          contentType: contentType,
-        ),
-      );
 
       final result = await loader.load(
         url: url,
         headers: const {},
-        resizeOption: resizeOption,
         headerOption: const TaroHeaderOption(
           customCacheDuration: Duration(days: 7),
         ),
@@ -464,21 +408,10 @@ void main() {
           isRedirect: false,
         ),
       );
-      when(mockTaroResizer.resizeIfNeeded(
-        bytes: bodyBytes,
-        contentType: contentType,
-        resizeOption: resizeOption,
-      )).thenAnswer(
-        (_) async => (
-          bytes: bodyBytes,
-          contentType: contentType,
-        ),
-      );
 
       final result = await loader.load(
         url: url,
         headers: const {},
-        resizeOption: resizeOption,
         headerOption: const TaroHeaderOption(
           checkMaxAgeIfExist: true,
           customCacheDuration: Duration(days: 7), // should override
