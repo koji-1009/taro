@@ -1,5 +1,7 @@
 # Taro
 
+[![pub package](https://img.shields.io/pub/v/taro.svg)](https://pub.dev/packages/taro)
+
 `Taro` is a library for loading data from network and saving it to storage to speed up data loading.
 By using `TaroImage`, you can also use the memory cache by CacheImage of Flutter.
 
@@ -32,7 +34,7 @@ Future<void> main() async {
   );
 
   // load image as TaroImage
-  final TaroImage imageProvider = taro.loadImageProvider(
+  final TaroImage imageProvider = Taro.instance.loadImageProvider(
     'https://example.com/image',
     headers: {
       'custom-header': 'value',
@@ -95,17 +97,13 @@ You can set a custom cache duration that overrides the server's cache-control he
 // Cache images for 7 days regardless of server headers
 final imageProvider = Taro.instance.loadImageProvider(
   'https://example.com/image.jpg',
-  headerOption: const TaroHeaderOption(
-    customCacheDuration: Duration(days: 7),
-  ),
+  customCacheDuration: const Duration(days: 7),
 );
 
 // Or use with TaroWidget
 TaroWidget(
   url: 'https://example.com/image.jpg',
-  headerOption: const TaroHeaderOption(
-    customCacheDuration: Duration(days: 7),
-  ),
+  customCacheDuration: const Duration(days: 7),
 )
 ```
 
@@ -219,7 +217,5 @@ If a native cache directory exists, such as Android or iOS, use [path_provider](
   * Get current time and mock time
 * [crypto](https://pub.dev/packages/crypto)
   * Get persistent file name from URL and options
-* [image](https://pub.dev/packages/image)
-  * Resize image
 * [path_provider](https://pub.dev/packages/path_provider)
   * Get application cache directory
