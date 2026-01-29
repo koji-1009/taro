@@ -36,9 +36,15 @@ class TaroLoader {
     bool ifThrowMaxAgeHeaderError = false,
     Duration? customCacheDuration,
   }) async {
-    final storageBytes = await _storageLoader.load(
-      url: url,
-    );
+    Uint8List? storageBytes;
+    try {
+      storageBytes = await _storageLoader.load(
+        url: url,
+      );
+    } on Exception {
+      // ignore exception
+    }
+
     if (storageBytes != null) {
       return storageBytes;
     }
@@ -58,12 +64,16 @@ class TaroLoader {
     }
 
     // save to storage
-    await _storageLoader.save(
-      url: url,
-      bytes: networkResponse.bytes,
-      contentType: networkResponse.contentType,
-      expireAt: networkResponse.expireAt,
-    );
+    try {
+      await _storageLoader.save(
+        url: url,
+        bytes: networkResponse.bytes,
+        contentType: networkResponse.contentType,
+        expireAt: networkResponse.expireAt,
+      );
+    } on Exception {
+      // ignore exception
+    }
 
     return networkResponse.bytes;
   }

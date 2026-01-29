@@ -5,12 +5,28 @@ import 'package:clock/clock.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:taro/src/storage/cache_file_info.dart';
 
+Directory? _cacheDir;
+
+Future<Directory> _getCacheDir() async {
+  if (_cacheDir != null) {
+    return _cacheDir!;
+  }
+
+  final appCacheDir = await getApplicationCacheDirectory();
+  final cacheDir = Directory('${appCacheDir.path}/taro');
+  if (!await cacheDir.exists()) {
+    await cacheDir.create();
+  }
+  _cacheDir = cacheDir;
+
+  return _cacheDir!;
+}
+
 /// Load [Uint8List] from storage.
 Future<Uint8List?> load({
   required String filename,
 }) async {
-  final appCacheDir = await getApplicationCacheDirectory();
-  final cacheDir = Directory('${appCacheDir.path}/taro');
+  final cacheDir = await _getCacheDir();
   final cacheFile = File('${cacheDir.path}/$filename');
   final cacheInfoFile = File('${cacheDir.path}/$filename.json');
 
@@ -51,12 +67,7 @@ Future<void> save({
     expireAt: expireAt,
   );
 
-  final appCacheDir = await getApplicationCacheDirectory();
-  final cacheDir = Directory('${appCacheDir.path}/taro');
-  if (!await cacheDir.exists()) {
-    await cacheDir.create();
-  }
-
+  final cacheDir = await _getCacheDir();
   final cacheFile = File('${cacheDir.path}/$filename');
   final cacheInfoFile = File('${cacheDir.path}/$filename.json');
 
