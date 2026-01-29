@@ -9,7 +9,9 @@ Directory? _cacheDir;
 
 Future<Directory> _getCacheDir() async {
   if (_cacheDir != null) {
-    return _cacheDir!;
+    if (await _cacheDir!.exists()) {
+      return _cacheDir!;
+    }
   }
 
   final appCacheDir = await getApplicationCacheDirectory();
