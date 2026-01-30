@@ -1,3 +1,7 @@
+## 2.0.2
+
+* **FIX**: Fix lint rule.
+
 ## 2.0.1
 
 * **FIX**: Handle deleted cache directory in `native.dart`.
