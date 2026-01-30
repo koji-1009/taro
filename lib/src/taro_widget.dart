@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:taro/src/taro.dart';
+import 'package:taro/src/taro_image.dart';
 
 /// A builder that creates a widget when an error occurs while loading the data.
 typedef TaroErrorBuilder = Widget Function(
@@ -18,7 +19,7 @@ typedef TaroPlaceholderBuilder = Widget Function(
 /// [TaroWidget] is a widget for loading images. It uses two loaders: Storage and Network.
 /// Images that have been loaded once are cached in [ImageCache].
 class TaroWidget extends StatelessWidget {
-  /// Creates a widget that displays an image from a [TaroImageProvider].
+  /// Creates a widget that displays an image from a [TaroImage].
   const TaroWidget({
     super.key,
     required this.url,

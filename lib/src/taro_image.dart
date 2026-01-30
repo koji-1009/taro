@@ -26,7 +26,7 @@ class TaroImage extends ImageProvider<TaroImage> {
   final double scale;
 
   /// Use network options to identify instances.
-  /// If [useHeadersHashCode] is true, the [headers] and [headerOption] are used to identify instances.
+  /// If [useHeadersHashCode] is true, the [headers] and other options are used to identify instances.
   /// This is useful when different headers or cache policies should create separate cache entries.
   final bool useHeadersHashCode;
 

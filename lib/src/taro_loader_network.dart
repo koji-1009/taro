@@ -169,7 +169,7 @@ class TaroLoaderNetwork {
           final maxAge = _getMaxAge(cacheControl);
           if (maxAge == null && cacheControl.contains('max-age=')) {
             // max-age directive exists but couldn't be parsed
-            throw FormatException(
+            throw const FormatException(
                 'Invalid max-age value in cache-control header');
           }
           final age = int.tryParse(headerAge) ?? 0;
