@@ -1,3 +1,9 @@
+## 2.0.1
+
+* **FIX**: Handle deleted cache directory in `native.dart`.
+* **REFACTOR**: Rearrange test directory structure.
+* **DOCS**: Update README badges and examples.## 2.0.0
+
 ## 2.0.0
 
 * **BREAKING CHANGE**: Refactor `TaroHttpResponse` from `Record` to `class`.
