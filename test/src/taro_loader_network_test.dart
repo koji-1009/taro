@@ -36,7 +36,7 @@ void main() {
         bodyBytes: bodyBytes,
         reasonPhrase: null,
         contentLength: bodyBytes.length,
-        headers: {
+        headers: const {
           'content-type': contentType,
         },
         isRedirect: false,
@@ -72,7 +72,7 @@ void main() {
         bodyBytes: bodyBytes,
         reasonPhrase: null,
         contentLength: bodyBytes.length,
-        headers: {
+        headers: const {
           'content-type': contentType,
           'cache-control': 'max-age=100',
         },
@@ -110,7 +110,7 @@ void main() {
           bodyBytes: bodyBytes,
           reasonPhrase: null,
           contentLength: bodyBytes.length,
-          headers: {
+          headers: const {
             'content-type': contentType,
             'cache-control': 'max-age=100',
           },
@@ -248,7 +248,7 @@ void main() {
         bodyBytes: Uint8List(0),
         reasonPhrase: null,
         contentLength: 0,
-        headers: {
+        headers: const {
           'content-type': contentType,
         },
         isRedirect: false,
@@ -279,7 +279,7 @@ void main() {
         bodyBytes: bodyBytes,
         reasonPhrase: null,
         contentLength: bodyBytes.length,
-        headers: <String, String>{
+        headers: const <String, String>{
           'content-type': contentType,
           'cache-control': 'max-age=abc',
         },
@@ -317,7 +317,7 @@ void main() {
         bodyBytes: bodyBytes,
         reasonPhrase: null,
         contentLength: bodyBytes.length,
-        headers: <String, String>{
+        headers: const <String, String>{
           'cache-control': 'max-age=abc',
         },
         isRedirect: false,
@@ -352,7 +352,7 @@ void main() {
           bodyBytes: bodyBytes,
           reasonPhrase: null,
           contentLength: bodyBytes.length,
-          headers: {
+          headers: const {
             'content-type': contentType,
           },
           isRedirect: false,
@@ -383,7 +383,7 @@ void main() {
           bodyBytes: bodyBytes,
           reasonPhrase: null,
           contentLength: bodyBytes.length,
-          headers: {
+          headers: const {
             'content-type': contentType,
             'cache-control': 'max-age=3600', // 1 hour
           },

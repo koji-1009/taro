@@ -87,7 +87,7 @@ class Taro {
     }
   }
 
-  /// Loads an image from the provided URL and returns it as a [TaroImage].
+  /// Loads an image from the provided URL and returns an [ImageProvider].
   ///
   /// The [headers] parameter is a map of request headers to send with the GET request.
   /// The [cacheWidth] and [cacheHeight] parameters are used to resize the image.

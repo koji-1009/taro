@@ -9,19 +9,19 @@ void main() {
       final response1 = TaroHttpResponse(
         statusCode: 200,
         bodyBytes: Uint8List.fromList([1, 2, 3]),
-        headers: {'content-type': 'application/json'},
+        headers: const {'content-type': 'application/json'},
       );
 
       final response2 = TaroHttpResponse(
         statusCode: 200,
         bodyBytes: Uint8List.fromList([1, 2, 3]),
-        headers: {'content-type': 'application/json'},
+        headers: const {'content-type': 'application/json'},
       );
 
       final response3 = TaroHttpResponse(
         statusCode: 404,
         bodyBytes: Uint8List.fromList([1, 2, 3]),
-        headers: {'content-type': 'application/json'},
+        headers: const {'content-type': 'application/json'},
       );
 
       expect(response1, equals(response2));
@@ -32,13 +32,13 @@ void main() {
       final response1 = TaroHttpResponse(
         statusCode: 200,
         bodyBytes: Uint8List.fromList([1, 2, 3]),
-        headers: {'content-type': 'application/json'},
+        headers: const {'content-type': 'application/json'},
       );
 
       final response2 = TaroHttpResponse(
         statusCode: 200,
         bodyBytes: Uint8List.fromList([1, 2, 3]),
-        headers: {'content-type': 'application/json'},
+        headers: const {'content-type': 'application/json'},
       );
 
       expect(response1.hashCode, equals(response2.hashCode));
@@ -48,7 +48,7 @@ void main() {
       final response = TaroHttpResponse(
         statusCode: 200,
         bodyBytes: Uint8List(0),
-        headers: {
+        headers: const {
           'Content-Type': 'application/json',
           'CACHE-CONTROL': 'no-cache',
         },
@@ -62,7 +62,7 @@ void main() {
       final response = TaroHttpResponse(
         statusCode: 200,
         bodyBytes: Uint8List.fromList([1, 2, 3]),
-        headers: {'content-type': 'application/octet-stream'},
+        headers: const {'content-type': 'application/octet-stream'},
         reasonPhrase: 'OK',
       );
 

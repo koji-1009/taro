@@ -11,7 +11,7 @@ class TaroLoader {
 
   /// The [TaroLoaderNetwork] instance used to load data from the network.
   /// Loader is able to change the original network loader.
-  TaroLoaderNetwork _networkLoader = TaroLoaderNetwork();
+  TaroLoaderNetwork _networkLoader = const TaroLoaderNetwork();
 
   /// The [TaroLoaderStorage] instance used to load data from the storage.
   /// Loader is able to change the original storage loader.
