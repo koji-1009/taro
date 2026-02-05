@@ -1,6 +1,9 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+
 /// The cache file information which saved in storage.
+@immutable
 class CacheFileInfo {
   const CacheFileInfo({
     required this.contentType,
