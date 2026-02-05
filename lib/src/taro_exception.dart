@@ -4,6 +4,11 @@ sealed class TaroException implements Exception {
   const TaroException();
 }
 
+/// Callback for storage errors.
+typedef TaroStorageErrorCallback = void Function(
+  TaroStorageFailureException exception,
+);
+
 /// [TaroLoadException] is thrown when there is an issue with loading data in the Taro library.
 final class TaroLoadException extends TaroException {
   /// Creates a [TaroLoadException].
@@ -31,6 +36,39 @@ final class TaroStorageException extends TaroException {
 
   @override
   String toString() => 'TaroStorageException: exception=$exception';
+}
+
+/// The type of storage operation that failed.
+enum TaroStorageOperationType {
+  /// Loading data from storage.
+  load,
+
+  /// Saving data to storage.
+  save,
+}
+
+/// [TaroStorageFailureException] is used to report storage failures via callback.
+/// Unlike [TaroStorageException], this exception is not thrown but passed to the onStorageError callback.
+final class TaroStorageFailureException extends TaroException {
+  /// Creates a [TaroStorageFailureException].
+  const TaroStorageFailureException({
+    required this.url,
+    required this.operationType,
+    required this.exception,
+  });
+
+  /// The URL that was being processed.
+  final String url;
+
+  /// The type of operation that failed.
+  final TaroStorageOperationType operationType;
+
+  /// The original exception that caused the error.
+  final Exception exception;
+
+  @override
+  String toString() =>
+      'TaroStorageFailureException: url=$url, operationType=$operationType, exception=$exception';
 }
 
 /// [TaroUriParseException] is thrown when there is an issue with parsing a URI in the Taro library.

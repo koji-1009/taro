@@ -151,4 +151,62 @@ void main() {
       expect(emptyException, isA<TaroException>());
     });
   });
+
+  group('TaroStorageFailureException', () {
+    test('toString contains all properties', () {
+      final exception = TaroStorageFailureException(
+        url: 'https://example.com/image.png',
+        operationType: TaroStorageOperationType.load,
+        exception: Exception('Disk read error'),
+      );
+      final str = exception.toString();
+      expect(str, contains('TaroStorageFailureException'));
+      expect(str, contains('https://example.com/image.png'));
+      expect(str, contains('TaroStorageOperationType.load'));
+      expect(str, contains('Disk read error'));
+    });
+
+    test('properties for load operation', () {
+      final originalException = Exception('Permission denied');
+      final exception = TaroStorageFailureException(
+        url: 'https://test.com/file.jpg',
+        operationType: TaroStorageOperationType.load,
+        exception: originalException,
+      );
+      expect(exception.url, equals('https://test.com/file.jpg'));
+      expect(exception.operationType, equals(TaroStorageOperationType.load));
+      expect(exception.exception, equals(originalException));
+    });
+
+    test('properties for save operation', () {
+      final originalException = Exception('Disk full');
+      final exception = TaroStorageFailureException(
+        url: 'https://test.com/file.jpg',
+        operationType: TaroStorageOperationType.save,
+        exception: originalException,
+      );
+      expect(exception.url, equals('https://test.com/file.jpg'));
+      expect(exception.operationType, equals(TaroStorageOperationType.save));
+      expect(exception.exception, equals(originalException));
+    });
+
+    test('is a TaroException', () {
+      final exception = TaroStorageFailureException(
+        url: 'test',
+        operationType: TaroStorageOperationType.load,
+        exception: Exception('test'),
+      );
+      expect(exception, isA<TaroException>());
+    });
+  });
+
+  group('TaroStorageOperationType', () {
+    test('has load and save values', () {
+      expect(TaroStorageOperationType.values,
+          contains(TaroStorageOperationType.load));
+      expect(TaroStorageOperationType.values,
+          contains(TaroStorageOperationType.save));
+      expect(TaroStorageOperationType.values.length, equals(2));
+    });
+  });
 }

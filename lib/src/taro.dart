@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
+import 'package:taro/src/taro_exception.dart';
 import 'package:taro/src/taro_image.dart';
 import 'package:taro/src/taro_loader.dart';
 import 'package:taro/src/taro_loader_network.dart';
@@ -62,6 +63,12 @@ class Taro {
     _loader.changeStorageLoader(newLoader);
   }
 
+  /// Sets a callback to be called when a storage operation fails.
+  /// This allows monitoring storage errors without interrupting the loading process.
+  set onStorageError(TaroStorageErrorCallback? callback) {
+    _loader.setOnStorageError(callback);
+  }
+
   /// Configures multiple settings at once for better consistency.
   void configure({
     bool? checkMaxAgeIfExist,
@@ -69,6 +76,7 @@ class Taro {
     Duration? customCacheDuration,
     TaroLoaderNetwork? networkLoader,
     TaroLoaderStorage? storageLoader,
+    TaroStorageErrorCallback? onStorageError,
   }) {
     if (checkMaxAgeIfExist != null) {
       _checkMaxAgeIfExist = checkMaxAgeIfExist;
@@ -85,6 +93,7 @@ class Taro {
     if (storageLoader != null) {
       _loader.changeStorageLoader(storageLoader);
     }
+    _loader.setOnStorageError(onStorageError);
   }
 
   /// Loads an image from the provided URL and returns an [ImageProvider].
