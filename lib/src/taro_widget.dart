@@ -127,7 +127,6 @@ class TaroWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image(
-      key: key,
       image: Taro.instance.loadImageProvider(
         url,
         scale: scale,
