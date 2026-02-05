@@ -1,3 +1,13 @@
+## 2.0.3
+
+* **FEAT**: Add `TaroStorageFailureException` and `TaroStorageOperationType` for storage error handling.
+* **FEAT**: Add `onStorageError` callback to `Taro` class for monitoring storage failures.
+* **FEAT**: Add `topics` to pubspec.yaml for better discoverability on pub.dev.
+* **REFACTOR**: Add `@immutable` annotation to `CacheFileInfo`.
+* **REFACTOR**: Remove duplicate `key` assignment in `TaroWidget`.
+* **TEST**: Add comprehensive tests for exception classes and `CacheFileInfo`.
+* **TEST**: Add `tearDown` to existing tests for better isolation.
+
 ## 2.0.2
 
 * **FIX**: Fix lint rule.
