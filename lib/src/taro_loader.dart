@@ -17,6 +17,9 @@ class TaroLoader {
   /// Loader is able to change the original storage loader.
   TaroLoaderStorage _storageLoader = const TaroLoaderStorage();
 
+  /// Callback for storage errors.
+  TaroStorageErrorCallback? _onStorageError;
+
   /// Changes the current network loader to the provided loader.
   void changeNetworkLoader(TaroLoaderNetwork loader) {
     _networkLoader = loader;
@@ -25,6 +28,11 @@ class TaroLoader {
   /// Changes the current storage loader to the provided loader.
   void changeStorageLoader(TaroLoaderStorage loader) {
     _storageLoader = loader;
+  }
+
+  /// Sets the callback for storage errors.
+  void setOnStorageError(TaroStorageErrorCallback? callback) {
+    _onStorageError = callback;
   }
 
   /// Loads the data from the provided URL with the given request headers.
@@ -41,8 +49,14 @@ class TaroLoader {
       storageBytes = await _storageLoader.load(
         url: url,
       );
-    } on Exception {
-      // ignore exception
+    } on Exception catch (e) {
+      _onStorageError?.call(
+        TaroStorageFailureException(
+          url: url,
+          operationType: TaroStorageOperationType.load,
+          exception: e,
+        ),
+      );
     }
 
     if (storageBytes != null) {
@@ -71,8 +85,14 @@ class TaroLoader {
         contentType: networkResponse.contentType,
         expireAt: networkResponse.expireAt,
       );
-    } on Exception {
-      // ignore exception
+    } on Exception catch (e) {
+      _onStorageError?.call(
+        TaroStorageFailureException(
+          url: url,
+          operationType: TaroStorageOperationType.save,
+          exception: e,
+        ),
+      );
     }
 
     return networkResponse.bytes;
