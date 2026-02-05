@@ -27,6 +27,11 @@ void main() {
       );
     });
 
+    tearDown(() {
+      reset(mockNetworkLoader);
+      reset(mockStorageLoader);
+    });
+
     testWidgets('displays placeholder while loading', (tester) async {
       const url = 'https://example.com/image.png';
 
