@@ -35,6 +35,11 @@ void main() {
       );
     });
 
+    tearDown(() {
+      reset(mockNetworkLoader);
+      reset(mockStorageLoader);
+    });
+
     test('instance returns singleton', () {
       expect(Taro.instance, same(taro));
     });
