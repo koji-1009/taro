@@ -1,3 +1,11 @@
+## 2.0.4
+
+* **FIX**: Resolve equality asymmetry in `TaroImage` when `useHeadersHashCode` differs between instances.
+* **FIX**: `Taro.configure()` no longer resets `onStorageError` callback when not explicitly provided.
+* **FIX**: Use recursive directory creation in native storage to prevent race conditions.
+* **TEST**: Add dedicated `TaroLoader` tests for storage/network orchestration and error callback behavior.
+* **TEST**: Expand test coverage for `age` header, 3xx status codes, `ResizeImage` wrapping, and `configure()` parameter preservation.
+
 ## 2.0.3
 
 * **FEAT**: Add `TaroStorageFailureException` and `TaroStorageOperationType` for storage error handling.
