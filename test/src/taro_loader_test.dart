@@ -80,8 +80,7 @@ void main() {
       TaroStorageFailureException? capturedError;
       loader.setOnStorageError((e) => capturedError = e);
 
-      when(mockStorageLoader.load(url: url))
-          .thenThrow(Exception('Disk error'));
+      when(mockStorageLoader.load(url: url)).thenThrow(Exception('Disk error'));
       when(mockNetworkLoader.load(
         url: anyNamed('url'),
         headers: anyNamed('headers'),
@@ -178,8 +177,7 @@ void main() {
     });
 
     test('does not call onStorageError when no callback is set', () async {
-      when(mockStorageLoader.load(url: url))
-          .thenThrow(Exception('Disk error'));
+      when(mockStorageLoader.load(url: url)).thenThrow(Exception('Disk error'));
       when(mockNetworkLoader.load(
         url: anyNamed('url'),
         headers: anyNamed('headers'),
