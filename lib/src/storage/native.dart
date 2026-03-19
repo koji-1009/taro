@@ -17,7 +17,7 @@ Future<Directory> _getCacheDir() async {
   final appCacheDir = await getApplicationCacheDirectory();
   final cacheDir = Directory('${appCacheDir.path}/taro');
   if (!await cacheDir.exists()) {
-    await cacheDir.create();
+    await cacheDir.create(recursive: true);
   }
   _cacheDir = cacheDir;
 

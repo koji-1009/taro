@@ -93,7 +93,9 @@ class Taro {
     if (storageLoader != null) {
       _loader.changeStorageLoader(storageLoader);
     }
-    _loader.setOnStorageError(onStorageError);
+    if (onStorageError != null) {
+      _loader.setOnStorageError(onStorageError);
+    }
   }
 
   /// Loads an image from the provided URL and returns an [ImageProvider].

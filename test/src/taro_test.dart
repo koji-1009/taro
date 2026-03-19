@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -83,6 +84,81 @@ void main() {
       final provider = taro.loadImageProvider(url);
 
       expect(provider, isA<TaroImage>());
+    });
+
+    test('loadImageProvider returns ResizeImage when cacheWidth is set', () {
+      const url = 'https://example.com/image.png';
+      final provider = taro.loadImageProvider(url, cacheWidth: 100);
+
+      expect(provider, isA<ResizeImage>());
+    });
+
+    test('loadImageProvider returns ResizeImage when cacheHeight is set', () {
+      const url = 'https://example.com/image.png';
+      final provider = taro.loadImageProvider(url, cacheHeight: 100);
+
+      expect(provider, isA<ResizeImage>());
+    });
+
+    test('configure does not reset onStorageError when not provided', () async {
+      var callbackCalled = false;
+      taro.onStorageError = (e) => callbackCalled = true;
+
+      // configure without onStorageError should not reset it
+      taro.configure(checkMaxAgeIfExist: true);
+
+      // Trigger a storage error to verify callback is still set
+      const url = 'https://example.com/image.png';
+      when(mockStorageLoader.load(url: url))
+          .thenThrow(Exception('Storage error'));
+      when(mockNetworkLoader.load(
+        url: anyNamed('url'),
+        headers: anyNamed('headers'),
+        checkMaxAgeIfExist: anyNamed('checkMaxAgeIfExist'),
+        ifThrowMaxAgeHeaderError: anyNamed('ifThrowMaxAgeHeaderError'),
+        customCacheDuration: anyNamed('customCacheDuration'),
+      )).thenAnswer(
+        (_) async => (
+          bytes: Uint8List(1),
+          contentType: 'image/png',
+          expireAt: null,
+        ),
+      );
+
+      await taro.loadBytes(url);
+      expect(callbackCalled, isTrue);
+    });
+
+    test('configure does not reset customCacheDuration when not provided',
+        () async {
+      taro.customCacheDuration = const Duration(minutes: 10);
+      taro.configure(checkMaxAgeIfExist: true);
+
+      const url = 'https://example.com/image.png';
+      when(mockStorageLoader.load(url: url)).thenAnswer((_) async => null);
+      when(mockNetworkLoader.load(
+        url: anyNamed('url'),
+        headers: anyNamed('headers'),
+        checkMaxAgeIfExist: anyNamed('checkMaxAgeIfExist'),
+        ifThrowMaxAgeHeaderError: anyNamed('ifThrowMaxAgeHeaderError'),
+        customCacheDuration: anyNamed('customCacheDuration'),
+      )).thenAnswer(
+        (_) async => (
+          bytes: Uint8List(0),
+          contentType: 'image/png',
+          expireAt: null,
+        ),
+      );
+
+      await taro.loadBytes(url);
+
+      verify(mockNetworkLoader.load(
+        url: anyNamed('url'),
+        headers: anyNamed('headers'),
+        checkMaxAgeIfExist: true,
+        ifThrowMaxAgeHeaderError: false,
+        customCacheDuration: const Duration(minutes: 10),
+      )).called(1);
     });
 
     test('configure updates config', () async {

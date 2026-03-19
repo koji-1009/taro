@@ -101,17 +101,15 @@ class TaroImage extends ImageProvider<TaroImage> {
       return false;
     }
 
-    if (useHeadersHashCode) {
-      return other is TaroImage &&
-          other.url == url &&
-          other.scale == scale &&
-          other.headers == headers &&
-          other.checkMaxAgeIfExist == checkMaxAgeIfExist &&
-          other.ifThrowMaxAgeHeaderError == ifThrowMaxAgeHeaderError &&
-          other.customCacheDuration == customCacheDuration;
-    }
-
-    return other is TaroImage && other.url == url && other.scale == scale;
+    return other is TaroImage &&
+        other.useHeadersHashCode == useHeadersHashCode &&
+        other.url == url &&
+        other.scale == scale &&
+        (!useHeadersHashCode ||
+            (other.headers == headers &&
+                other.checkMaxAgeIfExist == checkMaxAgeIfExist &&
+                other.ifThrowMaxAgeHeaderError == ifThrowMaxAgeHeaderError &&
+                other.customCacheDuration == customCacheDuration));
   }
 
   @override
@@ -119,12 +117,13 @@ class TaroImage extends ImageProvider<TaroImage> {
       ? Object.hash(
           url,
           scale,
+          useHeadersHashCode,
           headers,
           checkMaxAgeIfExist,
           ifThrowMaxAgeHeaderError,
           customCacheDuration,
         )
-      : Object.hash(url, scale);
+      : Object.hash(url, scale, useHeadersHashCode);
 
   @override
   String toString() => ''
