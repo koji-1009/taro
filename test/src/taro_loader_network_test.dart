@@ -338,6 +338,143 @@ void main() {
     );
   });
 
+  test('load success status code: 200 (check cache-control with age header)',
+      () async {
+    await withClock(Clock.fixed(DateTime(2024)), () async {
+      const url = 'https://example.com';
+
+      when(mockHttpClient.get(
+        uri: Uri.parse(url),
+        headers: const {},
+      )).thenAnswer(
+        (_) async => TaroHttpResponse(
+          statusCode: 200,
+          bodyBytes: bodyBytes,
+          reasonPhrase: null,
+          contentLength: bodyBytes.length,
+          headers: const {
+            'content-type': contentType,
+            'cache-control': 'max-age=100',
+            'age': '30',
+          },
+          isRedirect: false,
+        ),
+      );
+
+      final result = await loader.load(
+        url: url,
+        headers: const {},
+        checkMaxAgeIfExist: true,
+      );
+
+      // max-age=100, age=30 → expireAt = now + 70s
+      expect(
+        result,
+        equals(
+          (
+            bytes: bodyBytes,
+            contentType: contentType,
+            expireAt: clock.now().add(const Duration(seconds: 70)),
+          ),
+        ),
+      );
+    });
+  });
+
+  test('load success status code: 301 (redirect)', () async {
+    const url = 'https://example.com';
+
+    when(mockHttpClient.get(
+      uri: Uri.parse(url),
+      headers: const {},
+    )).thenAnswer(
+      (_) async => TaroHttpResponse(
+        statusCode: 301,
+        bodyBytes: bodyBytes,
+        reasonPhrase: 'Moved Permanently',
+        contentLength: bodyBytes.length,
+        headers: const {
+          'content-type': contentType,
+        },
+        isRedirect: true,
+      ),
+    );
+
+    final result = await loader.load(
+      url: url,
+      headers: const {},
+    );
+
+    expect(
+      result,
+      equals(
+        (
+          bytes: bodyBytes,
+          contentType: contentType,
+          expireAt: null,
+        ),
+      ),
+    );
+  });
+
+  test('load response error 100 (below 200)', () async {
+    const url = 'https://example.com';
+
+    when(mockHttpClient.get(
+      uri: Uri.parse(url),
+      headers: const {},
+    )).thenAnswer(
+      (_) async => TaroHttpResponse(
+        statusCode: 100,
+        bodyBytes: Uint8List(0),
+        reasonPhrase: 'Continue',
+        contentLength: 0,
+        headers: const <String, String>{},
+        isRedirect: false,
+      ),
+    );
+
+    expect(
+      () async {
+        await loader.load(
+          url: url,
+          headers: const {},
+        );
+        fail('should throw TaroHttpResponseException');
+      },
+      throwsA(isA<TaroHttpResponseException>()),
+    );
+  });
+
+  test('load response error 500', () async {
+    const url = 'https://example.com';
+
+    when(mockHttpClient.get(
+      uri: Uri.parse(url),
+      headers: const {},
+    )).thenAnswer(
+      (_) async => TaroHttpResponse(
+        statusCode: 500,
+        bodyBytes: Uint8List(0),
+        reasonPhrase: 'Internal Server Error',
+        contentLength: 0,
+        headers: const <String, String>{},
+        isRedirect: false,
+      ),
+    );
+
+    expect(
+      () async {
+        await loader.load(
+          url: url,
+          headers: const {},
+        );
+        fail('should throw TaroHttpResponseException');
+      },
+      throwsA(isA<TaroHttpResponseException>()),
+    );
+  });
+
   test('custom cache duration (7 days)', () async {
     const url = 'https://example.com';
     final now = DateTime(2024, 1, 1, 12, 0, 0);

@@ -60,6 +60,52 @@ void main() {
       expect(image1, equals(image2));
     });
 
+    test('equality is symmetric with different useHeadersHashCode', () {
+      const headers1 = {'Auth': '1'};
+      const headers2 = {'Auth': '2'};
+
+      const imageFalse = TaroImage(
+        url1,
+        headers: headers1,
+        useHeadersHashCode: false,
+      );
+      const imageTrue = TaroImage(
+        url1,
+        headers: headers2,
+        useHeadersHashCode: true,
+      );
+
+      // Different useHeadersHashCode → always not equal (symmetric)
+      expect(imageFalse == imageTrue, isFalse);
+      expect(imageTrue == imageFalse, isFalse);
+    });
+
+    test('equality with same useHeadersHashCode=true and same headers', () {
+      const headers = {'Auth': '1'};
+
+      const image1 = TaroImage(
+        url1,
+        headers: headers,
+        useHeadersHashCode: true,
+      );
+      const image2 = TaroImage(
+        url1,
+        headers: headers,
+        useHeadersHashCode: true,
+      );
+
+      expect(image1, equals(image2));
+      expect(image2, equals(image1));
+    });
+
+    test('hashCode differs for different useHeadersHashCode', () {
+      const image1 = TaroImage(url1, useHeadersHashCode: false);
+      const image2 = TaroImage(url1, useHeadersHashCode: true);
+
+      // Not equal, so hashCode may differ (not required, but expected)
+      expect(image1, isNot(equals(image2)));
+    });
+
     test('hashCode is consistent', () {
       const image1 = TaroImage(url1);
       const image2 = TaroImage(url1);
