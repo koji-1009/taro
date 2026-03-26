@@ -21634,7 +21634,7 @@ $iCR:1}
 A.a8R.prototype={
 $1(a){var s=A.cr().b
 s=s==null?null:s.canvasKitBaseUrl
-return(s==null?"https://www.gstatic.com/flutter-canvaskit/052f31d115eceda8cbff1b3481fcde4330c4ae12/":s)+a},
+return(s==null?"https://www.gstatic.com/flutter-canvaskit/425cfb54d01a9472b3e81d9e76fd63a4a44cfbcb/":s)+a},
 $S:135}
 A.D5.prototype={
 gp(a){var s=this.a
