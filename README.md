@@ -17,7 +17,7 @@ The demo application is available at [GitHub Pages](https://koji-1009.github.io/
 * Set custom headers for GET requests.
 * Check the max age of the data.
 * Set custom cache duration (e.g., 7 days) independent of server headers.
-* Reduce the size of the data by resizing the image.
+* Reduce decoded image memory usage with `cacheWidth` / `cacheHeight`.
 
 ## Usage
 
