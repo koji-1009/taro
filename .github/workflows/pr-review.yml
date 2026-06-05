@@ -9,7 +9,7 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - uses: koji-1009/setup-flutter@9204099837f17eb9ae05760a52360f85640de02d # v1.1.6
       - run: flutter pub get
       - uses: invertase/github-action-dart-analyzer@e981b01a458d0bab71ee5da182e5b26687b7101b # v3.0.0
@@ -19,7 +19,7 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - uses: koji-1009/setup-flutter@9204099837f17eb9ae05760a52360f85640de02d # v1.1.6
       - run: flutter pub get
       - run: dart format --output=none --set-exit-if-changed .
@@ -29,7 +29,7 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - uses: koji-1009/setup-flutter@9204099837f17eb9ae05760a52360f85640de02d # v1.1.6
       - run: flutter pub get
       - run: flutter test
