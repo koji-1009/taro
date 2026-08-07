@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: koji-1009/setup-flutter@26fb6927d2874fcc9b3af19cb4cf5cd66ec18a28 # v1.3.0
+      - uses: koji-1009/setup-flutter@6684b1e2693265f44314b7ec18935073116a2241 # v1.3.1
       - run: flutter pub get
       - uses: invertase/github-action-dart-analyzer@e981b01a458d0bab71ee5da182e5b26687b7101b # v3.0.0
 
@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: koji-1009/setup-flutter@26fb6927d2874fcc9b3af19cb4cf5cd66ec18a28 # v1.3.0
+      - uses: koji-1009/setup-flutter@6684b1e2693265f44314b7ec18935073116a2241 # v1.3.1
       - run: flutter pub get
       - run: dart format --output=none --set-exit-if-changed .
 
@@ -30,6 +30,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: koji-1009/setup-flutter@26fb6927d2874fcc9b3af19cb4cf5cd66ec18a28 # v1.3.0
+      - uses: koji-1009/setup-flutter@6684b1e2693265f44314b7ec18935073116a2241 # v1.3.1
       - run: flutter pub get
       - run: flutter test
