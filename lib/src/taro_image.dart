@@ -81,7 +81,7 @@ class TaroImage extends ImageProvider<TaroImage> {
         customCacheDuration: key.customCacheDuration,
       );
 
-      return decode(await ui.ImmutableBuffer.fromUint8List(bytes));
+      return await decode(await ui.ImmutableBuffer.fromUint8List(bytes));
     } catch (e) {
       // Depending on where the exception was thrown, the image cache may not
       // have had a chance to track the key in the cache at all.
