@@ -1,5 +1,9 @@
 include: package:flutter_lints/flutter.yaml
 
+analyzer:
+  language:
+    strict-inference: true
+
 linter:
   rules:
     avoid_equals_and_hash_code_on_mutable_classes: true
