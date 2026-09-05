@@ -1,3 +1,6 @@
+@TestOn('vm')
+library;
+
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -5,6 +8,7 @@ import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:taro/src/network/http_client.dart' as taro_client;
 import 'package:taro/src/taro_exception.dart';
 import 'package:taro/src/taro_loader_network.dart';
 
@@ -537,6 +541,30 @@ void main() {
 
       // Should use custom duration (7 days), not cache-control (1 hour)
       expect(result?.expireAt, equals(now.add(const Duration(days: 7))));
+    });
+  });
+
+  group('TaroLoaderNetwork constructors', () {
+    test('default constructor uses HttpClient with the default timeout', () {
+      const networkLoader = TaroLoaderNetwork();
+
+      expect(networkLoader.client, isA<taro_client.HttpClient>());
+      expect(
+        (networkLoader.client as taro_client.HttpClient).timeout,
+        equals(const Duration(seconds: 180)),
+      );
+    });
+
+    test('timeout factory uses HttpClient with the given timeout', () {
+      final networkLoader = TaroLoaderNetwork.timeout(
+        timeout: const Duration(seconds: 5),
+      );
+
+      expect(networkLoader.client, isA<taro_client.HttpClient>());
+      expect(
+        (networkLoader.client as taro_client.HttpClient).timeout,
+        equals(const Duration(seconds: 5)),
+      );
     });
   });
 }

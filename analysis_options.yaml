@@ -1,9 +1,5 @@
 include: package:flutter_lints/flutter.yaml
 
-analyzer:
-  language:
-    strict-raw-types: true
-
 linter:
   rules:
     avoid_equals_and_hash_code_on_mutable_classes: true
@@ -13,3 +9,5 @@ linter:
     prefer_const_constructors_in_immutables: true
     prefer_const_declarations: true
     prefer_const_literals_to_create_immutables: true
+    no_raw_types: true
+    no_dynamic_casts: true

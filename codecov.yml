@@ -1,0 +1,8 @@
+# `flutter test --coverage` only collects coverage on the VM, so the web
+# implementations never appear in lcov.info. They are verified by the
+# `test-web` job (`flutter test --platform chrome`) instead.
+ignore:
+  - "lib/src/network/web.dart"
+  - "lib/src/network/web_fetch.dart"
+  - "lib/src/storage/web.dart"
+  - "lib/src/storage/web_cache.dart"
