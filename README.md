@@ -1,6 +1,9 @@
 # Taro
 
 [![pub package](https://img.shields.io/pub/v/taro.svg)](https://pub.dev/packages/taro)
+[![GitHub license](https://img.shields.io/github/license/koji-1009/taro)](https://github.com/koji-1009/taro/blob/main/LICENSE)
+[![CI](https://github.com/koji-1009/taro/actions/workflows/analyze.yml/badge.svg)](https://github.com/koji-1009/taro/actions/workflows/analyze.yml)
+[![codecov](https://codecov.io/gh/koji-1009/taro/branch/main/graph/badge.svg)](https://codecov.io/gh/koji-1009/taro)
 
 `Taro` is a library for loading data from network and saving it to storage to speed up data loading.
 By using `TaroImage`, you can also use the memory cache by CacheImage of Flutter.
