@@ -1,3 +1,12 @@
+## 2.0.5
+
+* **FIX**: Send request headers on web. `fetch` was called with a `Headers` instance where its init dictionary was expected, so every header passed to `Taro` was silently dropped in web builds.
+* **FIX**: Throw a `FormatException` instead of a `TypeError` when a cache file info is corrupted, so the failure is wrapped in `TaroStorageException` rather than escaping as an `Error`.
+* **FIX**: Await the decoded image inside the `try` block of `TaroImage` so decoding failures are handled by the surrounding error handling.
+* **TEST**: Raise line coverage from 82.4% to 99.7%, and add browser tests for the web network and storage implementations.
+* **CHORE**: Upload coverage to Codecov and run the browser tests in CI.
+* **CHORE**: Replace the `strict-raw-types` analyzer mode with the `no_raw_types` and `no_dynamic_casts` lints, and enable `strict-inference`.
+
 ## 2.0.4
 
 * **FIX**: Resolve equality asymmetry in `TaroImage` when `useHeadersHashCode` differs between instances.
