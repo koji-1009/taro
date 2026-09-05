@@ -105,6 +105,25 @@ void main() {
       expect(await cacheInfoFile.exists(), isFalse);
     });
 
+    test('load wraps a corrupted cache info file in TaroStorageException',
+        () async {
+      await loader.save(
+        url: url,
+        bytes: bytes,
+        contentType: contentType,
+        expireAt: null,
+      );
+
+      final filename = '${sha256.convert(utf8.encode(url))}';
+      await File('${tempDir.path}/taro/$filename.json')
+          .writeAsString('{"content_type": 1}');
+
+      expect(
+        () => loader.load(url: url),
+        throwsA(isA<TaroStorageException>()),
+      );
+    });
+
     test('load wraps storage errors in TaroStorageException', () async {
       PathProviderPlatform.instance = _ThrowingPathProviderPlatform();
 
