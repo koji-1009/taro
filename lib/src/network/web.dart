@@ -16,7 +16,9 @@ Future<TaroHttpResponse> get({
   }
   final response = await fetch(
     uri.toString(),
-    requestHeaders,
+    RequestInit(
+      headers: requestHeaders,
+    ),
   ).toDart.timeout(timeout);
 
   final responseBuffer = await response.arrayBuffer().toDart;

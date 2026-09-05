@@ -4,8 +4,15 @@ import 'dart:js_interop';
 @JS()
 external JSPromise<Response> fetch(
   String url,
-  Headers headers,
+  RequestInit init,
 );
+
+/// [https://developer.mozilla.org/en-US/docs/Web/API/RequestInit]
+extension type RequestInit._(JSObject _) implements JSObject {
+  external factory RequestInit({
+    Headers headers,
+  });
+}
 
 /// [https://developer.mozilla.org/en-US/docs/Web/API/Response]
 extension type Response._(JSObject _) implements JSObject {
