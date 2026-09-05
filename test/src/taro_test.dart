@@ -34,6 +34,8 @@ void main() {
         ifThrowMaxAgeHeaderError: false,
         customCacheDuration: null,
       );
+      // `configure` ignores null, so reset it through the setter.
+      taro.customCacheDuration = null;
     });
 
     tearDown(() {
@@ -159,6 +161,164 @@ void main() {
         ifThrowMaxAgeHeaderError: false,
         customCacheDuration: const Duration(minutes: 10),
       )).called(1);
+    });
+
+    test('checkMaxAgeIfExist setter is applied to the network loader',
+        () async {
+      taro.checkMaxAgeIfExist = true;
+
+      const url = 'https://example.com/image.png';
+      when(mockStorageLoader.load(url: url)).thenAnswer((_) async => null);
+      when(mockNetworkLoader.load(
+        url: anyNamed('url'),
+        headers: anyNamed('headers'),
+        checkMaxAgeIfExist: anyNamed('checkMaxAgeIfExist'),
+        ifThrowMaxAgeHeaderError: anyNamed('ifThrowMaxAgeHeaderError'),
+        customCacheDuration: anyNamed('customCacheDuration'),
+      )).thenAnswer(
+        (_) async => (
+          bytes: Uint8List(0),
+          contentType: 'image/png',
+          expireAt: null,
+        ),
+      );
+
+      await taro.loadBytes(url);
+
+      verify(mockNetworkLoader.load(
+        url: anyNamed('url'),
+        headers: anyNamed('headers'),
+        checkMaxAgeIfExist: true,
+        ifThrowMaxAgeHeaderError: false,
+        customCacheDuration: null,
+      )).called(1);
+    });
+
+    test('ifThrowMaxAgeHeaderError setter is applied to the network loader',
+        () async {
+      taro.ifThrowMaxAgeHeaderError = true;
+
+      const url = 'https://example.com/image.png';
+      when(mockStorageLoader.load(url: url)).thenAnswer((_) async => null);
+      when(mockNetworkLoader.load(
+        url: anyNamed('url'),
+        headers: anyNamed('headers'),
+        checkMaxAgeIfExist: anyNamed('checkMaxAgeIfExist'),
+        ifThrowMaxAgeHeaderError: anyNamed('ifThrowMaxAgeHeaderError'),
+        customCacheDuration: anyNamed('customCacheDuration'),
+      )).thenAnswer(
+        (_) async => (
+          bytes: Uint8List(0),
+          contentType: 'image/png',
+          expireAt: null,
+        ),
+      );
+
+      await taro.loadBytes(url);
+
+      verify(mockNetworkLoader.load(
+        url: anyNamed('url'),
+        headers: anyNamed('headers'),
+        checkMaxAgeIfExist: false,
+        ifThrowMaxAgeHeaderError: true,
+        customCacheDuration: null,
+      )).called(1);
+    });
+
+    test('networkLoader setter replaces the loader in use', () async {
+      final replacement = MockTaroLoaderNetwork();
+      taro.networkLoader = replacement;
+
+      const url = 'https://example.com/image.png';
+      final bytes = Uint8List.fromList([9, 9, 9]);
+
+      when(mockStorageLoader.load(url: url)).thenAnswer((_) async => null);
+      when(replacement.load(
+        url: anyNamed('url'),
+        headers: anyNamed('headers'),
+        checkMaxAgeIfExist: anyNamed('checkMaxAgeIfExist'),
+        ifThrowMaxAgeHeaderError: anyNamed('ifThrowMaxAgeHeaderError'),
+        customCacheDuration: anyNamed('customCacheDuration'),
+      )).thenAnswer(
+        (_) async => (
+          bytes: bytes,
+          contentType: 'image/png',
+          expireAt: null,
+        ),
+      );
+
+      final result = await taro.loadBytes(url);
+
+      expect(result, equals(bytes));
+      verifyNever(mockNetworkLoader.load(
+        url: anyNamed('url'),
+        headers: anyNamed('headers'),
+        checkMaxAgeIfExist: anyNamed('checkMaxAgeIfExist'),
+        ifThrowMaxAgeHeaderError: anyNamed('ifThrowMaxAgeHeaderError'),
+        customCacheDuration: anyNamed('customCacheDuration'),
+      ));
+    });
+
+    test('networkLoaderTimeout setter replaces the loader in use', () async {
+      taro.networkLoaderTimeout = const Duration(seconds: 5);
+
+      const url = 'https://example.com/image.png';
+      final bytes = Uint8List.fromList([4, 5, 6]);
+
+      // Resolved from storage, so the newly created network loader is not used.
+      when(mockStorageLoader.load(url: url)).thenAnswer((_) async => bytes);
+
+      final result = await taro.loadBytes(url);
+
+      expect(result, equals(bytes));
+      verifyNever(mockNetworkLoader.load(
+        url: anyNamed('url'),
+        headers: anyNamed('headers'),
+        checkMaxAgeIfExist: anyNamed('checkMaxAgeIfExist'),
+        ifThrowMaxAgeHeaderError: anyNamed('ifThrowMaxAgeHeaderError'),
+        customCacheDuration: anyNamed('customCacheDuration'),
+      ));
+    });
+
+    test('storageLoader setter replaces the loader in use', () async {
+      final replacement = MockTaroLoaderStorage();
+      taro.storageLoader = replacement;
+
+      const url = 'https://example.com/image.png';
+      final bytes = Uint8List.fromList([7, 8, 9]);
+
+      when(replacement.load(url: url)).thenAnswer((_) async => bytes);
+
+      final result = await taro.loadBytes(url);
+
+      expect(result, equals(bytes));
+      verifyNever(mockStorageLoader.load(url: anyNamed('url')));
+    });
+
+    test('configure sets onStorageError', () async {
+      Object? received;
+      taro.configure(onStorageError: (e) => received = e);
+
+      const url = 'https://example.com/image.png';
+      when(mockStorageLoader.load(url: url))
+          .thenThrow(Exception('Storage error'));
+      when(mockNetworkLoader.load(
+        url: anyNamed('url'),
+        headers: anyNamed('headers'),
+        checkMaxAgeIfExist: anyNamed('checkMaxAgeIfExist'),
+        ifThrowMaxAgeHeaderError: anyNamed('ifThrowMaxAgeHeaderError'),
+        customCacheDuration: anyNamed('customCacheDuration'),
+      )).thenAnswer(
+        (_) async => (
+          bytes: Uint8List(1),
+          contentType: 'image/png',
+          expireAt: null,
+        ),
+      );
+
+      await taro.loadBytes(url);
+
+      expect(received, isNotNull);
     });
 
     test('configure updates config', () async {

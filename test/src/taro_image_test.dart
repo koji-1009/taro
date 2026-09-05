@@ -1,5 +1,11 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:taro/src/taro.dart';
 import 'package:taro/src/taro_image.dart';
+
+import 'taro_test.mocks.dart';
 
 void main() {
   group('TaroImage', () {
@@ -111,6 +117,99 @@ void main() {
       const image2 = TaroImage(url1);
 
       expect(image1.hashCode, equals(image2.hashCode));
+    });
+
+    test('hashCode includes headers when useHeadersHashCode is true', () {
+      const image1 = TaroImage(
+        url1,
+        headers: {'Auth': '1'},
+        useHeadersHashCode: true,
+      );
+      const image2 = TaroImage(
+        url1,
+        headers: {'Auth': '2'},
+        useHeadersHashCode: true,
+      );
+
+      expect(image1.hashCode, isNot(equals(image2.hashCode)));
+    });
+
+    test('hashCode ignores headers when useHeadersHashCode is false', () {
+      const image1 = TaroImage(url1, headers: {'Auth': '1'});
+      const image2 = TaroImage(url1, headers: {'Auth': '2'});
+
+      expect(image1.hashCode, equals(image2.hashCode));
+    });
+
+    test('hashCode includes options when useHeadersHashCode is true', () {
+      const image1 = TaroImage(
+        url1,
+        useHeadersHashCode: true,
+        customCacheDuration: Duration(days: 1),
+      );
+      const image2 = TaroImage(
+        url1,
+        useHeadersHashCode: true,
+        customCacheDuration: Duration(days: 2),
+      );
+
+      expect(image1.hashCode, isNot(equals(image2.hashCode)));
+    });
+
+    test('toString contains the url', () {
+      const image = TaroImage(url1);
+
+      expect(image.toString(), contains(url1));
+    });
+
+    testWidgets(
+        'reports the image provider and key when loading fails without '
+        'an error listener', (tester) async {
+      final mockNetworkLoader = MockTaroLoaderNetwork();
+      final mockStorageLoader = MockTaroLoaderStorage();
+
+      Taro.instance.configure(
+        networkLoader: mockNetworkLoader,
+        storageLoader: mockStorageLoader,
+      );
+
+      when(mockStorageLoader.load(url: url1)).thenAnswer((_) async => null);
+      when(mockNetworkLoader.load(
+        url: anyNamed('url'),
+        headers: anyNamed('headers'),
+        checkMaxAgeIfExist: anyNamed('checkMaxAgeIfExist'),
+        ifThrowMaxAgeHeaderError: anyNamed('ifThrowMaxAgeHeaderError'),
+        customCacheDuration: anyNamed('customCacheDuration'),
+      )).thenThrow(Exception('Network Error'));
+
+      final reported = <FlutterErrorDetails>[];
+      final previousOnError = FlutterError.onError;
+      FlutterError.onError = reported.add;
+      addTearDown(() => FlutterError.onError = previousOnError);
+
+      const image = TaroImage(url1);
+      // No `onError` listener, so the failure is reported to FlutterError.
+      image
+          .resolve(ImageConfiguration.empty)
+          .addListener(ImageStreamListener((_, __) {}));
+
+      await tester.pump();
+      await tester.pump(Duration.zero);
+
+      expect(reported, isNotEmpty);
+
+      final information = reported.first.informationCollector!().toList();
+      expect(
+        information.whereType<DiagnosticsProperty<ImageProvider>>(),
+        isNotEmpty,
+      );
+      expect(
+        information.whereType<DiagnosticsProperty<TaroImage>>(),
+        isNotEmpty,
+      );
+
+      PaintingBinding.instance.imageCache.clear();
+      PaintingBinding.instance.imageCache.clearLiveImages();
     });
   });
 }
