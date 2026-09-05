@@ -98,4 +98,43 @@ void main() {
       }
     });
   });
+
+  group('CacheFileInfo.fromJson malformed input', () {
+    test('throws FormatException if the json is not an object', () {
+      expect(
+        () => CacheFileInfo.fromJson('"just a string"'),
+        throwsA(isA<FormatException>()),
+      );
+    });
+
+    test('throws FormatException if content_type is missing', () {
+      expect(
+        () => CacheFileInfo.fromJson('{"expire_at": null}'),
+        throwsA(isA<FormatException>()),
+      );
+    });
+
+    test('throws FormatException if content_type is not a string', () {
+      expect(
+        () => CacheFileInfo.fromJson('{"content_type": 1, "expire_at": null}'),
+        throwsA(isA<FormatException>()),
+      );
+    });
+
+    test('throws FormatException if expire_at is not a string', () {
+      expect(
+        () => CacheFileInfo.fromJson(
+          '{"content_type": "image/png", "expire_at": 1}',
+        ),
+        throwsA(isA<FormatException>()),
+      );
+    });
+
+    test('throws FormatException if the json is invalid', () {
+      expect(
+        () => CacheFileInfo.fromJson('not json'),
+        throwsA(isA<FormatException>()),
+      );
+    });
+  });
 }
