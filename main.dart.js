@@ -21942,7 +21942,7 @@ $iDq:1}
 A.aa6.prototype={
 $1(a){var s=A.cb().b
 s=s==null?null:s.canvasKitBaseUrl
-return(s==null?"https://www.gstatic.com/flutter-canvaskit/a804b261645ef8c13eb3d5c44a5c2fb0340c5539/":s)+a},
+return(s==null?"https://www.gstatic.com/flutter-canvaskit/af7e796e161ae0bb1ff0758c71a7105418bd9ded/":s)+a},
 $S:102}
 A.DG.prototype={
 gp(a){var s=this.a
