@@ -6,7 +6,7 @@
 [![codecov](https://codecov.io/gh/koji-1009/taro/branch/main/graph/badge.svg)](https://codecov.io/gh/koji-1009/taro)
 
 `Taro` is a library for loading data from network and saving it to storage to speed up data loading.
-By using `TaroImage`, you can also use the memory cache by CacheImage of Flutter.
+By using `TaroImage`, you can also use the memory cache by `ImageCache` of Flutter.
 
 This library aims to be easy to use and maintain by reducing the amount of dependent libraries and code.
 
@@ -16,7 +16,7 @@ The demo application is available at [GitHub Pages](https://koji-1009.github.io/
 
 ## Features
 
-* Load image as byte arrays or as `TaroImage` object.
+* Load image as byte arrays or as `ImageProvider` object.
 * Set custom headers for GET requests.
 * Check the max age of the data.
 * Set custom cache duration (e.g., 7 days) independent of server headers.
@@ -36,8 +36,8 @@ Future<void> main() async {
     },
   );
 
-  // load image as TaroImage
-  final TaroImage imageProvider = Taro.instance.loadImageProvider(
+  // load image as ImageProvider
+  final ImageProvider imageProvider = Taro.instance.loadImageProvider(
     'https://example.com/image',
     headers: {
       'custom-header': 'value',
@@ -132,7 +132,6 @@ class HttpHttp implements TaroHttpClient {
   Future<TaroHttpResponse> get({
     required Uri uri,
     required Map<String, String> headers,
-    StreamController<ImageChunkEvent>? chunkEvents,
   }) async {
     final response = await http
         .get(
@@ -152,7 +151,7 @@ class HttpHttp implements TaroHttpClient {
 }
 ```
 
-Then, create a `Taro` instance with the custom http client.
+Then, set the custom http client to `Taro.instance`.
 
 ```dart
 Taro.instance.networkLoader = TaroLoaderNetwork(
@@ -198,7 +197,7 @@ class DioHttp implements TaroHttpClient {
 }
 ```
 
-Then, create a `Taro` instance with the custom http client.
+Then, set the custom http client to `Taro.instance`.
 
 ```dart
 Taro.instance.networkLoader = TaroLoaderNetwork(
