@@ -104,6 +104,24 @@ void main() {
       expect(image2, equals(image1));
     });
 
+    test('equality compares headers by content when useHeadersHashCode is true',
+        () {
+      // Map.of creates distinct instances with the same entries.
+      final image1 = TaroImage(
+        url1,
+        headers: Map.of({'Auth': '1'}),
+        useHeadersHashCode: true,
+      );
+      final image2 = TaroImage(
+        url1,
+        headers: Map.of({'Auth': '1'}),
+        useHeadersHashCode: true,
+      );
+
+      expect(image1, equals(image2));
+      expect(image1.hashCode, equals(image2.hashCode));
+    });
+
     test('hashCode differs for different useHeadersHashCode', () {
       const image1 = TaroImage(url1, useHeadersHashCode: false);
       const image2 = TaroImage(url1, useHeadersHashCode: true);
@@ -160,6 +178,7 @@ void main() {
       const image = TaroImage(url1);
 
       expect(image.toString(), contains(url1));
+      expect(image.toString(), contains('useHeadersHashCode: false'));
     });
 
     testWidgets(

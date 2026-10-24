@@ -135,7 +135,7 @@ final class TaroHttpResponseException extends TaroException {
 
   @override
   String toString() =>
-      'TaroHttpException: statusCode=$statusCode, reasonPhrase=$reasonPhrase, contentLength=$contentLength, headers=$headers, isRedirect=$isRedirect';
+      'TaroHttpResponseException: statusCode=$statusCode, reasonPhrase=$reasonPhrase, contentLength=$contentLength, headers=$headers, isRedirect=$isRedirect';
 }
 
 /// [TaroEmptyResponseException] is thrown when there is an issue with the HTTP response in the Taro library.
