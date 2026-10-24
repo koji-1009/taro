@@ -3,7 +3,7 @@ import 'package:taro/taro.dart';
 
 /// [HttpHttp] is a class that performs GET requests using the http package
 class HttpHttp implements TaroHttpClient {
-  /// Creates a [HttpClient].
+  /// Creates a [HttpHttp].
   const HttpHttp({this.timeout = const Duration(seconds: 180)});
 
   final Duration timeout;

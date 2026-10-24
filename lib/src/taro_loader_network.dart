@@ -90,7 +90,7 @@ abstract interface class TaroHttpClient {
 }
 
 /// [TaroLoaderNetwork] is a class that manages the loading of data from a network source.
-/// It uses the http package to send GET requests to the provided URL.
+/// By default, it sends GET requests to the provided URL with `HttpClient` from `dart:io` on native platforms and with the `fetch` API on the web.
 class TaroLoaderNetwork {
   /// Creates a [TaroLoaderNetwork].
   const TaroLoaderNetwork({
