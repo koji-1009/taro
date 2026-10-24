@@ -76,6 +76,7 @@ void main() {
         isRedirect: false,
       );
       final str = exception.toString();
+      expect(str, contains('TaroHttpResponseException'));
       expect(str, contains('statusCode=404'));
       expect(str, contains('reasonPhrase=Not Found'));
       expect(str, contains('contentLength=0'));

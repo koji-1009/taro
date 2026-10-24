@@ -106,7 +106,7 @@ class TaroImage extends ImageProvider<TaroImage> {
         other.url == url &&
         other.scale == scale &&
         (!useHeadersHashCode ||
-            (other.headers == headers &&
+            (mapEquals(other.headers, headers) &&
                 other.checkMaxAgeIfExist == checkMaxAgeIfExist &&
                 other.ifThrowMaxAgeHeaderError == ifThrowMaxAgeHeaderError &&
                 other.customCacheDuration == customCacheDuration));
@@ -118,7 +118,9 @@ class TaroImage extends ImageProvider<TaroImage> {
           url,
           scale,
           useHeadersHashCode,
-          headers,
+          Object.hashAllUnordered(
+            headers.entries.map((e) => Object.hash(e.key, e.value)),
+          ),
           checkMaxAgeIfExist,
           ifThrowMaxAgeHeaderError,
           customCacheDuration,
@@ -127,5 +129,5 @@ class TaroImage extends ImageProvider<TaroImage> {
 
   @override
   String toString() => ''
-      '${objectRuntimeType(this, 'TaroImage')}(url: $url, scale: $scale, useHeadersInHashCode: $useHeadersHashCode, headers: $headers, checkMaxAgeIfExist: $checkMaxAgeIfExist, ifThrowMaxAgeHeaderError: $ifThrowMaxAgeHeaderError, customCacheDuration: $customCacheDuration)';
+      '${objectRuntimeType(this, 'TaroImage')}(url: $url, scale: $scale, useHeadersHashCode: $useHeadersHashCode, headers: $headers, checkMaxAgeIfExist: $checkMaxAgeIfExist, ifThrowMaxAgeHeaderError: $ifThrowMaxAgeHeaderError, customCacheDuration: $customCacheDuration)';
 }
