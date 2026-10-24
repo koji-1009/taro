@@ -167,7 +167,8 @@ class TaroLoaderNetwork {
       try {
         if (cacheControl.isNotEmpty) {
           final maxAge = _getMaxAge(cacheControl);
-          if (maxAge == null && cacheControl.contains('max-age=')) {
+          if (maxAge == null &&
+              cacheControl.toLowerCase().contains('max-age=')) {
             // max-age directive exists but couldn't be parsed
             throw const FormatException(
                 'Invalid max-age value in cache-control header');
@@ -200,10 +201,17 @@ class TaroLoaderNetwork {
   /// Returns the max age from the cache-control header.
   int? _getMaxAge(String cacheControl) {
     // Parse cache-control directives (e.g., "max-age=3600, must-revalidate")
+    // Directive names are case-insensitive and the value may be quoted
+    // (RFC 9111, Section 5.2).
     final directives = cacheControl.split(',').map((e) => e.trim());
     for (final directive in directives) {
-      if (directive.startsWith('max-age=')) {
-        final maxAgeStr = directive.substring('max-age='.length);
+      if (directive.toLowerCase().startsWith('max-age=')) {
+        var maxAgeStr = directive.substring('max-age='.length);
+        if (maxAgeStr.length >= 2 &&
+            maxAgeStr.startsWith('"') &&
+            maxAgeStr.endsWith('"')) {
+          maxAgeStr = maxAgeStr.substring(1, maxAgeStr.length - 1);
+        }
         return int.tryParse(maxAgeStr);
       }
     }
