@@ -385,6 +385,88 @@ void main() {
     });
   });
 
+  for (final cacheControl in [
+    'Max-Age=100',
+    'max-age="100"',
+    'public, MAX-AGE="100"',
+  ]) {
+    test('load success status code: 200 (check cache-control: $cacheControl)',
+        () async {
+      await withClock(Clock.fixed(DateTime(2024)), () async {
+        const url = 'https://example.com';
+
+        when(mockHttpClient.get(
+          uri: Uri.parse(url),
+          headers: const {},
+        )).thenAnswer(
+          (_) async => TaroHttpResponse(
+            statusCode: 200,
+            bodyBytes: bodyBytes,
+            reasonPhrase: null,
+            contentLength: bodyBytes.length,
+            headers: {
+              'content-type': contentType,
+              'cache-control': cacheControl,
+            },
+            isRedirect: false,
+          ),
+        );
+
+        final result = await loader.load(
+          url: url,
+          headers: const {},
+          checkMaxAgeIfExist: true,
+          ifThrowMaxAgeHeaderError: true,
+        );
+
+        expect(
+          result,
+          equals(
+            (
+              bytes: bodyBytes,
+              contentType: contentType,
+              expireAt: clock.now().add(const Duration(seconds: 100)),
+            ),
+          ),
+        );
+      });
+    });
+  }
+
+  test('invalid cache-control header with an upper-case directive name',
+      () async {
+    const url = 'https://example.com';
+
+    when(mockHttpClient.get(
+      uri: Uri.parse(url),
+      headers: const {},
+    )).thenAnswer(
+      (_) async => TaroHttpResponse(
+        statusCode: 200,
+        bodyBytes: bodyBytes,
+        reasonPhrase: null,
+        contentLength: bodyBytes.length,
+        headers: const {
+          'content-type': contentType,
+          'cache-control': 'Max-Age=abc',
+        },
+        isRedirect: false,
+      ),
+    );
+
+    expect(
+      () async {
+        await loader.load(
+          url: url,
+          headers: const {},
+          checkMaxAgeIfExist: true,
+          ifThrowMaxAgeHeaderError: true,
+        );
+      },
+      throwsA(isA<TaroNetworkException>()),
+    );
+  });
+
   test('load success status code: 301 (redirect)', () async {
     const url = 'https://example.com';
 
