@@ -3,6 +3,8 @@ library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:taro/src/network/http_client.dart';
+import 'package:taro/src/taro_exception.dart';
+import 'package:taro/src/taro_loader_network.dart';
 
 void main() {
   group('HttpClient on web', () {
@@ -25,6 +27,31 @@ void main() {
       expect(response.contentLength, equals(4));
       expect(response.isRedirect, isFalse);
       expect(response.headers['content-type'], equals('image/png'));
+    });
+
+    test('get throws an Exception when the fetch fails', () async {
+      const client = HttpClient();
+
+      await expectLater(
+        client.get(
+          // Nothing listens on port 1, so the fetch is rejected.
+          uri: Uri.parse('http://127.0.0.1:1/image.png'),
+          headers: const {},
+        ),
+        throwsA(isA<Exception>()),
+      );
+    });
+  });
+
+  group('TaroLoaderNetwork on web', () {
+    test('load wraps a failed fetch in TaroNetworkException', () async {
+      await expectLater(
+        const TaroLoaderNetwork().load(
+          url: 'http://127.0.0.1:1/image.png',
+          headers: const {},
+        ),
+        throwsA(isA<TaroNetworkException>()),
+      );
     });
   });
 }

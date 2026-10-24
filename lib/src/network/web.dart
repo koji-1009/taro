@@ -14,14 +14,24 @@ Future<TaroHttpResponse> get({
   for (final entry in headers.entries) {
     requestHeaders.append(entry.key, entry.value);
   }
-  final response = await fetch(
-    uri.toString(),
-    RequestInit(
-      headers: requestHeaders,
-    ),
-  ).toDart.timeout(timeout);
+  final Response response;
+  final JSArrayBuffer responseBuffer;
+  try {
+    response = await fetch(
+      uri.toString(),
+      RequestInit(
+        headers: requestHeaders,
+      ),
+    ).toDart.timeout(timeout);
 
-  final responseBuffer = await response.arrayBuffer().toDart;
+    responseBuffer = await response.arrayBuffer().toDart;
+  } on Exception {
+    rethrow;
+  } catch (error) {
+    // A failed fetch rejects with a JavaScript TypeError, which is not an
+    // [Exception]. Wrap it so that it is handled like a native network error.
+    throw Exception('[taro][network] Failed to fetch $uri: $error');
+  }
   final responseBytes = responseBuffer.toDart.asUint8List();
   final responseHeaders = <String, String>{};
   response.headers.forEach((String value, String key, JSObject object) {
