@@ -18,10 +18,16 @@ extension type _Request._(JSObject _) implements JSObject {
   );
 
   external _Headers get headers;
+
+  external _AbortSignal get signal;
 }
 
 extension type _Headers._(JSObject _) implements JSObject {
   external String? get(String name);
+}
+
+extension type _AbortSignal._(JSObject _) implements JSObject {
+  external bool get aborted;
 }
 
 void main() {
@@ -40,6 +46,22 @@ void main() {
 
       expect(request.headers.get('x-taro'), equals('value'));
       expect(request.headers.get('authorization'), equals('Bearer token'));
+    });
+
+    test('carries the abort signal into the request', () {
+      final abortController = AbortController();
+
+      final request = _Request(
+        'https://example.com/image.png',
+        RequestInit(
+          headers: Headers(),
+          signal: abortController.signal,
+        ),
+      );
+
+      expect(request.signal.aborted, isFalse);
+      abortController.abort();
+      expect(request.signal.aborted, isTrue);
     });
   });
 }

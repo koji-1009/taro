@@ -107,5 +107,34 @@ void main() {
 
       completer.complete();
     });
+
+    test('get throws TimeoutException when the body is too slow', () async {
+      final completer = Completer<void>();
+      final uri = await serve((request) async {
+        // Send the headers and part of the body, then stall.
+        request.response
+          ..statusCode = HttpStatus.ok
+          ..headers.contentLength = 4
+          ..add([1, 2]);
+        await request.response.flush();
+        await completer.future;
+        request.response.add([3, 4]);
+        await request.response.close();
+      });
+
+      const client = HttpClient(
+        timeout: Duration(milliseconds: 100),
+      );
+
+      await expectLater(
+        client.get(
+          uri: uri,
+          headers: const {},
+        ),
+        throwsA(isA<TimeoutException>()),
+      );
+
+      completer.complete();
+    });
   });
 }

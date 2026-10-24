@@ -11,8 +11,21 @@ external JSPromise<Response> fetch(
 extension type RequestInit._(JSObject _) implements JSObject {
   external factory RequestInit({
     Headers headers,
+    AbortSignal signal,
   });
 }
+
+/// [https://developer.mozilla.org/en-US/docs/Web/API/AbortController]
+extension type AbortController._(JSObject _) implements JSObject {
+  external factory AbortController();
+
+  external AbortSignal get signal;
+
+  external void abort();
+}
+
+/// [https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal]
+extension type AbortSignal._(JSObject _) implements JSObject {}
 
 /// [https://developer.mozilla.org/en-US/docs/Web/API/Response]
 extension type Response._(JSObject _) implements JSObject {
