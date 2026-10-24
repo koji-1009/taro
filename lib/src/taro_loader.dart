@@ -48,6 +48,7 @@ class TaroLoader {
     try {
       storageBytes = await _storageLoader.load(
         url: url,
+        headers: headers,
       );
     } on Exception catch (e) {
       _onStorageError?.call(
@@ -81,6 +82,7 @@ class TaroLoader {
     try {
       await _storageLoader.save(
         url: url,
+        headers: headers,
         bytes: networkResponse.bytes,
         contentType: networkResponse.contentType,
         expireAt: networkResponse.expireAt,

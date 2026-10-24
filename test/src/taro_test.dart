@@ -53,7 +53,8 @@ void main() {
       final bytes = Uint8List.fromList([1, 2, 3]);
       final headers = {'Auth': 'Token'};
 
-      when(mockStorageLoader.load(url: url)).thenAnswer((_) async => null);
+      when(mockStorageLoader.load(url: url, headers: headers))
+          .thenAnswer((_) async => null);
       when(mockNetworkLoader.load(
         url: url,
         headers: headers,
@@ -71,7 +72,7 @@ void main() {
       final result = await taro.loadBytes(url, headers: headers);
 
       expect(result, equals(bytes));
-      verify(mockStorageLoader.load(url: url)).called(1);
+      verify(mockStorageLoader.load(url: url, headers: headers)).called(1);
       verify(mockNetworkLoader.load(
         url: url,
         headers: headers,
@@ -111,7 +112,7 @@ void main() {
 
       // Trigger a storage error to verify callback is still set
       const url = 'https://example.com/image.png';
-      when(mockStorageLoader.load(url: url))
+      when(mockStorageLoader.load(url: url, headers: anyNamed('headers')))
           .thenThrow(Exception('Storage error'));
       when(mockNetworkLoader.load(
         url: anyNamed('url'),
@@ -137,7 +138,8 @@ void main() {
       taro.configure(checkMaxAgeIfExist: true);
 
       const url = 'https://example.com/image.png';
-      when(mockStorageLoader.load(url: url)).thenAnswer((_) async => null);
+      when(mockStorageLoader.load(url: url, headers: anyNamed('headers')))
+          .thenAnswer((_) async => null);
       when(mockNetworkLoader.load(
         url: anyNamed('url'),
         headers: anyNamed('headers'),
@@ -168,7 +170,8 @@ void main() {
       taro.checkMaxAgeIfExist = true;
 
       const url = 'https://example.com/image.png';
-      when(mockStorageLoader.load(url: url)).thenAnswer((_) async => null);
+      when(mockStorageLoader.load(url: url, headers: anyNamed('headers')))
+          .thenAnswer((_) async => null);
       when(mockNetworkLoader.load(
         url: anyNamed('url'),
         headers: anyNamed('headers'),
@@ -199,7 +202,8 @@ void main() {
       taro.ifThrowMaxAgeHeaderError = true;
 
       const url = 'https://example.com/image.png';
-      when(mockStorageLoader.load(url: url)).thenAnswer((_) async => null);
+      when(mockStorageLoader.load(url: url, headers: anyNamed('headers')))
+          .thenAnswer((_) async => null);
       when(mockNetworkLoader.load(
         url: anyNamed('url'),
         headers: anyNamed('headers'),
@@ -232,7 +236,8 @@ void main() {
       const url = 'https://example.com/image.png';
       final bytes = Uint8List.fromList([9, 9, 9]);
 
-      when(mockStorageLoader.load(url: url)).thenAnswer((_) async => null);
+      when(mockStorageLoader.load(url: url, headers: anyNamed('headers')))
+          .thenAnswer((_) async => null);
       when(replacement.load(
         url: anyNamed('url'),
         headers: anyNamed('headers'),
@@ -266,7 +271,8 @@ void main() {
       final bytes = Uint8List.fromList([4, 5, 6]);
 
       // Resolved from storage, so the newly created network loader is not used.
-      when(mockStorageLoader.load(url: url)).thenAnswer((_) async => bytes);
+      when(mockStorageLoader.load(url: url, headers: anyNamed('headers')))
+          .thenAnswer((_) async => bytes);
 
       final result = await taro.loadBytes(url);
 
@@ -287,12 +293,16 @@ void main() {
       const url = 'https://example.com/image.png';
       final bytes = Uint8List.fromList([7, 8, 9]);
 
-      when(replacement.load(url: url)).thenAnswer((_) async => bytes);
+      when(replacement.load(url: url, headers: anyNamed('headers')))
+          .thenAnswer((_) async => bytes);
 
       final result = await taro.loadBytes(url);
 
       expect(result, equals(bytes));
-      verifyNever(mockStorageLoader.load(url: anyNamed('url')));
+      verifyNever(mockStorageLoader.load(
+        url: anyNamed('url'),
+        headers: anyNamed('headers'),
+      ));
     });
 
     test('configure sets onStorageError', () async {
@@ -300,7 +310,7 @@ void main() {
       taro.configure(onStorageError: (e) => received = e);
 
       const url = 'https://example.com/image.png';
-      when(mockStorageLoader.load(url: url))
+      when(mockStorageLoader.load(url: url, headers: anyNamed('headers')))
           .thenThrow(Exception('Storage error'));
       when(mockNetworkLoader.load(
         url: anyNamed('url'),
@@ -329,7 +339,8 @@ void main() {
       );
 
       const url = 'https://example.com/image.png';
-      when(mockStorageLoader.load(url: url)).thenAnswer((_) async => null);
+      when(mockStorageLoader.load(url: url, headers: anyNamed('headers')))
+          .thenAnswer((_) async => null);
 
       // Use anyNamed for flexible matching to ensure call is recorded
       when(mockNetworkLoader.load(
@@ -349,7 +360,8 @@ void main() {
       await taro.loadBytes(url);
 
       // Verify execution reached storage loader
-      verify(mockStorageLoader.load(url: url)).called(1);
+      verify(mockStorageLoader.load(url: url, headers: anyNamed('headers')))
+          .called(1);
 
       // Verify network loader was called with updated config
       verify(mockNetworkLoader.load(

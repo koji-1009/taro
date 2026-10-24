@@ -192,7 +192,8 @@ void main() {
         storageLoader: mockStorageLoader,
       );
 
-      when(mockStorageLoader.load(url: url1)).thenAnswer((_) async => null);
+      when(mockStorageLoader.load(url: url1, headers: anyNamed('headers')))
+          .thenAnswer((_) async => null);
       when(mockNetworkLoader.load(
         url: anyNamed('url'),
         headers: anyNamed('headers'),

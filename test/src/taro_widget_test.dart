@@ -35,7 +35,8 @@ void main() {
     testWidgets('displays placeholder while loading', (tester) async {
       const url = 'https://example.com/image.png';
 
-      when(mockStorageLoader.load(url: url)).thenAnswer((_) async => null);
+      when(mockStorageLoader.load(url: url, headers: anyNamed('headers')))
+          .thenAnswer((_) async => null);
 
       final completer = Completer<
           ({Uint8List bytes, String contentType, DateTime? expireAt})?>();
@@ -116,7 +117,8 @@ void main() {
     testWidgets('displays error builder on failure', (tester) async {
       const url = 'https://example.com/error.png';
 
-      when(mockStorageLoader.load(url: url)).thenAnswer((_) async => null);
+      when(mockStorageLoader.load(url: url, headers: anyNamed('headers')))
+          .thenAnswer((_) async => null);
       when(mockNetworkLoader.load(
         url: url,
         headers: anyNamed('headers'),

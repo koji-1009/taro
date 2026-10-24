@@ -31,7 +31,8 @@ void main() {
     });
 
     test('returns storage bytes when storage succeeds', () async {
-      when(mockStorageLoader.load(url: url)).thenAnswer((_) async => bytes);
+      when(mockStorageLoader.load(url: url, headers: headers))
+          .thenAnswer((_) async => bytes);
 
       final result = await loader.load(
         url: url,
@@ -39,7 +40,7 @@ void main() {
       );
 
       expect(result, equals(bytes));
-      verify(mockStorageLoader.load(url: url)).called(1);
+      verify(mockStorageLoader.load(url: url, headers: headers)).called(1);
       verifyNever(mockNetworkLoader.load(
         url: anyNamed('url'),
         headers: anyNamed('headers'),
@@ -50,7 +51,8 @@ void main() {
     });
 
     test('falls back to network when storage returns null', () async {
-      when(mockStorageLoader.load(url: url)).thenAnswer((_) async => null);
+      when(mockStorageLoader.load(url: url, headers: headers))
+          .thenAnswer((_) async => null);
       when(mockNetworkLoader.load(
         url: anyNamed('url'),
         headers: anyNamed('headers'),
@@ -64,7 +66,7 @@ void main() {
       final result = await loader.load(url: url, headers: headers);
 
       expect(result, equals(bytes));
-      verify(mockStorageLoader.load(url: url)).called(1);
+      verify(mockStorageLoader.load(url: url, headers: headers)).called(1);
       verify(mockNetworkLoader.load(
         url: url,
         headers: headers,
@@ -80,7 +82,8 @@ void main() {
       TaroStorageFailureException? capturedError;
       loader.setOnStorageError((e) => capturedError = e);
 
-      when(mockStorageLoader.load(url: url)).thenThrow(Exception('Disk error'));
+      when(mockStorageLoader.load(url: url, headers: headers))
+          .thenThrow(Exception('Disk error'));
       when(mockNetworkLoader.load(
         url: anyNamed('url'),
         headers: anyNamed('headers'),
@@ -103,7 +106,8 @@ void main() {
     });
 
     test('throws TaroLoadException when network returns null', () async {
-      when(mockStorageLoader.load(url: url)).thenAnswer((_) async => null);
+      when(mockStorageLoader.load(url: url, headers: headers))
+          .thenAnswer((_) async => null);
       when(mockNetworkLoader.load(
         url: anyNamed('url'),
         headers: anyNamed('headers'),
@@ -124,7 +128,8 @@ void main() {
       TaroStorageFailureException? capturedError;
       loader.setOnStorageError((e) => capturedError = e);
 
-      when(mockStorageLoader.load(url: url)).thenAnswer((_) async => null);
+      when(mockStorageLoader.load(url: url, headers: headers))
+          .thenAnswer((_) async => null);
       when(mockNetworkLoader.load(
         url: anyNamed('url'),
         headers: anyNamed('headers'),
@@ -136,6 +141,7 @@ void main() {
       );
       when(mockStorageLoader.save(
         url: anyNamed('url'),
+        headers: anyNamed('headers'),
         bytes: anyNamed('bytes'),
         contentType: anyNamed('contentType'),
         expireAt: anyNamed('expireAt'),
@@ -154,7 +160,8 @@ void main() {
     test('saves to storage after network load', () async {
       final expireAt = DateTime.utc(2024, 6, 1);
 
-      when(mockStorageLoader.load(url: url)).thenAnswer((_) async => null);
+      when(mockStorageLoader.load(url: url, headers: headers))
+          .thenAnswer((_) async => null);
       when(mockNetworkLoader.load(
         url: anyNamed('url'),
         headers: anyNamed('headers'),
@@ -170,6 +177,7 @@ void main() {
 
       verify(mockStorageLoader.save(
         url: url,
+        headers: headers,
         bytes: bytes,
         contentType: 'image/png',
         expireAt: expireAt,
@@ -177,7 +185,8 @@ void main() {
     });
 
     test('does not call onStorageError when no callback is set', () async {
-      when(mockStorageLoader.load(url: url)).thenThrow(Exception('Disk error'));
+      when(mockStorageLoader.load(url: url, headers: headers))
+          .thenThrow(Exception('Disk error'));
       when(mockNetworkLoader.load(
         url: anyNamed('url'),
         headers: anyNamed('headers'),
