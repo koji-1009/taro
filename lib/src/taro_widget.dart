@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:taro/src/taro.dart';
 import 'package:taro/src/taro_image.dart';
@@ -151,7 +152,20 @@ class TaroWidget extends StatelessWidget {
       errorBuilder: errorBuilder != null
           ? (context, error, stackTrace) =>
               errorBuilder!(context, url, error, stackTrace)
-          : null,
+          // Without an errorBuilder, Image does not track errors outside debug
+          // mode, so frameBuilder keeps returning the placeholder after a
+          // failure. Fall back to the same empty box Image shows in that case.
+          : placeholder != null && !kDebugMode
+              ? (context, error, stackTrace) => _TaroErrorReporter(
+                    url: url,
+                    error: error,
+                    stackTrace: stackTrace,
+                    child: SizedBox(
+                      width: width,
+                      height: height,
+                    ),
+                  )
+              : null,
       semanticLabel: semanticLabel,
       excludeFromSemantics: excludeFromSemantics,
       width: width,
@@ -169,4 +183,41 @@ class TaroWidget extends StatelessWidget {
       filterQuality: filterQuality,
     );
   }
+}
+
+/// Reports the error to [FlutterError] once, as [Image] does when no
+/// errorBuilder is given, and shows [child].
+class _TaroErrorReporter extends StatefulWidget {
+  const _TaroErrorReporter({
+    required this.url,
+    required this.error,
+    required this.stackTrace,
+    required this.child,
+  });
+
+  final String url;
+  final Object error;
+  final StackTrace? stackTrace;
+  final Widget child;
+
+  @override
+  State<_TaroErrorReporter> createState() => _TaroErrorReporterState();
+}
+
+class _TaroErrorReporterState extends State<_TaroErrorReporter> {
+  @override
+  void initState() {
+    super.initState();
+    FlutterError.reportError(
+      FlutterErrorDetails(
+        exception: widget.error,
+        stack: widget.stackTrace,
+        library: 'taro',
+        context: ErrorDescription('while loading ${widget.url}'),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }
