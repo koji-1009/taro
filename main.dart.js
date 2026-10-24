@@ -66422,7 +66422,7 @@ A.Gx.prototype={
 k(a){return"TaroNetworkException: url="+this.a+", error="+this.b.k(0)}}
 A.Gv.prototype={
 k(a){var s=this
-return"TaroHttpException: statusCode="+s.a+", reasonPhrase="+A.k(s.b)+", contentLength="+A.k(s.c)+", headers="+s.d.k(0)+", isRedirect="+s.e}}
+return"TaroHttpResponseException: statusCode="+s.a+", reasonPhrase="+A.k(s.b)+", contentLength="+A.k(s.c)+", headers="+s.d.k(0)+", isRedirect="+s.e}}
 A.Gt.prototype={
 k(a){return"TaroEmptyResponseException: url="+this.a}}
 A.ke.prototype={
@@ -66473,7 +66473,7 @@ return s},
 gp(a){var s=A.J(this.a,this.b,!1,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a,B.a)
 return s},
 k(a){var s=this
-return"TaroImage(url: "+s.a+", scale: "+s.b+", useHeadersInHashCode: false, headers: "+s.d.k(0)+", checkMaxAgeIfExist: false, ifThrowMaxAgeHeaderError: false, customCacheDuration: "+A.k(s.r)+")"}}
+return"TaroImage(url: "+s.a+", scale: "+s.b+", useHeadersHashCode: false, headers: "+s.d.k(0)+", checkMaxAgeIfExist: false, ifThrowMaxAgeHeaderError: false, customCacheDuration: "+A.k(s.r)+")"}}
 A.a2v.prototype={
 $0(){var s=null
 return A.d([A.ee("Image provider",this.a,!0,B.ai,s,s,s,B.V,!1,!0,!0,B.bw,s),A.ee("Image key",this.b,!0,B.ai,s,s,s,B.V,!1,!0,!0,B.bw,s)],t.p)},
