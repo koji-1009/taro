@@ -1,3 +1,7 @@
+## 2.1.1
+
+* **FIX**: `networkLoaderTimeout` changes only the timeout of the default client, and throws a `StateError` for a custom client instead of replacing it.
+
 ## 2.1.0
 
 * **FIX**: Include request headers in the storage cache key. `TaroLoaderStorage.load` and `save` take an optional `headers` argument.
