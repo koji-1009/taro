@@ -29,7 +29,8 @@ class TaroHttpResponse {
   /// The reason phrase of the response.
   final String? reasonPhrase;
 
-  /// The content length of the response.
+  /// The size of the response body in bytes, that is, the length of
+  /// [bodyBytes].
   final int? contentLength;
 
   /// The headers of the response.

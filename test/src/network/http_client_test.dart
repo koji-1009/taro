@@ -178,7 +178,7 @@ void main() {
         headers: const {},
       );
 
-      expect(response.contentLength, equals(-1));
+      expect(response.contentLength, equals(4));
       expect(response.bodyBytes, equals([1, 2, 3, 4]));
     });
 
@@ -201,6 +201,7 @@ void main() {
         headers: const {},
       );
 
+      expect(response.contentLength, equals(body.length));
       expect(response.bodyBytes, equals(body));
     });
 
