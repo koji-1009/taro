@@ -59,6 +59,19 @@ void main() {
       expect(loadedBytes, equals(bytes));
     });
 
+    test('uses the URL only cache file when the headers are omitted', () async {
+      await loader.save(
+        url: url,
+        bytes: bytes,
+        contentType: contentType,
+        expireAt: null,
+      );
+
+      final filename = '${sha256.convert(utf8.encode(url))}';
+      expect(await File('${tempDir.path}/taro/$filename').exists(), isTrue);
+      expect(await loader.load(url: url), equals(bytes));
+    });
+
     test('caches requests with different headers separately', () async {
       const headersA = {'authorization': 'Bearer a'};
       const headersB = {'authorization': 'Bearer b'};
