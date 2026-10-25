@@ -124,7 +124,7 @@ final class TaroHttpResponseException extends TaroException {
   /// The reason phrase of the response.
   final String? reasonPhrase;
 
-  /// The content length of the response.
+  /// The size of the response body in bytes.
   final int? contentLength;
 
   /// The headers of the response.

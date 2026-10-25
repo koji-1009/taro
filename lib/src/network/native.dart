@@ -68,7 +68,7 @@ Future<TaroHttpResponse> get({
     statusCode: response.statusCode,
     bodyBytes: responseBytes,
     reasonPhrase: response.reasonPhrase,
-    contentLength: response.contentLength,
+    contentLength: responseBytes.length,
     headers: responseHeaders,
     isRedirect: response.isRedirect,
   );
