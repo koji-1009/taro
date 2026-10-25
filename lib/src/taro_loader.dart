@@ -20,6 +20,9 @@ class TaroLoader {
   /// Callback for storage errors.
   TaroStorageErrorCallback? _onStorageError;
 
+  /// The current network loader.
+  TaroLoaderNetwork get networkLoader => _networkLoader;
+
   /// Changes the current network loader to the provided loader.
   void changeNetworkLoader(TaroLoaderNetwork loader) {
     _networkLoader = loader;

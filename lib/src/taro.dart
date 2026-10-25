@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/painting.dart';
+import 'package:taro/src/network/http_client.dart';
 import 'package:taro/src/taro_exception.dart';
 import 'package:taro/src/taro_image.dart';
 import 'package:taro/src/taro_loader.dart';
@@ -49,11 +50,26 @@ class Taro {
     _loader.changeNetworkLoader(newLoader);
   }
 
-  /// Changes the timeout of the current [TaroLoaderNetwork] to the provided duration.
+  /// Changes the timeout of the default client to the provided duration,
+  /// keeping the rest of the current [TaroLoaderNetwork].
+  ///
+  /// [TaroHttpClient] does not define a timeout, so set the timeout of a custom
+  /// client on that client. Throws a [StateError] if the current client is not
+  /// the default one.
   set networkLoaderTimeout(Duration timeout) {
+    final networkLoader = _loader.networkLoader;
+    final client = networkLoader.client;
+    if (client is! HttpClient) {
+      throw StateError(
+        'networkLoaderTimeout cannot change the timeout of '
+        '${client.runtimeType}. Set the timeout on that client instead.',
+      );
+    }
     _loader.changeNetworkLoader(
-      TaroLoaderNetwork.timeout(
-        timeout: timeout,
+      networkLoader.copyWith(
+        client: client.copyWith(
+          timeout: timeout,
+        ),
       ),
     );
   }

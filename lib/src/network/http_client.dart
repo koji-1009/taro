@@ -15,6 +15,15 @@ class HttpClient implements TaroHttpClient {
 
   final Duration timeout;
 
+  /// Creates a copy of this client with the given fields replaced.
+  HttpClient copyWith({
+    Duration? timeout,
+  }) {
+    return HttpClient(
+      timeout: timeout ?? this.timeout,
+    );
+  }
+
   @override
   Future<TaroHttpResponse> get({
     required Uri uri,
