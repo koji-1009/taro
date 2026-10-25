@@ -12,8 +12,11 @@ import 'package:taro/src/taro_loader_network.dart';
 /// then 'closed' when the client disconnects.
 ///
 /// - `/hang`: accepts the request and never responds.
+/// - `/stall`: sends the headers and part of the body, then stalls.
+/// - `/slow`: sends 5 bytes 60 ms apart.
 const _serverCode = r'''
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:stream_channel/stream_channel.dart';
@@ -30,8 +33,29 @@ Future<void> hybridMain(StreamChannel<Object?> channel) async {
       socket.destroy();
     }
 
+    var responded = false;
     socket.listen(
-      (_) {},
+      (data) async {
+        if (responded) {
+          return;
+        }
+        responded = true;
+        final requestLine = latin1.decode(data).split('\r\n').first;
+        const headers = 'HTTP/1.1 200 OK\r\n'
+            'Access-Control-Allow-Origin: *\r\n';
+        if (requestLine.contains('/stall')) {
+          socket
+            ..write('${headers}Content-Length: 4\r\n\r\n')
+            ..add([1, 2]);
+        } else if (requestLine.contains('/slow')) {
+          socket.write('${headers}Content-Length: 5\r\n\r\n');
+          for (var i = 0; i < 5; i++) {
+            socket.add([i]);
+            await socket.flush();
+            await Future<void>.delayed(const Duration(milliseconds: 60));
+          }
+        }
+      },
       onDone: close,
       onError: (Object _) => close(),
     );
@@ -105,6 +129,39 @@ void main() {
         connectionClosed.timeout(const Duration(seconds: 5)),
         completes,
       );
+    });
+
+    test('get aborts the request when the body stalls', () async {
+      final connectionClosed = messages.firstWhere((m) => m == 'closed');
+
+      const client = HttpClient(
+        timeout: Duration(milliseconds: 200),
+      );
+
+      await expectLater(
+        client.get(
+          uri: Uri.parse('http://127.0.0.1:$port/stall'),
+          headers: const {},
+        ),
+        throwsA(isA<TimeoutException>()),
+      );
+      await expectLater(
+        connectionClosed.timeout(const Duration(seconds: 5)),
+        completes,
+      );
+    });
+
+    test('get does not time out while the body keeps arriving', () async {
+      const client = HttpClient(
+        timeout: Duration(milliseconds: 200),
+      );
+
+      final response = await client.get(
+        uri: Uri.parse('http://127.0.0.1:$port/slow'),
+        headers: const {},
+      );
+
+      expect(response.bodyBytes, equals([0, 1, 2, 3, 4]));
     });
   });
 
