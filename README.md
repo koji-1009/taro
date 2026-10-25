@@ -218,6 +218,6 @@ If a native cache directory exists, such as Android or iOS, use [path_provider](
 * [clock](https://pub.dev/packages/clock)
   * Get current time and mock time
 * [crypto](https://pub.dev/packages/crypto)
-  * Get persistent file name from URL and options
+  * Get persistent file name from URL and request headers
 * [path_provider](https://pub.dev/packages/path_provider)
   * Get application cache directory

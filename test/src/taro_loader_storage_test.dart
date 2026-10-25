@@ -49,17 +49,51 @@ void main() {
     test('save and load', () async {
       await loader.save(
         url: url,
+        headers: const {},
         bytes: bytes,
         contentType: contentType,
         expireAt: null,
       );
 
-      final loadedBytes = await loader.load(url: url);
+      final loadedBytes = await loader.load(url: url, headers: const {});
+      expect(loadedBytes, equals(bytes));
+    });
+
+    test('caches requests with different headers separately', () async {
+      const headersA = {'authorization': 'Bearer a'};
+      const headersB = {'authorization': 'Bearer b'};
+
+      await loader.save(
+        url: url,
+        headers: headersA,
+        bytes: bytes,
+        contentType: contentType,
+        expireAt: null,
+      );
+
+      expect(await loader.load(url: url, headers: headersA), equals(bytes));
+      expect(await loader.load(url: url, headers: headersB), isNull);
+      expect(await loader.load(url: url, headers: const {}), isNull);
+    });
+
+    test('ignores the case and order of header names', () async {
+      await loader.save(
+        url: url,
+        headers: const {'Authorization': 'Bearer a', 'Accept': 'image/png'},
+        bytes: bytes,
+        contentType: contentType,
+        expireAt: null,
+      );
+
+      final loadedBytes = await loader.load(
+        url: url,
+        headers: const {'accept': 'image/png', 'authorization': 'Bearer a'},
+      );
       expect(loadedBytes, equals(bytes));
     });
 
     test('load returns null if file does not exist', () async {
-      final loadedBytes = await loader.load(url: url);
+      final loadedBytes = await loader.load(url: url, headers: const {});
       expect(loadedBytes, isNull);
     });
 
@@ -70,6 +104,7 @@ void main() {
       await withClock(Clock.fixed(now), () async {
         await loader.save(
           url: url,
+          headers: const {},
           bytes: bytes,
           contentType: contentType,
           expireAt: expireAt,
@@ -78,7 +113,7 @@ void main() {
 
       final futureTime = now.add(const Duration(hours: 2));
       await withClock(Clock.fixed(futureTime), () async {
-        final loadedBytes = await loader.load(url: url);
+        final loadedBytes = await loader.load(url: url, headers: const {});
         expect(loadedBytes, isNull);
       });
     });
@@ -87,6 +122,7 @@ void main() {
         () async {
       await loader.save(
         url: url,
+        headers: const {},
         bytes: bytes,
         contentType: contentType,
         expireAt: null,
@@ -99,7 +135,7 @@ void main() {
       expect(await cacheInfoFile.exists(), isTrue);
       await cacheFile.delete();
 
-      final loadedBytes = await loader.load(url: url);
+      final loadedBytes = await loader.load(url: url, headers: const {});
 
       expect(loadedBytes, isNull);
       expect(await cacheInfoFile.exists(), isFalse);
@@ -109,6 +145,7 @@ void main() {
         () async {
       await loader.save(
         url: url,
+        headers: const {},
         bytes: bytes,
         contentType: contentType,
         expireAt: null,
@@ -119,7 +156,7 @@ void main() {
           .writeAsString('{"content_type": 1}');
 
       expect(
-        () => loader.load(url: url),
+        () => loader.load(url: url, headers: const {}),
         throwsA(isA<TaroStorageException>()),
       );
     });
@@ -128,7 +165,7 @@ void main() {
       PathProviderPlatform.instance = _ThrowingPathProviderPlatform();
 
       expect(
-        () => loader.load(url: url),
+        () => loader.load(url: url, headers: const {}),
         throwsA(isA<TaroStorageException>()),
       );
     });
@@ -139,6 +176,7 @@ void main() {
       expect(
         () => loader.save(
           url: url,
+          headers: const {},
           bytes: bytes,
           contentType: contentType,
           expireAt: null,
@@ -154,6 +192,7 @@ void main() {
       await withClock(Clock.fixed(now), () async {
         await loader.save(
           url: url,
+          headers: const {},
           bytes: bytes,
           contentType: contentType,
           expireAt: expireAt,
@@ -162,7 +201,7 @@ void main() {
 
       final futureTime = now.add(const Duration(hours: 1));
       await withClock(Clock.fixed(futureTime), () async {
-        final loadedBytes = await loader.load(url: url);
+        final loadedBytes = await loader.load(url: url, headers: const {});
         expect(loadedBytes, equals(bytes));
       });
     });

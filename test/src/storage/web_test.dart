@@ -19,19 +19,20 @@ void main() {
 
       await loader.save(
         url: url,
+        headers: const {},
         bytes: bytes,
         contentType: contentType,
         expireAt: null,
       );
 
-      final loadedBytes = await loader.load(url: url);
+      final loadedBytes = await loader.load(url: url, headers: const {});
       expect(loadedBytes, equals(bytes));
     });
 
     test('load returns null if the cache entry does not exist', () async {
       const url = 'https://example.com/web_missing.png';
 
-      final loadedBytes = await loader.load(url: url);
+      final loadedBytes = await loader.load(url: url, headers: const {});
       expect(loadedBytes, isNull);
     });
 
@@ -42,6 +43,7 @@ void main() {
       await withClock(Clock.fixed(now), () async {
         await loader.save(
           url: url,
+          headers: const {},
           bytes: bytes,
           contentType: contentType,
           expireAt: now.add(const Duration(hours: 1)),
@@ -49,12 +51,12 @@ void main() {
       });
 
       await withClock(Clock.fixed(now.add(const Duration(hours: 2))), () async {
-        final loadedBytes = await loader.load(url: url);
+        final loadedBytes = await loader.load(url: url, headers: const {});
         expect(loadedBytes, isNull);
       });
 
       // The expired entry is deleted, so a second load also misses.
-      expect(await loader.load(url: url), isNull);
+      expect(await loader.load(url: url, headers: const {}), isNull);
     });
 
     test('load returns bytes if not expired', () async {
@@ -64,6 +66,7 @@ void main() {
       await withClock(Clock.fixed(now), () async {
         await loader.save(
           url: url,
+          headers: const {},
           bytes: bytes,
           contentType: contentType,
           expireAt: now.add(const Duration(hours: 2)),
@@ -71,7 +74,7 @@ void main() {
       });
 
       await withClock(Clock.fixed(now.add(const Duration(hours: 1))), () async {
-        final loadedBytes = await loader.load(url: url);
+        final loadedBytes = await loader.load(url: url, headers: const {});
         expect(loadedBytes, equals(bytes));
       });
     });
