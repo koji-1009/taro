@@ -12,6 +12,10 @@ Future<TaroHttpResponse> get({
   required Map<String, String> headers,
   required Duration timeout,
 }) async {
+  // Connecting longer than [timeout] cancels the attempt and throws a
+  // SocketException. The client is shared, so the last timeout set applies
+  // to new connections; an app uses one timeout in practice.
+  _httpClient.connectionTimeout = timeout;
   final request = await _httpClient.getUrl(uri);
   for (final entry in headers.entries) {
     request.headers.add(entry.key, entry.value);
