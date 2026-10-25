@@ -19,12 +19,6 @@ Future<TaroHttpResponse> get({
     requestHeaders.append(entry.key, entry.value);
   }
   final abortController = AbortController();
-  Never onTimeout() {
-    // Stop the request instead of leaving it running in the background.
-    abortController.abort();
-    throw TimeoutException(null, timeout);
-  }
-
   final Response response;
   final bytesBuilder = BytesBuilder(copy: false);
   try {
@@ -34,20 +28,23 @@ Future<TaroHttpResponse> get({
         headers: requestHeaders,
         signal: abortController.signal,
       ),
-    ).toDart.timeout(timeout, onTimeout: onTimeout);
+    ).toDart.timeout(timeout);
 
     // A response without a body, such as 204, has no stream to read.
     final reader = response.body?.getReader();
     if (reader != null) {
       while (true) {
-        final result =
-            await reader.read().toDart.timeout(timeout, onTimeout: onTimeout);
+        final result = await reader.read().toDart.timeout(timeout);
         if (result.done) {
           break;
         }
         bytesBuilder.add(result.value!.toDart);
       }
     }
+  } on TimeoutException {
+    // Stop the request instead of leaving it running in the background.
+    abortController.abort();
+    rethrow;
   } on Exception {
     rethrow;
   } catch (error) {
