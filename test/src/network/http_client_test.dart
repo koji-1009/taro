@@ -182,6 +182,28 @@ void main() {
       expect(response.bodyBytes, equals([1, 2, 3, 4]));
     });
 
+    test('get returns a decompressed gzip body with a content length',
+        () async {
+      final body = List<int>.generate(10000, (i) => i % 256);
+      final compressed = gzip.encode(body);
+      final uri = await serve((request) async {
+        request.response
+          ..statusCode = HttpStatus.ok
+          ..headers.set(HttpHeaders.contentEncodingHeader, 'gzip')
+          ..headers.contentLength = compressed.length
+          ..add(compressed);
+        await request.response.close();
+      });
+
+      const client = HttpClient();
+      final response = await client.get(
+        uri: uri,
+        headers: const {},
+      );
+
+      expect(response.bodyBytes, equals(body));
+    });
+
     test('get does not time out while the body keeps arriving', () async {
       final uri = await serve((request) async {
         request.response

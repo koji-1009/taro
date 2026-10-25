@@ -38,7 +38,11 @@ Future<TaroHttpResponse> get({
   final body = response.timeout(timeout);
   final contentLength = response.contentLength;
   final Uint8List responseBytes;
-  if (contentLength >= 0) {
+  // A gzip body is decompressed by the client, so its content length is the
+  // size before decompression and does not match the bytes read.
+  if (contentLength >= 0 &&
+      response.compressionState !=
+          HttpClientResponseCompressionState.decompressed) {
     // Write into a buffer of the known size instead of copying the chunks
     // again at the end, as consolidateHttpClientResponseBytes does.
     final buffer = Uint8List(contentLength);
@@ -47,9 +51,9 @@ Future<TaroHttpResponse> get({
       buffer.setRange(offset, offset + chunk.length, chunk);
       offset += chunk.length;
     });
-    responseBytes = offset == contentLength
-        ? buffer
-        : Uint8List.sublistView(buffer, 0, offset);
+    // A body shorter than the content length fails with an HttpException,
+    // so the buffer is full here.
+    responseBytes = buffer;
   } else {
     final bytesBuilder = BytesBuilder(copy: false);
     await body.forEach(bytesBuilder.add);
