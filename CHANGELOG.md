@@ -1,3 +1,17 @@
+## 2.1.0
+
+* **FIX**: Include request headers in the storage cache key, so requests to the same URL with different headers (e.g. `Authorization`) no longer share a cache entry. `TaroLoaderStorage.load` and `save` take an optional `headers` argument; requests without headers keep the previous cache file name.
+* **FIX**: Time out a stalled response body in the default `HttpClient`. The timeout now also applies to each wait for the next part of the body, not only to the response headers; a slow download that keeps receiving data does not time out.
+* **FIX**: Set the timeout as `connectionTimeout` on native, so connecting to a host that does not answer fails with a `TaroNetworkException` after the timeout.
+* **FIX**: Abort the `fetch` on web when the request times out, instead of leaving it running in the background.
+* **FIX**: Wrap failed `fetch` calls on web in an `Exception`, so they are thrown as `TaroNetworkException` like native network errors.
+* **FIX**: Report the size of the body as `contentLength` on native, as on web. It was the `Content-Length` header: the size before decompression for a gzip body, and -1 without the header.
+* **FIX**: Parse the `max-age` directive case-insensitively and accept a quoted value.
+* **FIX**: Compare `TaroImage` headers by content when `useHeadersHashCode` is true, so maps with the same entries identify the same image.
+* **FIX**: Correct the names printed by `TaroImage.toString` and `TaroHttpResponseException.toString`.
+* **DOCS**: Fix incorrect descriptions in doc comments and README.
+* **CHORE**: Bump `codecov/codecov-action` to 7.1.1 and `koji-1009/setup-flutter` to 1.4.1.
+
 ## 2.0.5
 
 * **FIX**: Send request headers on web. `fetch` was called with a `Headers` instance where its init dictionary was expected, so every header passed to `Taro` was silently dropped in web builds.
