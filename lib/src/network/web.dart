@@ -14,6 +14,7 @@ Future<TaroHttpResponse> get({
   for (final entry in headers.entries) {
     requestHeaders.append(entry.key, entry.value);
   }
+  final abortController = AbortController();
   final Response response;
   final JSArrayBuffer responseBuffer;
   try {
@@ -21,8 +22,16 @@ Future<TaroHttpResponse> get({
       uri.toString(),
       RequestInit(
         headers: requestHeaders,
+        signal: abortController.signal,
       ),
-    ).toDart.timeout(timeout);
+    ).toDart.timeout(
+      timeout,
+      onTimeout: () {
+        // Stop the request instead of leaving it running in the background.
+        abortController.abort();
+        throw TimeoutException(null, timeout);
+      },
+    );
 
     responseBuffer = await response.arrayBuffer().toDart;
   } on Exception {
