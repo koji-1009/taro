@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:js_interop';
+import 'dart:typed_data';
 
 import 'package:taro/src/network/web_fetch.dart';
 import 'package:taro/src/taro_loader_network.dart';
 
 /// Load image data as [TaroHttpResponse] from the network.
+///
+/// [timeout] limits each wait: the response headers and every next part of
+/// the body. A slow download that keeps receiving data does not time out.
 Future<TaroHttpResponse> get({
   required Uri uri,
   required Map<String, String> headers,
@@ -15,8 +19,14 @@ Future<TaroHttpResponse> get({
     requestHeaders.append(entry.key, entry.value);
   }
   final abortController = AbortController();
+  Never onTimeout() {
+    // Stop the request instead of leaving it running in the background.
+    abortController.abort();
+    throw TimeoutException(null, timeout);
+  }
+
   final Response response;
-  final JSArrayBuffer responseBuffer;
+  final bytesBuilder = BytesBuilder(copy: false);
   try {
     response = await fetch(
       uri.toString(),
@@ -24,16 +34,20 @@ Future<TaroHttpResponse> get({
         headers: requestHeaders,
         signal: abortController.signal,
       ),
-    ).toDart.timeout(
-      timeout,
-      onTimeout: () {
-        // Stop the request instead of leaving it running in the background.
-        abortController.abort();
-        throw TimeoutException(null, timeout);
-      },
-    );
+    ).toDart.timeout(timeout, onTimeout: onTimeout);
 
-    responseBuffer = await response.arrayBuffer().toDart;
+    // A response without a body, such as 204, has no stream to read.
+    final reader = response.body?.getReader();
+    if (reader != null) {
+      while (true) {
+        final result =
+            await reader.read().toDart.timeout(timeout, onTimeout: onTimeout);
+        if (result.done) {
+          break;
+        }
+        bytesBuilder.add(result.value!.toDart);
+      }
+    }
   } on Exception {
     rethrow;
   } catch (error) {
@@ -41,7 +55,7 @@ Future<TaroHttpResponse> get({
     // [Exception]. Wrap it so that it is handled like a native network error.
     throw Exception('[taro][network] Failed to fetch $uri: $error');
   }
-  final responseBytes = responseBuffer.toDart.asUint8List();
+  final responseBytes = bytesBuilder.takeBytes();
   final responseHeaders = <String, String>{};
   response.headers.forEach((String value, String key, JSObject object) {
     responseHeaders[key] = value;

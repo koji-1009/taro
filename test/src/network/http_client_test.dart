@@ -107,5 +107,108 @@ void main() {
 
       completer.complete();
     });
+
+    test('get aborts the request when the body stalls', () async {
+      // A raw socket server, so the test can see the client disconnect.
+      final serverSocket =
+          await ServerSocket.bind(InternetAddress.loopbackIPv4, 0);
+      addTearDown(serverSocket.close);
+
+      final connectionClosed = Completer<void>();
+      serverSocket.listen((socket) {
+        var responded = false;
+        // Both onError and onDone can be called for one disconnect.
+        void closed() {
+          if (!connectionClosed.isCompleted) {
+            connectionClosed.complete();
+          }
+          socket.destroy();
+        }
+
+        socket.listen(
+          (_) {
+            if (responded) {
+              return;
+            }
+            responded = true;
+            // Send the headers and part of the body, then stall.
+            socket
+              ..write('HTTP/1.1 200 OK\r\nContent-Length: 4\r\n\r\n')
+              ..add([1, 2]);
+          },
+          onDone: closed,
+          onError: (Object _) => closed(),
+        );
+      });
+      final uri = Uri.parse(
+        'http://${serverSocket.address.address}:${serverSocket.port}/image',
+      );
+
+      const client = HttpClient(
+        timeout: Duration(milliseconds: 100),
+      );
+
+      await expectLater(
+        client.get(
+          uri: uri,
+          headers: const {},
+        ),
+        throwsA(isA<TimeoutException>()),
+      );
+      await expectLater(
+        connectionClosed.future.timeout(const Duration(seconds: 5)),
+        completes,
+      );
+    });
+
+    test('get returns a chunked body without a content length', () async {
+      final uri = await serve((request) async {
+        request.response
+          ..statusCode = HttpStatus.ok
+          ..bufferOutput = false
+          ..add([1, 2]);
+        await request.response.flush();
+        request.response.add([3, 4]);
+        await request.response.close();
+      });
+
+      const client = HttpClient();
+      final response = await client.get(
+        uri: uri,
+        headers: const {},
+      );
+
+      expect(response.contentLength, equals(-1));
+      expect(response.bodyBytes, equals([1, 2, 3, 4]));
+    });
+
+    test('get does not time out while the body keeps arriving', () async {
+      final uri = await serve((request) async {
+        request.response
+          ..statusCode = HttpStatus.ok
+          // Send each part as soon as it is flushed.
+          ..bufferOutput = false
+          ..headers.contentLength = 5;
+        // 5 parts, 60 ms apart: longer than the timeout in total, but each
+        // wait is shorter than it.
+        for (var i = 0; i < 5; i++) {
+          request.response.add([i]);
+          await request.response.flush();
+          await Future<void>.delayed(const Duration(milliseconds: 60));
+        }
+        await request.response.close();
+      });
+
+      const client = HttpClient(
+        timeout: Duration(milliseconds: 200),
+      );
+
+      final response = await client.get(
+        uri: uri,
+        headers: const {},
+      );
+
+      expect(response.bodyBytes, equals([0, 1, 2, 3, 4]));
+    });
   });
 }
