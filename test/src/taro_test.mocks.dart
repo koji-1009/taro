@@ -103,7 +103,7 @@ class MockTaroLoaderStorage extends _i1.Mock implements _i5.TaroLoaderStorage {
   @override
   _i3.Future<_i4.Uint8List?> load({
     required String? url,
-    required Map<String, String>? headers,
+    Map<String, String>? headers = const {},
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -121,7 +121,7 @@ class MockTaroLoaderStorage extends _i1.Mock implements _i5.TaroLoaderStorage {
   @override
   _i3.Future<void> save({
     required String? url,
-    required Map<String, String>? headers,
+    Map<String, String>? headers = const {},
     required _i4.Uint8List? bytes,
     required String? contentType,
     required DateTime? expireAt,

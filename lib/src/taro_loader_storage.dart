@@ -14,7 +14,7 @@ class TaroLoaderStorage {
   /// Returns a Future that completes with the data.
   Future<Uint8List?> load({
     required String url,
-    required Map<String, String> headers,
+    Map<String, String> headers = const {},
   }) async {
     try {
       return await storage.load(
@@ -30,7 +30,7 @@ class TaroLoaderStorage {
   /// Saves the data for the provided URL and request headers to storage.
   Future<void> save({
     required String url,
-    required Map<String, String> headers,
+    Map<String, String> headers = const {},
     required Uint8List bytes,
     required String contentType,
     required DateTime? expireAt,
