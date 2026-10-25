@@ -50,11 +50,12 @@ class Taro {
     _loader.changeNetworkLoader(newLoader);
   }
 
-  /// Changes the timeout of the current [TaroLoaderNetwork] to the provided duration.
+  /// Changes the timeout of the default client to the provided duration,
+  /// keeping the rest of the current [TaroLoaderNetwork].
   ///
-  /// Only the timeout of the client is replaced; the rest of the loader is kept.
-  /// Throws a [StateError] if the client is a custom [TaroHttpClient], because
-  /// its timeout belongs to that client.
+  /// [TaroHttpClient] does not define a timeout, so set the timeout of a custom
+  /// client on that client. Throws a [StateError] if the current client is not
+  /// the default one.
   set networkLoaderTimeout(Duration timeout) {
     final networkLoader = _loader.networkLoader;
     final client = networkLoader.client;
