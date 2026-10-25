@@ -110,6 +110,15 @@ class TaroLoaderNetwork {
   /// The [TaroHttpClient] instance used to send GET requests.
   final TaroHttpClient client;
 
+  /// Creates a copy of this loader with the given fields replaced.
+  TaroLoaderNetwork copyWith({
+    TaroHttpClient? client,
+  }) {
+    return TaroLoaderNetwork(
+      client: client ?? this.client,
+    );
+  }
+
   /// Loads the data from the provided URL with the given request headers.
   /// If [checkMaxAgeIfExist] is true, the method checks the max age of the data.
   Future<({Uint8List bytes, String contentType, DateTime? expireAt})?> load({

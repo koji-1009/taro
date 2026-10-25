@@ -38,6 +38,17 @@ class _FakeTaroHttpClient_0 extends _i1.SmartFake
         );
 }
 
+class _FakeTaroLoaderNetwork_1 extends _i1.SmartFake
+    implements _i2.TaroLoaderNetwork {
+  _FakeTaroLoaderNetwork_1(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [TaroLoaderNetwork].
 ///
 /// See the documentation for Mockito's code generation for more information.
@@ -54,6 +65,32 @@ class MockTaroLoaderNetwork extends _i1.Mock implements _i2.TaroLoaderNetwork {
           Invocation.getter(#client),
         ),
       ) as _i2.TaroHttpClient);
+
+  @override
+  _i2.TaroLoaderNetwork copyWith({_i2.TaroHttpClient? client}) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #copyWith,
+          [],
+          {#client: client},
+        ),
+        returnValue: _FakeTaroLoaderNetwork_1(
+          this,
+          Invocation.method(
+            #copyWith,
+            [],
+            {#client: client},
+          ),
+        ),
+        returnValueForMissingStub: _FakeTaroLoaderNetwork_1(
+          this,
+          Invocation.method(
+            #copyWith,
+            [],
+            {#client: client},
+          ),
+        ),
+      ) as _i2.TaroLoaderNetwork);
 
   @override
   _i3.Future<({_i4.Uint8List bytes, String contentType, DateTime? expireAt})?>

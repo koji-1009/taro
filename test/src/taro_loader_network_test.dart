@@ -648,5 +648,25 @@ void main() {
         equals(const Duration(seconds: 5)),
       );
     });
+
+    test('copyWith replaces the client', () {
+      final networkLoader = TaroLoaderNetwork.timeout(
+        timeout: const Duration(seconds: 5),
+      );
+
+      final copied = networkLoader.copyWith(client: mockHttpClient);
+
+      expect(copied.client, same(mockHttpClient));
+    });
+
+    test('copyWith keeps the client when it is omitted', () {
+      final networkLoader = TaroLoaderNetwork.timeout(
+        timeout: const Duration(seconds: 5),
+      );
+
+      final copied = networkLoader.copyWith();
+
+      expect(copied.client, same(networkLoader.client));
+    });
   });
 }

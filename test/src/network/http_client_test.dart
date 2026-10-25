@@ -37,6 +37,22 @@ void main() {
       expect(client.timeout, equals(const Duration(seconds: 180)));
     });
 
+    test('copyWith replaces the timeout', () {
+      const client = HttpClient();
+
+      final copied = client.copyWith(timeout: const Duration(seconds: 5));
+
+      expect(copied.timeout, equals(const Duration(seconds: 5)));
+    });
+
+    test('copyWith keeps the timeout when it is omitted', () {
+      const client = HttpClient(timeout: Duration(seconds: 5));
+
+      final copied = client.copyWith();
+
+      expect(copied.timeout, equals(const Duration(seconds: 5)));
+    });
+
     test('get returns the response body, status and headers', () async {
       final receivedHeaders = <String, String>{};
 
