@@ -4,6 +4,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:taro/src/network/http_client.dart';
 import 'package:taro/src/taro.dart';
 import 'package:taro/src/taro_image.dart';
 import 'package:taro/src/taro_loader_network.dart';
@@ -14,6 +15,15 @@ import 'package:taro/src/taro_loader_storage.dart';
   MockSpec<TaroLoaderStorage>(),
 ])
 import 'taro_test.mocks.dart';
+
+class _CustomHttpClient implements TaroHttpClient {
+  @override
+  Future<TaroHttpResponse> get({
+    required Uri uri,
+    required Map<String, String> headers,
+  }) =>
+      throw UnimplementedError();
+}
 
 void main() {
   group('Taro', () {
@@ -264,7 +274,10 @@ void main() {
       ));
     });
 
-    test('networkLoaderTimeout setter replaces the loader in use', () async {
+    test(
+        'networkLoaderTimeout setter replaces the loader with the default client',
+        () async {
+      when(mockNetworkLoader.client).thenReturn(const HttpClient());
       taro.networkLoaderTimeout = const Duration(seconds: 5);
 
       const url = 'https://example.com/image.png';
@@ -284,6 +297,31 @@ void main() {
         ifThrowMaxAgeHeaderError: anyNamed('ifThrowMaxAgeHeaderError'),
         customCacheDuration: anyNamed('customCacheDuration'),
       ));
+    });
+
+    test('networkLoaderTimeout setter keeps the loader with a custom client',
+        () async {
+      when(mockNetworkLoader.client).thenReturn(_CustomHttpClient());
+      taro.networkLoaderTimeout = const Duration(seconds: 5);
+
+      const url = 'https://example.com/image.png';
+      final bytes = Uint8List.fromList([4, 5, 6]);
+
+      when(mockStorageLoader.load(url: url, headers: anyNamed('headers')))
+          .thenAnswer((_) async => null);
+      when(mockNetworkLoader.load(
+        url: url,
+        headers: anyNamed('headers'),
+        checkMaxAgeIfExist: anyNamed('checkMaxAgeIfExist'),
+        ifThrowMaxAgeHeaderError: anyNamed('ifThrowMaxAgeHeaderError'),
+        customCacheDuration: anyNamed('customCacheDuration'),
+      )).thenAnswer(
+        (_) async => (bytes: bytes, contentType: 'image/png', expireAt: null),
+      );
+
+      final result = await taro.loadBytes(url);
+
+      expect(result, equals(bytes));
     });
 
     test('storageLoader setter replaces the loader in use', () async {
